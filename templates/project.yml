@@ -1,0 +1,6 @@
+name: {{ name }}
+targets:
+  {{ name }}:
+    type: framework
+    platform: iOS
+    sources: {{ sources }}
