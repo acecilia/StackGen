@@ -3,6 +3,7 @@ import Yams
 
 public class FileIterator {
     static let defaultFileName = "Module.yml"
+    static let defaultTemplatePath = "templates"
 
     public init() { }
     

@@ -8,19 +8,19 @@ class GradleFolderStructure: FolderStructureInterface {
         self.language = language
     }
 
-    var sources: [File] {
-        [.glob("src/main/\(language)/\(File.allFilesGlobSuffix)")]
+    var sources: [String] {
+        ["src/main/\(language)"]
     }
 
-    var resources: [File] {
-        [.glob("src/main/resources/\(File.allFilesGlobSuffix)")]
+    var resources: [String] {
+        ["src/main/resources"]
     }
 
-    var tests: [File] {
-        [.glob("src/test/\(language)/\(File.allFilesGlobSuffix)")]
+    var tests: [String] {
+        ["src/test/\(language)"]
     }
 
-    var testResources: [File] {
-        [.glob("src/test/resources/\(File.allFilesGlobSuffix)")]
+    var testResources: [String] {
+        ["src/test/resources"]
     }
 }

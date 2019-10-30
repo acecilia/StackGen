@@ -27,7 +27,7 @@ public class GenerateCommand: Command {
         }
 
         let generators: [FileGeneratorInterface] = [
-            XcodegenGenerator(modules)
+            XcodegenGenerator(reporter, modules)
         ]
 
         for generator in generators {

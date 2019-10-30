@@ -1,13 +1,12 @@
 import Foundation
 
 protocol FolderStructureInterface: class {
-    var sources: [File] { get }
-    var resources: [File] { get }
-    var tests: [File] { get }
-    var testResources: [File] { get }
+    var sources: [String] { get }
+    var resources: [String] { get }
+    var tests: [String] { get }
+    var testResources: [String] { get }
 }
 
 public enum FolderStructure: String, Codable {
     case gradle
-    case SPM
 }

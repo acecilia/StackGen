@@ -27,16 +27,11 @@ public class CleanCommand: Command {
         }
         
         let generators: [FileGeneratorInterface] = [
-            XcodegenGenerator(modules)
+            XcodegenGenerator(reporter, modules)
         ]
 
         for generator in generators {
-            let outputFileName = type(of: generator).outputFileName
-            let filesToRemove = rootPath.find().type(.file).filter { $0.basename() == outputFileName }
-            for fileToRemove in filesToRemove {
-                reporter.print("Removed file: \(fileToRemove.relative(to: rootPath))")
-                try fileToRemove.delete()
-            }
+            try generator.clean()
         }
 
         reporter.print("Done")
