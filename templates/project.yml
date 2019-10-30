@@ -1,6 +1,6 @@
 name: {{ name }}
 targets:
   {{ name }}:
-    type: framework
+    type: framework.static
     platform: iOS
     sources: {{ sources }}

@@ -12,12 +12,20 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/stencilproject/Stencil.git", .exact("0.13.1")),
         .package(url: "https://github.com/jpsim/Yams.git", .exact("2.0.0")),
-        .package(url: "https://github.com/mxcl/Path.swift.git", .exact("1.0.0-alpha.3"))
+        .package(url: "https://github.com/mxcl/Path.swift.git", .exact("1.0.0-alpha.3")),
+        .package(url: "https://github.com/jakeheis/SwiftCLI", .exact("5.3.3"))
     ],
     targets: [
         .target(
             name: "SwiftBuildSystemGenerator",
-            dependencies: ["SwiftBuildSystemGeneratorKit"]
+            dependencies: ["SwiftBuildSystemGeneratorCLI"]
+        ),
+        .target(
+            name: "SwiftBuildSystemGeneratorCLI",
+            dependencies: [
+                "SwiftBuildSystemGeneratorKit",
+                "SwiftCLI",
+            ]
         ),
         .target(
             name: "SwiftBuildSystemGeneratorKit",

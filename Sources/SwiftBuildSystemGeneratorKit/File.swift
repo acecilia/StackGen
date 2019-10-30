@@ -1,6 +1,8 @@
 import Path
 
 public enum File: Codable, CustomStringConvertible {
+    static let allFilesGlobSuffix = "**/*"
+
     case glob(String)
     case path(Path)
 

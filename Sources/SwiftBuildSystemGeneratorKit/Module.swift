@@ -2,11 +2,11 @@ import Path
 import Yams
 
 public struct Module: Codable {
-    let name: String
-    let path: Path
-    let sources: [File]
-    let tests: [File]
-    let dependencies: [Path]
+    public let name: String
+    public let path: Path
+    public let sources: [File]
+    public let tests: [File]
+    public let dependencies: [Path]
 
     public init(moduleFilePath: Path) throws {
         let content = try String(contentsOf: moduleFilePath)
@@ -19,11 +19,21 @@ public struct Module: Codable {
         }
 
         let modulePath = moduleFilePath.parent
+        let moduleName = modulePath.basename()
 
-        self.name = modulePath.basename()
+        let folderStructure: FolderStructureInterface
+        switch yamlModule.folderStructure {
+        case .gradle, nil:
+            folderStructure = GradleFolderStructure("swift")
+
+        case .SPM:
+            folderStructure = SPMFolderStructure(moduleName)
+        }
+
+        self.name = moduleName
         self.path = modulePath
-        self.sources = [.glob("Sources/**/*")]
-        self.tests = [.glob("Tests/**/*")]
+        self.sources = folderStructure.sources
+        self.tests = folderStructure.tests
         self.dependencies = yamlModule.dependencies ?? []
     }
 }
