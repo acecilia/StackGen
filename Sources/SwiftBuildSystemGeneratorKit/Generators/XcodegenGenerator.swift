@@ -2,10 +2,9 @@ import Stencil
 import Path
 import XcodeProj
 import ProjectSpec
-import Shell
+import XcodeGenKit
 
 public class XcodegenGenerator: FileGeneratorInterface {
-
     private let reporter: ReporterInterface
     private let modules: [Module]
 
@@ -34,47 +33,38 @@ public class XcodegenGenerator: FileGeneratorInterface {
     }
 
     private func generateProjectFile(_ module: Module) throws {
-        reporter.print("Generating: \(OutputPath.projectFile.relativePath(for: module))")
+        let file = OutputPath.projectFile
+        reporter.print("Generating: \(file.relativePath(for: module))")
 
         let environment = Environment(loader: FileSystemLoader(paths: [.init(FileIterator.defaultTemplatePath)]))
         let rendered = try environment.renderTemplate(name: OutputPath.projectFileName, context: try module.asDictionary(basePath: module.path))
 
-        let outputPath = OutputPath.projectFile.path(for: module)
+        let outputPath = file.path(for: module)
         try outputPath.delete()
         try rendered.write(to: outputPath)
     }
 
     private func generateXcodeProject(_ module: Module) throws {
-        reporter.print("Generating: \(OutputPath.xcodeproj.relativePath(for: module))")
+        let file = OutputPath.xcodeproj
+        reporter.print("Generating: \(file.relativePath(for: module))")
 
-        let result = Shell().capture(
-            ["/usr/local/bin/xcodegen"],
-            workingDirectoryPath: .init(module.path.string),
-            env: nil
-        )
-
-        if case let .failure(error) = result {
-            let errorMessages = [
-                error.description,
-                error.processError.description
-                ]
-                .filter {
-                    $0.isEmpty == false
-                }
-            let errorMessage = errorMessages.joined(separator: ". ")
-
-            reporter.print("The xcode project could not be generated using XcodeGen: you will need to generate it by yourself. Error: \(errorMessage)")
-        }
+        // From: https://github.com/yonaskolb/XcodeGen/blob/master/Tests/FixtureTests/FixtureTests.swift
+        let project = try Project(path: .init(file.absolutePath(for: module)))
+        let generator = ProjectGenerator(project: project)
+        let writer = FileWriter(project: project)
+        let xcodeProject = try generator.generateXcodeProject()
+        try writer.writeXcodeProject(xcodeProject)
+        try writer.writePlists()
     }
 
     private func generateWorkspace(_ module: Module) throws {
-        reporter.print("Generating: \(OutputPath.xcworkspace.relativePath(for: module))")
+        let file = OutputPath.xcworkspace
+        reporter.print("Generating: \(file.relativePath(for: module))")
 
         let projectReference = XCWorkspaceDataFileRef(location: .group("\(module.name).xcodeproj"))
         let workspaceData = XCWorkspaceData(children: [.file(projectReference)])
         let workspace = XCWorkspace(data: workspaceData)
-        let workspacePath = OutputPath.xcworkspace.path(for: module)
-        try workspace.write(path: .init(workspacePath.string), override: true)
+        try workspace.write(path: .init(file.absolutePath(for: module)), override: true)
     }
 }
 
@@ -102,4 +92,7 @@ private enum OutputPath: CaseIterable {
         return path(for: module).relative(to: module.path)
     }
 
+    func absolutePath(for module: Module) -> String {
+        return path(for: module).string
+    }
 }
