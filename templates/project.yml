@@ -5,4 +5,6 @@ targets:
     platform: iOS
     sources:{% for source in sources %}
       - {{ source }}{% endfor %}
-
+    {% if dependencies.count > 0 %}dependencies:{% for dependency in dependencies %}
+      - framework: {{ dependency }}
+        implicit: true{% endfor %}{% endif %}

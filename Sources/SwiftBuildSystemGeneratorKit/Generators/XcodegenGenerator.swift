@@ -37,7 +37,10 @@ public class XcodegenGenerator: FileGeneratorInterface {
         reporter.print("Generating: \(file.relativePath(for: module))")
 
         let environment = Environment(loader: FileSystemLoader(paths: [.init(FileIterator.defaultTemplatePath)]))
-        let rendered = try environment.renderTemplate(name: OutputPath.projectFileName, context: try module.asDictionary(basePath: module.path))
+        let rendered = try environment.renderTemplate(
+            name: OutputPath.projectFileName,
+            context: module.xcodeGenDictionary()
+        )
 
         let outputPath = file.path(for: module)
         try outputPath.delete()
@@ -45,11 +48,10 @@ public class XcodegenGenerator: FileGeneratorInterface {
     }
 
     private func generateXcodeProject(_ module: Module) throws {
-        let file = OutputPath.xcodeproj
-        reporter.print("Generating: \(file.relativePath(for: module))")
+        reporter.print("Generating: \(OutputPath.xcodeproj.relativePath(for: module))")
 
         // From: https://github.com/yonaskolb/XcodeGen/blob/master/Tests/FixtureTests/FixtureTests.swift
-        let project = try Project(path: .init(file.absolutePath(for: module)))
+        let project = try Project(path: .init(OutputPath.projectFile.absolutePath(for: module)))
         let generator = ProjectGenerator(project: project)
         let writer = FileWriter(project: project)
         let xcodeProject = try generator.generateXcodeProject()
@@ -61,8 +63,16 @@ public class XcodegenGenerator: FileGeneratorInterface {
         let file = OutputPath.xcworkspace
         reporter.print("Generating: \(file.relativePath(for: module))")
 
-        let projectReference = XCWorkspaceDataFileRef(location: .group("\(module.name).xcodeproj"))
-        let workspaceData = XCWorkspaceData(children: [.file(projectReference)])
+        let projectReference = XCWorkspaceDataFileRef(location: .group(module.name + ".xcodeproj"))
+        let dependencies = module.dependencies
+            .map {
+                let xcodeProjectPath = ($0.path/($0.name + ".xcodeproj")).relative(to: module.path)
+                return XCWorkspaceDataFileRef(location: .group(xcodeProjectPath))
+            }
+            .map { XCWorkspaceDataElement.file($0) }
+        let dependenciesGroup = XCWorkspaceDataGroup(location: .group(""), name: "Dependencies", children: dependencies)
+
+        let workspaceData = XCWorkspaceData(children: [.file(projectReference), .group(dependenciesGroup)])
         let workspace = XCWorkspace(data: workspaceData)
         try workspace.write(path: .init(file.absolutePath(for: module)), override: true)
     }
