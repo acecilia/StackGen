@@ -3,9 +3,10 @@ import Yams
 import Foundation
 
 public struct Module: Codable, DictionaryConvertible {
-    public var name: String
+    public let name: String
     public let path: Path
     public let sources: [Path]
+    public let testName: String
     public let tests: [Path]
     public let dependencies: [Module]
 
@@ -20,8 +21,19 @@ public struct Module: Codable, DictionaryConvertible {
 
         self.name = path.basename()
         self.path = path
+        self.sources = folderStructure.sources.map { path/$0 }
+        self.testName = name + "Tests"
+        self.tests = folderStructure.tests.map { path/$0 }
+        self.dependencies = try Self.computeDependencies(name, path, rawModule.yamlModule.dependencies, rawModules)
+    }
 
-        let dependencies: [Module] = try (rawModule.yamlModule.dependencies ?? []).map { [name, path] dependencyPath in
+    private static func computeDependencies(
+        _ name: String,
+        _ path: Path,
+        _ dependenciesPaths: [Path]?,
+        _ rawModules: [RawModule]
+    ) throws -> [Module] {
+        return try (dependenciesPaths ?? []).map { dependencyPath in
             guard let rawModule = rawModules.first(where: { $0.path == dependencyPath }) else {
                 let dependency = dependencyPath.relative(to: path)
                 let modules = rawModules.map { $0.path.relative(to: Path.cwd) }.joined(separator: "', '")
@@ -29,10 +41,6 @@ public struct Module: Codable, DictionaryConvertible {
             }
             return try Module(rawModule, resolveDependenciesUsing: rawModules)
         }
-
-        self.sources = folderStructure.sources.map { path/$0 }
-        self.tests = folderStructure.tests.map { path/$0 }
-        self.dependencies = dependencies
     }
 }
 
