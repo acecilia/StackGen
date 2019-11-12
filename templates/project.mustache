@@ -1,24 +1,30 @@
 name: {{ name }}
 fileGroups: [module.yml, project.yml]
-
+¶
 options:
   defaultConfig: Release
   bundleIdPrefix: com.acecilia
   transitivelyLinkDependencies: True
   createIntermediateGroups: true
-
+¶
 targets:
-  {{ name }}:
+  {{name}}:
     type: framework.static
     platform: iOS
-    sources:{% for source in sources %}
-      - {{ source }}{% endfor %}
-    {% if dependencies.count > 0 %}dependencies:{% for dependency in dependencies %}
-      - framework: {{ dependency }}
-        implicit: true{% endfor %}{% endif %}
+    sources:
+    {{#sources}}
+      - {{ . }}
+    {{/sources}}
+    {{#dependencies}}
+    dependencies:
+    {{/dependencies}}
+    {{#dependencies}}
+      - framework: {{ . }}
+        implicit: true
+    {{/dependencies}}
     info:
       path: .build/{{ name }}/Info.plist
-
+¶
   {{ testName }}:
     type: bundle.unit-test
     platform: iOS
@@ -26,13 +32,15 @@ targets:
       base:
         # Needed for getting proper test coverage percentages when using static frameworks
         OTHER_LDFLAGS: -all_load
-    sources:{% for source in tests %}
-      - {{ source }}{% endfor %}
+    sources:
+    {{#sources}}
+      - {{ . }}
+    {{/sources}}
     dependencies:
       - target: {{ name }}
     info:
       path: .build/{{ testName }}/Info.plist
-
+¶
 schemes:
   {{ name }}:
     build:

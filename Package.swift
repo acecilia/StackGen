@@ -10,10 +10,7 @@ let package = Package(
         .library(name: "SwiftBuildSystemGeneratorKit", targets: ["SwiftBuildSystemGeneratorKit"]),
     ],
     dependencies: [
-        .package(
-            url: "https://github.com/stencilproject/Stencil.git",
-            .revision("e516ca9389b64da70b71a461925bbca66f65fe61") // Latest on master at the time of writing
-        ),
+        .package(url: "https://github.com/groue/GRMustache.swift", .upToNextMajor(from: "4.0.1")),
         .package(url: "https://github.com/jpsim/Yams.git", .upToNextMajor(from: "2.0.0")),
         .package(url: "https://github.com/mxcl/Path.swift.git", .upToNextMajor(from: "1.0.0-alpha.3")),
         .package(url: "https://github.com/jakeheis/SwiftCLI", .upToNextMajor(from: "5.3.3")),
@@ -36,7 +33,7 @@ let package = Package(
         .target(
             name: "SwiftBuildSystemGeneratorKit",
             dependencies: [
-                "Stencil",
+                "Mustache",
                 "Yams",
                 "Path",
                 "XcodeProj",

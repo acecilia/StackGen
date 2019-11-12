@@ -1,4 +1,4 @@
-import Stencil
+import Mustache
 import Path
 import XcodeProj
 import ProjectSpec
@@ -36,11 +36,9 @@ public class XcodegenGenerator: FileGeneratorInterface {
         let file = OutputPath.projectFile
         reporter.print("Generating: \(file.relativePath(for: module))")
 
-        let environment = Environment(loader: FileSystemLoader(paths: [.init(FileIterator.defaultTemplatePath)]))
-        let rendered = try environment.renderTemplate(
-            name: OutputPath.projectFileName,
-            context: module.xcodeGenDictionary()
-        )
+        let templateRepository = TemplateRepository(directoryPath: FileIterator.defaultTemplatePath)
+        let template = try templateRepository.template(named: OutputPath.projectFileName)
+        let rendered = try template.renderAndTrimNewLines(module.xcodeGenDictionary())
 
         let outputPath = file.path(for: module)
         try outputPath.delete()
@@ -79,7 +77,7 @@ public class XcodegenGenerator: FileGeneratorInterface {
 }
 
 private enum OutputPath: CaseIterable {
-    static let projectFileName = "project.yml"
+    static let projectFileName = "project"
 
     case projectFile
     case xcodeproj
