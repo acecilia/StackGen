@@ -17,6 +17,7 @@ public class SwiftBuildSystemGeneratorCLI {
             ]
         )
 
+        cli.helpMessageGenerator = MessageGenerator()
         cli.parser.routeBehavior = .searchWithFallback(generateCommand)
     }
 
