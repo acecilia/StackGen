@@ -1,4 +1,4 @@
-name: {{ name }}
+name: {{name}}
 fileGroups: [module.yml, project.yml]
 ¶
 options:
@@ -13,19 +13,19 @@ targets:
     platform: iOS
     sources:
     {{#sources}}
-      - {{ . }}
+      - {{.}}
     {{/sources}}
     {{#dependencies}}
     dependencies:
     {{/dependencies}}
     {{#dependencies}}
-      - framework: {{ . }}
+      - framework: {{.}}
         implicit: true
     {{/dependencies}}
     info:
-      path: .build/{{ name }}/Info.plist
+      path: .build/{{name}}/Info.plist
 ¶
-  {{ testName }}:
+  {{testName}}:
     type: bundle.unit-test
     platform: iOS
     settings:
@@ -34,20 +34,20 @@ targets:
         OTHER_LDFLAGS: -all_load
     sources:
     {{#sources}}
-      - {{ . }}
+      - {{.}}
     {{/sources}}
     dependencies:
-      - target: {{ name }}
+      - target: {{name}}
     info:
-      path: .build/{{ testName }}/Info.plist
+      path: .build/{{testName}}/Info.plist
 ¶
 schemes:
-  {{ name }}:
+  {{name}}:
     build:
       targets:
-        {{ name }}: all
+        {{name}}: all
     test:
       gatherCoverageData: true
       targets:
-        - name: {{ testName }}
+        - name: {{testName}}
           randomExecutionOrder: true
