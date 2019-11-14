@@ -41,8 +41,8 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "SwiftBuildSystemGeneratorKitTests",
-            dependencies: ["SwiftBuildSystemGeneratorKit"]
-        ),
+            name: "SwiftBuildSystemGeneratorTests",
+            dependencies: ["SwiftBuildSystemGeneratorCLI"]
+        )
     ]
 )

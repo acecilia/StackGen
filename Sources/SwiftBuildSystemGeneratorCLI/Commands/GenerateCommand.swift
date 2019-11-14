@@ -13,7 +13,7 @@ public class GenerateCommand: Command {
     }
 
     public func execute() throws {
-        let rootPath = Path.cwd/"Examples"
+        let rootPath = Path(Path.cwd)
 
         reporter.print("Generating configuration files from path: \(rootPath)")
 

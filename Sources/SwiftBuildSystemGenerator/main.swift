@@ -1,5 +1,5 @@
 import SwiftBuildSystemGeneratorCLI
 
 let cli = SwiftBuildSystemGeneratorCLI()
-cli.execute()
-
+print(CommandLine.arguments.dropFirst())
+cli.execute(with: Array(CommandLine.arguments.dropFirst()))

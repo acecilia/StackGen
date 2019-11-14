@@ -8,6 +8,7 @@ options:
   createIntermediateGroups: true
 ¶
 targets:
+  {{#mainTarget}}
   {{name}}:
     type: framework.static
     platform: iOS
@@ -19,13 +20,15 @@ targets:
     dependencies:
     {{/dependencies}}
     {{#dependencies}}
-      - framework: {{.}}
+      - framework: {{name}}.framework
         implicit: true
     {{/dependencies}}
     info:
       path: .build/{{name}}/Info.plist
+  {{/mainTarget}}
 ¶
-  {{testName}}:
+  {{#testTarget}}
+  {{name}}:
     type: bundle.unit-test
     platform: iOS
     settings:
@@ -37,9 +40,10 @@ targets:
       - {{.}}
     {{/sources}}
     dependencies:
-      - target: {{name}}
+      - target: {{mainTarget.name}}
     info:
-      path: .build/{{testName}}/Info.plist
+      path: .build/{{name}}/Info.plist
+  {{/testTarget}}
 ¶
 schemes:
   {{name}}:

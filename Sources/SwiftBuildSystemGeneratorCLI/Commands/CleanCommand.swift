@@ -13,7 +13,7 @@ public class CleanCommand: Command {
     }
 
     public func execute() throws {
-        let rootPath = Path.cwd/"Examples"
+        let rootPath = Path(Path.cwd)
 
         reporter.print("Removing existing configuration files from path: \(rootPath)")
 

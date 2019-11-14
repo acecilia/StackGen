@@ -3,5 +3,6 @@ import XCTest
 
 final class SwiftBuildSystemGeneratorTests: XCTestCase {
     func test() {
+        print("cucu")
     }
 }

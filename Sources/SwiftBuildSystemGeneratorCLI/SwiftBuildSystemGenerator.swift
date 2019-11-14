@@ -21,13 +21,8 @@ public class SwiftBuildSystemGeneratorCLI {
         cli.parser.routeBehavior = .searchWithFallback(generateCommand)
     }
 
-    public func execute(arguments: [String]? = nil) {
-        let status: Int32
-        if let arguments = arguments {
-            status = cli.go(with: arguments)
-        } else {
-            status = cli.go()
-        }
+    public func execute(with arguments: [String] = []) {
+        let status = cli.go(with: arguments)
         exit(status)
     }
 }

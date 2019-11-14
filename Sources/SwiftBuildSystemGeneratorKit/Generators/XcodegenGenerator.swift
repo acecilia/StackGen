@@ -38,7 +38,7 @@ public class XcodegenGenerator: FileGeneratorInterface {
 
         let templateRepository = TemplateRepository(directoryPath: FileIterator.defaultTemplatePath)
         let template = try templateRepository.template(named: OutputPath.projectFileName)
-        let rendered = try template.renderAndTrimNewLines(module.xcodeGenDictionary())
+        let rendered = try template.renderAndTrimNewLines(module.asDictionary(basePath: module.path))
 
         let outputPath = file.path(for: module)
         try outputPath.delete()
@@ -62,7 +62,7 @@ public class XcodegenGenerator: FileGeneratorInterface {
         reporter.print("Generating: \(file.relativePath(for: module))")
 
         let projectReference = XCWorkspaceDataFileRef(location: .group(module.name + ".xcodeproj"))
-        let dependencies = module.dependencies
+        let dependencies = module.mainTarget.dependencies
             .map {
                 let xcodeProjectPath = ($0.path/($0.name + ".xcodeproj")).relative(to: module.path)
                 return XCWorkspaceDataFileRef(location: .group(xcodeProjectPath))
@@ -77,7 +77,7 @@ public class XcodegenGenerator: FileGeneratorInterface {
 }
 
 private enum OutputPath: CaseIterable {
-    static let projectFileName = "project"
+    static let projectFileName = "project.yml"
 
     case projectFile
     case xcodeproj
