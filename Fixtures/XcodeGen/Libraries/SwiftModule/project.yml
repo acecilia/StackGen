@@ -42,5 +42,5 @@ schemes:
     test:
       gatherCoverageData: true
       targets:
-        - name: 
+        - name: SwiftModuleTests
           randomExecutionOrder: true
