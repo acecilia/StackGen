@@ -4,7 +4,7 @@ import SwiftBuildSystemGeneratorKit
 import Path
 
 public class CleanCommand: Command {
-    public let name: String = "clean"
+    public static let name: String = "clean"
     public let shortDescription: String = "Removes all generated build system configurations"
 
     let reporter: ReporterInterface
@@ -17,8 +17,9 @@ public class CleanCommand: Command {
 
         reporter.print("Removing existing configuration files from path: \(rootPath)")
 
-        let fileIterator = FileIterator()
-        let modules = try fileIterator.start(rootPath)
+        let options = Options(rootPath: rootPath, reporter: reporter)
+        let fileIterator = FileIterator(options)
+        let modules = try fileIterator.start()
 
         reporter.print("Found modules:")
         modules.forEach {
@@ -27,7 +28,7 @@ public class CleanCommand: Command {
         }
         
         let generators: [FileGeneratorInterface] = [
-            XcodegenGenerator(reporter, modules)
+            XcodegenGenerator(options, modules)
         ]
 
         for generator in generators {

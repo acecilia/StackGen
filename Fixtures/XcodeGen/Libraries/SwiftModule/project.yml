@@ -1,34 +1,26 @@
-name: {{name}}
+name: SwiftModule
 fileGroups: [module.yml, project.yml]
-¶
+
 options:
   defaultConfig: Release
   bundleIdPrefix: com.acecilia
   transitivelyLinkDependencies: True
   createIntermediateGroups: true
-¶
+  minimumXcodeGenVersion: 2.10.1
+
 targets:
-  {{#mainTarget}}
-  {{name}}:
+  SwiftModule:
     type: framework.static
     platform: iOS
     sources:
-    {{#sources}}
-      - {{.}}
-    {{/sources}}
-    {{#dependencies}}
+      - src/main/swift
     dependencies:
-    {{/dependencies}}
-    {{#dependencies}}
-      - framework: {{name}}.framework
+      - framework: SwiftModule2.framework
         implicit: true
-    {{/dependencies}}
     info:
-      path: .build/{{name}}/Info.plist
-  {{/mainTarget}}
-¶
-  {{#testTarget}}
-  {{name}}:
+      path: supportingFiles/SwiftModule/Info.plist
+
+  SwiftModuleTests:
     type: bundle.unit-test
     platform: iOS
     settings:
@@ -36,22 +28,19 @@ targets:
         # Needed for getting proper test coverage percentages when using static frameworks
         OTHER_LDFLAGS: -all_load
     sources:
-    {{#sources}}
-      - {{.}}
-    {{/sources}}
+      - src/test/swift
     dependencies:
-      - target: {{mainTarget.name}}
+      - target: SwiftModule
     info:
-      path: .build/{{name}}/Info.plist
-  {{/testTarget}}
-¶
+      path: supportingFiles/SwiftModuleTests/Info.plist
+
 schemes:
-  {{name}}:
+  SwiftModule:
     build:
       targets:
-        {{name}}: all
+        SwiftModule: all
     test:
       gatherCoverageData: true
       targets:
-        - name: {{testName}}
+        - name: 
           randomExecutionOrder: true

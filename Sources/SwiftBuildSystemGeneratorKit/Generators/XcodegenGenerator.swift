@@ -5,19 +5,21 @@ import ProjectSpec
 import XcodeGenKit
 
 public class XcodegenGenerator: FileGeneratorInterface {
-    private let reporter: ReporterInterface
+    private let options: Options
     private let modules: [Module]
 
-    public init(_ reporter: ReporterInterface, _ modules: [Module]) {
-        self.reporter = reporter
+    public init(_ options: Options, _ modules: [Module]) {
+        self.options = options
         self.modules = modules
     }
 
     public func generate() throws {
         for module in modules {
             try generateProjectFile(module)
-            try generateXcodeProject(module)
-            try generateWorkspace(module)
+            if options.generateXcodeProject {
+                try generateXcodeProject(module)
+                try generateWorkspace(module)
+            }
         }
     }
 
@@ -28,15 +30,15 @@ public class XcodegenGenerator: FileGeneratorInterface {
                 try $0.delete()
             }
             let removedFiles = filesToRemove.map { $0.relative(to: module.path) }.joined(separator: ", ")
-            reporter.print("Removed files: \(removedFiles)")
+            options.reporter.print("Removed files: \(removedFiles)")
         }
     }
 
     private func generateProjectFile(_ module: Module) throws {
         let file = OutputPath.projectFile
-        reporter.print("Generating: \(file.relativePath(for: module))")
+        options.reporter.print("Generating: \(file.relativePath(for: module))")
 
-        let templateRepository = TemplateRepository(directoryPath: FileIterator.defaultTemplatePath)
+        let templateRepository = TemplateRepository(directoryPath: options.templatePath)
         let template = try templateRepository.template(named: OutputPath.projectFileName)
         let rendered = try template.renderAndTrimNewLines(module.asDictionary(basePath: module.path))
 
@@ -46,7 +48,7 @@ public class XcodegenGenerator: FileGeneratorInterface {
     }
 
     private func generateXcodeProject(_ module: Module) throws {
-        reporter.print("Generating: \(OutputPath.xcodeproj.relativePath(for: module))")
+        options.reporter.print("Generating: \(OutputPath.xcodeproj.relativePath(for: module))")
 
         // From: https://github.com/yonaskolb/XcodeGen/blob/master/Tests/FixtureTests/FixtureTests.swift
         let project = try Project(path: .init(OutputPath.projectFile.absolutePath(for: module)))
@@ -59,7 +61,7 @@ public class XcodegenGenerator: FileGeneratorInterface {
 
     private func generateWorkspace(_ module: Module) throws {
         let file = OutputPath.xcworkspace
-        reporter.print("Generating: \(file.relativePath(for: module))")
+        options.reporter.print("Generating: \(file.relativePath(for: module))")
 
         let projectReference = XCWorkspaceDataFileRef(location: .group(module.name + ".xcodeproj"))
         let dependencies = module.mainTarget.dependencies
@@ -76,12 +78,13 @@ public class XcodegenGenerator: FileGeneratorInterface {
     }
 }
 
-private enum OutputPath: CaseIterable {
+private enum OutputPath: String, CaseIterable {
     static let projectFileName = "project.yml"
 
     case projectFile
     case xcodeproj
     case xcworkspace
+    case supportingFiles
 
     func path(for module: Module) -> Path {
         switch self {
@@ -93,6 +96,9 @@ private enum OutputPath: CaseIterable {
 
         case .xcworkspace:
             return module.path/"\(module.name).xcworkspace"
+
+        case .supportingFiles:
+            return module.path/OutputPath.supportingFiles.rawValue
         }
     }
 
