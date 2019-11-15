@@ -10,8 +10,6 @@ let package = Package(
         .library(name: "SwiftBuildSystemGeneratorKit", targets: ["SwiftBuildSystemGeneratorKit"]),
     ],
     dependencies: [
-        // Need to specify pathKit here because otherwise SPM goes mad
-        .package(url: "https://github.com/kylef/PathKit.git", .upToNextMajor(from: "1.0.0")),
         .package(url: "https://github.com/groue/GRMustache.swift", .upToNextMajor(from: "4.0.1")),
         .package(url: "https://github.com/jpsim/Yams.git", .upToNextMajor(from: "2.0.0")),
         .package(url: "https://github.com/mxcl/Path.swift.git", .upToNextMajor(from: "1.0.0-alpha.3")),
