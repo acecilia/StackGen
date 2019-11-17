@@ -4,12 +4,14 @@ import XcodeProj
 import ProjectSpec
 import XcodeGenKit
 
-public class XcodegenGenerator: FileGeneratorInterface {
+public class XcodegenGenerator: GeneratorInterface {
     private let options: Options
+    private let globals: Globals
     private let modules: [Module]
 
-    public init(_ options: Options, _ modules: [Module]) {
+    public init(_ options: Options, _ globals: Globals, _ modules: [Module]) {
         self.options = options
+        self.globals = globals
         self.modules = modules
     }
 
@@ -40,7 +42,8 @@ public class XcodegenGenerator: FileGeneratorInterface {
 
         let templateRepository = TemplateRepository(directoryPath: options.templatePath)
         let template = try templateRepository.template(named: OutputPath.projectFileName)
-        let rendered = try template.renderAndTrimNewLines(module.asDictionary(basePath: module.path))
+        let context = try module.asContext(basePath: module.path, globals: globals)
+        let rendered = try template.renderAndTrimNewLines(context)
 
         let outputPath = file.path(for: module)
         try outputPath.delete()

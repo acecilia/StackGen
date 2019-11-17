@@ -3,10 +3,12 @@ import Path
 
 extension Module {
     public struct Yaml: Codable {
-        let folderStructure: FolderStructure?
-        let dependencies: [Path]?
+        public let globals: Globals?
+        public let folderStructure: FolderStructure?
+        public let dependencies: [Path]?
 
-        init() {
+        public init() {
+            self.globals = nil
             self.folderStructure = nil
             self.dependencies = nil
         }

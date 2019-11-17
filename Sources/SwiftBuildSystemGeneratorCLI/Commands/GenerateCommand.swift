@@ -26,6 +26,7 @@ public class GenerateCommand: Command {
             templatePath: templatesPath.value,
             generateXcodeProject: generateXcodeProject.value
         )
+        let globals = Globals(bundleIdPrefix: "com.acecilia", supportPath: "supportingFiles")
         let fileIterator = FileIterator(options)
         let modules = try fileIterator.start()
 
@@ -35,8 +36,8 @@ public class GenerateCommand: Command {
             reporter.print("\(relativePath)")
         }
 
-        let generators: [FileGeneratorInterface] = [
-            XcodegenGenerator(options, modules)
+        let generators: [GeneratorInterface] = [
+            XcodegenGenerator(options, globals, modules)
         ]
 
         for generator in generators {

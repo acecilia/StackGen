@@ -1,4 +1,4 @@
-public protocol FileGeneratorInterface {
+public protocol GeneratorInterface {
     func generate() throws
     func clean() throws
 }

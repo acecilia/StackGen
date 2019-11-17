@@ -5,11 +5,12 @@ import Path
 
 final class Tests: XCTestCase {
     func testClean() throws {
-        let destination = try (fixturesPath/Generator.XcodeGen.rawValue).copy(into: try tmp())
+        let destination = try (fixturesPath/GeneratorType.XcodeGen.rawValue).copy(into: try tmp())
 
         FileManager.default.changeCurrentDirectoryPath(destination.string)
         let cli = SwiftBuildSystemGeneratorCLI()
-        cli.execute(with: [CleanCommand.name])
+        let status = cli.execute(with: [CleanCommand.name])
+        XCTAssertEqual(status, 0)
 
         let result = FileManager.default.contentsEqual(
             atPath: destination.string,
@@ -23,11 +24,12 @@ final class Tests: XCTestCase {
 
         FileManager.default.changeCurrentDirectoryPath(destination.string)
         let cli = SwiftBuildSystemGeneratorCLI()
-        cli.execute(with: generateCommandArgs)
+        let status = cli.execute(with: generateCommandArgs)
+        XCTAssertEqual(status, 0)
 
         let result = FileManager.default.contentsEqual(
             atPath: destination.string,
-            andPath: (fixturesPath/Generator.XcodeGen.rawValue).string
+            andPath: (fixturesPath/GeneratorType.XcodeGen.rawValue).string
         )
         XCTAssertTrue(result)
     }

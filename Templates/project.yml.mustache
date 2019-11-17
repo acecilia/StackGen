@@ -3,7 +3,7 @@ fileGroups: [module.yml, project.yml]
 ¶
 options:
   defaultConfig: Release
-  bundleIdPrefix: com.acecilia
+  bundleIdPrefix: {{globals.bundleIdPrefix}}
   transitivelyLinkDependencies: True
   createIntermediateGroups: true
   minimumXcodeGenVersion: 2.10.1
@@ -25,7 +25,7 @@ targets:
         implicit: true
     {{/dependencies}}
     info:
-      path: supportingFiles/{{name}}/Info.plist
+      path: {{globals.supportPath}}/{{name}}/Info.plist
   {{/mainTarget}}
 ¶
   {{#testTarget}}
@@ -43,7 +43,7 @@ targets:
     dependencies:
       - target: {{mainTarget.name}}
     info:
-      path: supportingFiles/{{name}}/Info.plist
+      path: {{globals.supportPath}}/{{name}}/Info.plist
   {{/testTarget}}
 ¶
 schemes:

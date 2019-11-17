@@ -18,6 +18,7 @@ public class CleanCommand: Command {
         reporter.print("Removing existing configuration files from path: \(rootPath)")
 
         let options = Options(rootPath: rootPath, reporter: reporter)
+        let globals = Globals(bundleIdPrefix: "com.acecilia", supportPath: "supportingFiles")
         let fileIterator = FileIterator(options)
         let modules = try fileIterator.start()
 
@@ -27,8 +28,8 @@ public class CleanCommand: Command {
             reporter.print("\(relativePath)")
         }
         
-        let generators: [FileGeneratorInterface] = [
-            XcodegenGenerator(options, modules)
+        let generators: [GeneratorInterface] = [
+            XcodegenGenerator(options, globals, modules)
         ]
 
         for generator in generators {

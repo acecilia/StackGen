@@ -2,12 +2,12 @@ import Foundation
 import Path
 
 /// https://stackoverflow.com/questions/45209743/how-can-i-use-swift-s-codable-to-encode-into-a-dictionary
-protocol DictionaryConvertible {
+public protocol DictionaryConvertible {
     func asDictionary(basePath: Path?) throws -> [String: Any]
 }
 
 extension DictionaryConvertible where Self: Encodable {
-    func asDictionary(basePath: Path?) throws -> [String: Any] {
+    public func asDictionary(basePath: Path?) throws -> [String: Any] {
         let encoder = JSONEncoder()
         if let basePath = basePath {
             encoder.userInfo[.relativePath] = basePath
