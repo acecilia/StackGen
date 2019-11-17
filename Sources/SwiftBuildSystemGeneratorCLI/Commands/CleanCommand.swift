@@ -17,8 +17,10 @@ public class CleanCommand: Command {
 
         reporter.print("Removing existing configuration files from path: \(rootPath)")
 
-        let options = Options(rootPath: rootPath, reporter: reporter)
-        let globals = Globals(bundleIdPrefix: "com.acecilia", supportPath: "supportingFiles")
+        let workspace = try Workspace.decode(from: rootPath)
+
+        let options = Options(yaml: workspace.options, rootPath: rootPath, reporter: reporter)
+        let globals = Globals(yaml: workspace.globals)
         let fileIterator = FileIterator(options)
         let modules = try fileIterator.start()
 

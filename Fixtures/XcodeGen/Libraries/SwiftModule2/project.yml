@@ -15,7 +15,7 @@ targets:
     sources:
       - src/main/swift
     info:
-      path: supportingFiles/SwiftModule2/Info.plist
+      path: SupportingFiles/SwiftModule2/Info.plist
 
   SwiftModule2Tests:
     type: bundle.unit-test
@@ -29,7 +29,7 @@ targets:
     dependencies:
       - target: SwiftModule2
     info:
-      path: supportingFiles/SwiftModule2Tests/Info.plist
+      path: SupportingFiles/SwiftModule2Tests/Info.plist
 
 schemes:
   SwiftModule2:

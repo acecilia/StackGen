@@ -18,7 +18,7 @@ targets:
       - framework: SwiftModule2.framework
         implicit: true
     info:
-      path: supportingFiles/SwiftModule/Info.plist
+      path: SupportingFiles/SwiftModule/Info.plist
 
   SwiftModuleTests:
     type: bundle.unit-test
@@ -32,7 +32,7 @@ targets:
     dependencies:
       - target: SwiftModule
     info:
-      path: supportingFiles/SwiftModuleTests/Info.plist
+      path: SupportingFiles/SwiftModuleTests/Info.plist
 
 schemes:
   SwiftModule:

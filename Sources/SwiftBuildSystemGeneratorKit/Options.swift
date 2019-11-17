@@ -9,6 +9,7 @@ public struct Options {
     public let generateXcodeProject: Bool
 
     public init(
+        yaml: Yaml?,
         rootPath: Path,
         reporter: ReporterInterface,
         fileName: String? = nil,
@@ -17,8 +18,16 @@ public struct Options {
     ) {
         self.rootPath = rootPath
         self.reporter = reporter
-        self.fileName = fileName ?? "module.yml"
-        self.templatePath = templatePath ?? "Templates"
-        self.generateXcodeProject = generateXcodeProject ?? false
+        self.fileName = yaml?.fileName ?? fileName ?? "module.yml"
+        self.templatePath = yaml?.templatePath ?? templatePath ?? "Templates"
+        self.generateXcodeProject = yaml?.generateXcodeProject ?? generateXcodeProject ?? false
+    }
+}
+
+extension Options {
+    public struct Yaml: Codable {
+        public let fileName: String?
+        public let templatePath: String?
+        public let generateXcodeProject: Bool?
     }
 }

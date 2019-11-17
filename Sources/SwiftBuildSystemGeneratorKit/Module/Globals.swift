@@ -4,8 +4,15 @@ public struct Globals: Codable, DictionaryConvertible {
     public let bundleIdPrefix: String
     public let supportPath: String
 
-    public init(bundleIdPrefix: String, supportPath: String) {
-        self.bundleIdPrefix = bundleIdPrefix
-        self.supportPath = supportPath
+    public init(yaml: Yaml) {
+        self.bundleIdPrefix = yaml.bundleIdPrefix
+        self.supportPath = yaml.supportPath ?? "SupportingFiles"
+    }
+}
+
+extension Globals {
+    public struct Yaml: Codable {
+        public let bundleIdPrefix: String
+        public let supportPath: String?
     }
 }

@@ -20,13 +20,16 @@ public class GenerateCommand: Command {
 
         reporter.print("Generating configuration files from path: \(rootPath)")
 
+        let workspace = try Workspace.decode(from: rootPath)
+
         let options = Options(
+            yaml: workspace.options,
             rootPath: rootPath,
             reporter: reporter,
             templatePath: templatesPath.value,
             generateXcodeProject: generateXcodeProject.value
         )
-        let globals = Globals(bundleIdPrefix: "com.acecilia", supportPath: "supportingFiles")
+        let globals = Globals(yaml: workspace.globals)
         let fileIterator = FileIterator(options)
         let modules = try fileIterator.start()
 
