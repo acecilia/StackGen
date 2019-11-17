@@ -17,7 +17,7 @@ public struct Options {
     ) {
         self.rootPath = rootPath
         self.reporter = reporter
-        self.fileName = fileName ?? "Module.yml"
+        self.fileName = fileName ?? "module.yml"
         self.templatePath = templatePath ?? "Templates"
         self.generateXcodeProject = generateXcodeProject ?? false
     }
