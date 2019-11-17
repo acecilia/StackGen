@@ -3,7 +3,7 @@ import SwiftBuildSystemGeneratorCLI
 import SwiftBuildSystemGeneratorKit
 import Path
 
-final class Tests: XCTestCase {
+final class XcodeGenTests: XCTestCase {
     func testClean() throws {
         let destination = try (fixturesPath/GeneratorType.XcodeGen.rawValue).copy(into: try tmp())
 
