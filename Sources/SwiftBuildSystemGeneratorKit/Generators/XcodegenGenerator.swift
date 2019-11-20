@@ -6,19 +6,17 @@ import XcodeGenKit
 
 public class XcodegenGenerator: GeneratorInterface {
     private let options: Options
-    private let globals: Globals
     private let modules: [Module]
 
-    public init(_ options: Options, _ globals: Globals, _ modules: [Module]) {
+    public init(_ options: Options, _ modules: [Module]) {
         self.options = options
-        self.globals = globals
         self.modules = modules
     }
 
     public func generate() throws {
         for module in modules {
             try generateProjectFile(module)
-            if options.generateXcodeProject {
+            if module.globals.resolve().generateXcodeProject {
                 try generateXcodeProject(module)
                 try generateWorkspace(module)
             }
@@ -40,9 +38,9 @@ public class XcodegenGenerator: GeneratorInterface {
         let file = OutputPath.projectFile
         options.reporter.print("Generating: \(file.relativePath(for: module))")
 
-        let templateRepository = TemplateRepository(directoryPath: options.templatePath)
+        let templateRepository = TemplateRepository(directoryPath: module.globals.resolve().templatesPath.string)
         let template = try templateRepository.template(named: OutputPath.projectFileName)
-        let context = try module.asContext(basePath: module.path, globals: globals)
+        let context = try module.asContext(basePath: module.path)
         let rendered = try template.renderAndTrimNewLines(context)
 
         let outputPath = file.path(for: module)

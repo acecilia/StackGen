@@ -1,0 +1,9 @@
+globals:
+  bundleIdPrefix: com.acecilia
+
+modules:
+  SwiftModule:
+    dependencies:
+      - ../SwiftModule2
+
+  SwiftModule2:

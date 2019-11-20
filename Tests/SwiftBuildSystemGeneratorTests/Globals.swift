@@ -30,5 +30,5 @@ func functionName(_ methodSignature: String) -> String {
 
 }
 
-let generateCommandArgs = [GenerateCommand.name, "-x", "-t", "\((rootPath/"Templates").string)"]
+let generateCommandArgs = [GenerateCommand.name]
 

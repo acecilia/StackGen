@@ -7,8 +7,7 @@ public class GenerateCommand: Command {
     public static let name: String = "generate"
     public let shortDescription: String = "Generates build system configurations for swift projects"
 
-    let templatesPath = Key<String>("-t", "--templates", description: "The path to the folder containing the templates to use")
-    let generateXcodeProject = Flag("-x", "--generateXcodeProject", description: "In addition to the build files, also generate the Xcode project and workspace")
+    let fileName = Key<String>("-f", "--fileName", description: "The yml file name to be used")
 
     let reporter: ReporterInterface
     public init(reporter: ReporterInterface) {
@@ -20,16 +19,11 @@ public class GenerateCommand: Command {
 
         reporter.print("Generating configuration files from path: \(rootPath)")
 
-        let workspace = try Workspace.decode(from: rootPath)
-
         let options = Options(
-            yaml: workspace.options,
             rootPath: rootPath,
             reporter: reporter,
-            templatePath: templatesPath.value,
-            generateXcodeProject: generateXcodeProject.value
+            fileName: fileName.value
         )
-        let globals = Globals(yaml: workspace.globals)
         let fileIterator = FileIterator(options)
         let modules = try fileIterator.start()
 
@@ -40,7 +34,7 @@ public class GenerateCommand: Command {
         }
 
         let generators: [GeneratorInterface] = [
-            XcodegenGenerator(options, globals, modules)
+            XcodegenGenerator(options, modules)
         ]
 
         for generator in generators {

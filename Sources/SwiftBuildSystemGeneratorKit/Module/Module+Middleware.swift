@@ -7,6 +7,11 @@ extension Module {
         public let path: Path
         public let yamlModule: Module.Yaml
 
+        public init(path: Path, yamlModule: Module.Yaml) {
+            self.path = path
+            self.yamlModule = yamlModule
+        }
+        
         public init(_ moduleFilePath: Path) throws {
             self.path = moduleFilePath.parent
 

@@ -17,10 +17,7 @@ public class CleanCommand: Command {
 
         reporter.print("Removing existing configuration files from path: \(rootPath)")
 
-        let workspace = try Workspace.decode(from: rootPath)
-
-        let options = Options(yaml: workspace.options, rootPath: rootPath, reporter: reporter)
-        let globals = Globals(yaml: workspace.globals)
+        let options = Options(rootPath: rootPath, reporter: reporter)
         let fileIterator = FileIterator(options)
         let modules = try fileIterator.start()
 
@@ -31,7 +28,7 @@ public class CleanCommand: Command {
         }
         
         let generators: [GeneratorInterface] = [
-            XcodegenGenerator(options, globals, modules)
+            XcodegenGenerator(options, modules)
         ]
 
         for generator in generators {
