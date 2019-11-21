@@ -3,7 +3,6 @@ import Yams
 import Foundation
 
 public struct Module: Codable, ContextConvertible {
-    public let globals: Globals?
     public let name: String
     public let path: Path
     public let mainTarget: Target
@@ -15,8 +14,6 @@ public struct Module: Codable, ContextConvertible {
         case .gradle, nil:
             folderStructure = GradleFolderStructure("swift")
         }
-
-        self.globals = middlewareModule.yamlModule.globals
 
         let path = middlewareModule.path
         self.name = path.basename()

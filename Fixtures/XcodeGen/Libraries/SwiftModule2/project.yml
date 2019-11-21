@@ -4,7 +4,7 @@ fileGroups: [module.yml, project.yml]
 options:
   defaultConfig: Release
   bundleIdPrefix: com.acecilia
-  transitivelyLinkDependencies: True
+  transitivelyLinkDependencies: true
   createIntermediateGroups: true
   minimumXcodeGenVersion: 2.10.1
 
