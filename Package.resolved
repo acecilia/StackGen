@@ -11,15 +11,6 @@
         }
       },
       {
-        "package": "Mustache",
-        "repositoryURL": "https://github.com/groue/GRMustache.swift",
-        "state": {
-          "branch": null,
-          "revision": "671e2c5234e829c1f337c9d300bd6d9b21d1c42a",
-          "version": "4.0.1"
-        }
-      },
-      {
         "package": "JSONUtilities",
         "repositoryURL": "https://github.com/yonaskolb/JSONUtilities.git",
         "state": {
@@ -71,6 +62,15 @@
           "branch": null,
           "revision": "f14ff47f45642aa5703900980b014c2e9394b6e5",
           "version": "0.9.0"
+        }
+      },
+      {
+        "package": "Stencil",
+        "repositoryURL": "https://github.com/stencilproject/Stencil.git",
+        "state": {
+          "branch": null,
+          "revision": "a229b59d3d888cd6bed2d372bdce627d71ea5e66",
+          "version": null
         }
       },
       {

@@ -1,5 +1,4 @@
 import Foundation
-import Mustache
 
 public struct UnexpectedError: Error, CustomStringConvertible {
     public let description: String

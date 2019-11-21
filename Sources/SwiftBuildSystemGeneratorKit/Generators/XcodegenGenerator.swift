@@ -1,4 +1,3 @@
-import Mustache
 import Path
 import XcodeProj
 import ProjectSpec
@@ -35,10 +34,11 @@ public class XcodegenGenerator: GeneratorInterface {
         let file = OutputPath.projectFile
         Reporter.print("Generating: \(file.relativePath(for: module))")
 
-        let templateRepository = TemplateRepository(directoryPath: options.templatePath)
-        let template = try templateRepository.template(named: OutputPath.projectFileName)
-        let context = try module.asContext(basePath: module.path, globals: globals)
-        let rendered = try template.renderAndTrimNewLines(context)
+        let rendered = try TemplateEngine.shared.render(
+            templateName: OutputPath.projectFileName,
+            context: try module.asContext(basePath: module.path, globals: globals),
+            options
+        )
 
         let outputPath = file.path(for: module)
         try outputPath.delete()

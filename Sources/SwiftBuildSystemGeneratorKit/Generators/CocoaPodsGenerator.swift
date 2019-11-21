@@ -1,6 +1,5 @@
 import Foundation
 import Path
-import Mustache
 
 public class CocoaPodsGenerator: GeneratorInterface {
     private let options: Options
@@ -17,11 +16,12 @@ public class CocoaPodsGenerator: GeneratorInterface {
         for module in modules {
             let file = OutputPath.podspec
             Reporter.print("Generating: \(file.relativePath(for: module))")
-
-            let templateRepository = TemplateRepository(directoryPath: options.templatePath)
-            let template = try templateRepository.template(named: OutputPath.templateName)
-            let context = try module.asContext(basePath: Options.rootPath, globals: globals)
-            let rendered = try template.renderAndTrimNewLines(context)
+            
+            let rendered = try TemplateEngine.shared.render(
+                templateName: OutputPath.templateName,
+                context: try module.asContext(basePath: Options.rootPath, globals: globals),
+                options
+            )
 
             let outputPath = file.path(for: module)
             try outputPath.delete()
