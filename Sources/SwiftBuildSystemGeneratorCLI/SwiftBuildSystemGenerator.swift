@@ -6,19 +6,17 @@ public class SwiftBuildSystemGeneratorCLI {
     let cli: CLI
 
     public init(reporter: ReporterInterface = DefaultReporter()) {
-        let generateCommand = GenerateCommand(reporter: reporter)
-
         cli = CLI(
             name: "swiftbuildsystemgenerator",
             description: "Generates build system configurations for swift projects",
             commands: [
-                generateCommand,
+                GenerateCommand(reporter: reporter),
                 CleanCommand(reporter: reporter)
             ]
         )
 
         cli.helpMessageGenerator = MessageGenerator()
-        cli.parser.routeBehavior = .searchWithFallback(generateCommand)
+        cli.parser.routeBehavior = .searchWithFallback(cli.commands.first! as! Command)
     }
 
     public func execute(with arguments: [String] = []) -> Int32 {

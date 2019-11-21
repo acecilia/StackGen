@@ -34,17 +34,25 @@ public struct Module: Codable, ContextConvertible {
 
     private static func computeDependencies(
         _ name: String,
-        _ path: Path,
-        _ dependenciesPaths: [Path]?,
+        _ modulePath: Path,
+        _ dependencies: [Dependency.Yaml]?,
         _ middlewareModules: [Module.Middleware]
     ) throws -> [Module] {
-        return try (dependenciesPaths ?? []).map { dependencyPath in
-            guard let middlewareModule = middlewareModules.first(where: { $0.path == dependencyPath }) else {
-                let dependency = dependencyPath.relative(to: path)
-                let modules = middlewareModules.map { $0.path.relative(to: Path.cwd) }.joined(separator: "', '")
-                throw UnexpectedError("Module '\(name)' specifies the dependency '\(dependency)', but such dependency could not be found among the considered modules: '\(modules)'")
+        return try (dependencies ?? []).map { dependency in
+
+            switch dependency {
+            case let .firstParty(path):
+                guard let middlewareModule = middlewareModules.first(where: { $0.path == path }) else {
+                    let dependency = path.relative(to: modulePath)
+                    let modules = middlewareModules.map { $0.path.relative(to: Options.rootPath) }.joined(separator: "', '")
+                    throw UnexpectedError("Module '\(name)' specifies the dependency '\(dependency)', but such dependency could not be found among the considered modules: '\(modules)'")
+                }
+                return try Module(middlewareModule, resolveDependenciesUsing: middlewareModules)
+
+            case let .thirdParty(name):
+                fatalError("Third party '\(name)' is not supported yet")
             }
-            return try Module(middlewareModule, resolveDependenciesUsing: middlewareModules)
+
         }
     }
 }

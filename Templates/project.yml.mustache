@@ -17,9 +17,9 @@ targets:
     {{#sources}}
       - {{.}}
     {{/sources}}
-    {{#dependencies}}
+    {{#dependencies.count}}
     dependencies:
-    {{/dependencies}}
+    {{/dependencies.count}}
     {{#dependencies}}
       - framework: {{name}}.framework
         implicit: true

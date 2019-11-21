@@ -12,15 +12,16 @@ class GradleFolderStructure: FolderStructureInterface {
         ["src/main/\(language)"]
     }
 
-    var resources: [String] {
-        ["src/main/resources"]
-    }
+
+//    var resources: [String] {
+//        ["src/main/resources"]
+//    }
 
     var tests: [String] {
         ["src/test/\(language)"]
     }
 
-    var testResources: [String] {
-        ["src/test/resources"]
-    }
+//    var testResources: [String] {
+//        ["src/test/resources"]
+//    }
 }

@@ -1,5 +1,6 @@
 import Foundation
 import SwiftBuildSystemGeneratorCLI
+import SwiftBuildSystemGeneratorKit
 import Path
 
 let rootPath = Path(#file)!/".."/".."/".."
@@ -30,5 +31,12 @@ func functionName(_ methodSignature: String) -> String {
 
 }
 
-let generateCommandArgs = [GenerateCommand.name, "-x", "-t", "\((rootPath/"Templates").string)"]
+func generateCommandArgs(_ generator: GeneratorType) -> [String] {
+    return [
+        GenerateCommand.name,
+        "-x",
+        "-t", "\((rootPath/"Templates").string)",
+        "-g", "\(generator.rawValue)"
+    ]
+}
 

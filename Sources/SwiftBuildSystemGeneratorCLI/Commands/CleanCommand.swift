@@ -13,7 +13,7 @@ public class CleanCommand: Command {
     }
 
     public func execute() throws {
-        let action = CleanAction(reporter: reporter)
+        let action = CleanAction()
         try action.execute()
     }
 }

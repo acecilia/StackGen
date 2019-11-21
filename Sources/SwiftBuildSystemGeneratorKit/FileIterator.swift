@@ -9,7 +9,7 @@ public class FileIterator {
     }
     
     public func start() throws -> [Module] {
-        let configurationFiles = options.rootPath.find().type(.file).filter { $0.basename() == options.fileName }
+        let configurationFiles = Options.rootPath.find().type(.file).filter { $0.basename() == options.fileName }
         let middlewareModules = try configurationFiles.map { try Module.Middleware($0) }
         let modules = try middlewareModules.map { try Module($0, resolveDependenciesUsing: middlewareModules) }
         return modules

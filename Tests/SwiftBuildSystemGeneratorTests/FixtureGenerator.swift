@@ -4,15 +4,17 @@ import SwiftBuildSystemGeneratorKit
 import Path
 
 final class FixtureGenerator: XCTestCase {
-    func testGenerateXcodeGenFixture() throws {
-        try fixturesPath.mkdir(.p)
-        let xcodeGenFixturePath = fixturesPath/GeneratorType.XcodeGen.rawValue
-        try xcodeGenFixturePath.delete()
-        try examplesPath.copy(to: xcodeGenFixturePath)
+    func testGenerateFixtures() throws {
+        for generator in GeneratorType.allCases {
+            try fixturesPath.mkdir(.p)
+            let fixturePath = fixturesPath/generator.rawValue
+            try fixturePath.delete()
+            try examplesPath.copy(to: fixturePath)
 
-        FileManager.default.changeCurrentDirectoryPath(xcodeGenFixturePath.string)
-        let cli = SwiftBuildSystemGeneratorCLI()
-        let status = cli.execute(with: generateCommandArgs)
-        XCTAssertEqual(status, 0)
+            FileManager.default.changeCurrentDirectoryPath(fixturePath.string)
+            let cli = SwiftBuildSystemGeneratorCLI()
+            let status = cli.execute(with: generateCommandArgs(generator))
+            XCTAssertEqual(status, 0)
+        }
     }
 }

@@ -4,7 +4,7 @@ import Path
 extension Module {
     public struct Yaml: Codable {
         public let folderStructure: FolderStructure?
-        public let dependencies: [Path]?
+        public let dependencies: [Dependency.Yaml]?
 
         public init() {
             self.folderStructure = nil

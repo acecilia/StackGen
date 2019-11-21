@@ -1,0 +1,21 @@
+Pod::Spec.new do |s|
+  {{#mainTarget}}
+  s.name                   = '{{name}}'
+  s.version                = '{{globals.version}}'
+  s.source_files           = {{#sources}}'{{.}}/*.swift'{{/sources}}
+
+  {{#dependencies.count}}
+¶
+  {{/dependencies.count}}
+  {{#dependencies}}
+  spec.dependency '{{name}}', '{{globals.version}}'
+  {{/dependencies}}
+¶
+  # Dummy data required by cocoapods
+  s.authors                = 'dummy'
+  s.summary                = 'dummy'
+  s.homepage               = 'dummy'
+  s.license                = { :type => 'MIT' }
+  s.source                 = { :git => '' }
+  {{/mainTarget}}
+end
