@@ -5,7 +5,7 @@ import Path
 
 final class Tests: XCTestCase {
     func testClean() throws {
-        for generator in GeneratorType.allCases {
+        for generator in Generator.allCases {
             let destination = try (fixturesPath/generator.rawValue).copy(into: try tmp())
 
             FileManager.default.changeCurrentDirectoryPath(destination.string)
@@ -22,7 +22,7 @@ final class Tests: XCTestCase {
     }
 
     func testGenerate() throws {
-        for generator in GeneratorType.allCases {
+        for generator in Generator.allCases {
             let destination = try examplesPath.copy(into: try tmp())
 
             FileManager.default.changeCurrentDirectoryPath(destination.string)

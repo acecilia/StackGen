@@ -31,7 +31,7 @@ func functionName(_ methodSignature: String) -> String {
 
 }
 
-func generateCommandArgs(_ generator: GeneratorType) -> [String] {
+func generateCommandArgs(_ generator: Generator) -> [String] {
     return [
         GenerateCommand.name,
         "-x",

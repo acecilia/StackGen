@@ -4,25 +4,25 @@ import Foundation
 
 public struct Module: Codable, ContextConvertible {
     public let name: String
+    public let version: String
     public let path: Path
     public let mainTarget: Target
     public let testTarget: Target?
 
-    public init(_ middlewareModule: Module.Middleware, resolveDependenciesUsing middlewareModules: [Module.Middleware]) throws {
-        let folderStructure: FolderStructureInterface
-        switch middlewareModule.yamlModule.folderStructure {
-        case .gradle, nil:
-            folderStructure = GradleFolderStructure("swift")
-        }
-
+    public init(
+        _ middlewareModule: Module.Middleware,
+        _ globals: Globals,
+        resolveDependenciesUsing middlewareModules: [Module.Middleware]
+    ) throws {
         let path = middlewareModule.path
         self.name = path.basename()
-
+        self.version = middlewareModule.yamlModule.version ?? globals.version
         self.path = path
+        let folderStructure = globals.folderStructure.build()
         self.mainTarget = Target(
             name: name,
             sources: folderStructure.sources.map { path/$0 },
-            dependencies: try Self.computeDependencies(name, path, middlewareModule.yamlModule.dependencies, middlewareModules)
+            dependencies: try Self.computeDependencies(name, path, globals, middlewareModule.yamlModule.dependencies, middlewareModules)
         )
 
         self.testTarget = Target(
@@ -35,6 +35,7 @@ public struct Module: Codable, ContextConvertible {
     private static func computeDependencies(
         _ name: String,
         _ modulePath: Path,
+        _ globals: Globals,
         _ dependencies: [Dependency.Yaml]?,
         _ middlewareModules: [Module.Middleware]
     ) throws -> [Module] {
@@ -47,7 +48,7 @@ public struct Module: Codable, ContextConvertible {
                     let modules = middlewareModules.map { $0.path.relative(to: Options.rootPath) }.joined(separator: "', '")
                     throw UnexpectedError("Module '\(name)' specifies the dependency '\(dependency)', but such dependency could not be found among the considered modules: '\(modules)'")
                 }
-                return try Module(middlewareModule, resolveDependenciesUsing: middlewareModules)
+                return try Module(middlewareModule, globals, resolveDependenciesUsing: middlewareModules)
 
             case let .thirdParty(name):
                 fatalError("Third party '\(name)' is not supported yet")

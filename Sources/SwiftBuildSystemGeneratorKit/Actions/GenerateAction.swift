@@ -17,7 +17,7 @@ public class GenerateAction {
         )
         let globals = Globals(yaml: workspace.globals)
         let fileIterator = FileIterator(options)
-        let modules = try fileIterator.start()
+        let modules = try fileIterator.start(globals)
 
         Reporter.print("Found modules:")
         modules.forEach {
@@ -26,7 +26,7 @@ public class GenerateAction {
         }
 
         let generators: [GeneratorInterface] = options.generators.map {
-            $0.generator(options, globals, modules)
+            $0.build(options, globals, modules)
         }
 
         for generator in generators {

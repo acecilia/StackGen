@@ -6,7 +6,3 @@ protocol FolderStructureInterface: class {
     var tests: [String] { get }
 //    var testResources: [String] { get }
 }
-
-public enum FolderStructure: String, Codable {
-    case gradle
-}

@@ -1,9 +1,6 @@
 import Foundation
 import Path
 
-public enum Dependency {
-}
-
 extension Dependency {
     public enum Yaml: Codable {
         case firstParty(Path)

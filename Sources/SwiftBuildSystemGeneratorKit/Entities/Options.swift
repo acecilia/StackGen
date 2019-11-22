@@ -13,7 +13,7 @@ public struct Options {
     public let fileName: String
     public let templatePath: String
     public let generateXcodeProject: Bool
-    public let generators: [GeneratorType]
+    public let generators: [Generator]
 
     public init(
         yaml: Yaml?
@@ -24,7 +24,7 @@ public struct Options {
         if let generators = yaml?.generators, generators.isEmpty == false {
             self.generators = generators
         } else {
-            self.generators = GeneratorType.allCases
+            self.generators = Generator.allCases
         }
     }
 }
@@ -34,13 +34,13 @@ extension Options {
         public let fileName: String?
         public let templatePath: String?
         public let generateXcodeProject: Bool?
-        public let generators: [GeneratorType]?
+        public let generators: [Generator]?
 
         public init(
             fileName: String?,
             templatePath: String?,
             generateXcodeProject: Bool?,
-            generators: [GeneratorType]?
+            generators: [Generator]?
         ) {
             self.fileName = fileName
             self.templatePath = templatePath

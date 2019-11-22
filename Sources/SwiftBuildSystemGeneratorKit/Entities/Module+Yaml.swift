@@ -3,11 +3,11 @@ import Path
 
 extension Module {
     public struct Yaml: Codable {
-        public let folderStructure: FolderStructure?
+        public let version: String?
         public let dependencies: [Dependency.Yaml]?
 
         public init() {
-            self.folderStructure = nil
+            self.version = nil
             self.dependencies = nil
         }
     }

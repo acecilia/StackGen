@@ -5,7 +5,7 @@ import Path
 
 final class FixtureGenerator: XCTestCase {
     func testGenerateFixtures() throws {
-        for generator in GeneratorType.allCases {
+        for generator in Generator.allCases {
             try fixturesPath.mkdir(.p)
             let fixturePath = fixturesPath/generator.rawValue
             try fixturePath.delete()
