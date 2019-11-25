@@ -2,7 +2,7 @@ import Foundation
 import Path
 
 extension Module {
-    public struct Yaml: Codable {
+    public struct Yaml: Decodable {
         public let version: String?
         public let dependencies: [Dependency.Yaml]?
 

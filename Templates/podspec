@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
 ¶
   {% endif %}
   {% for dependency in mainTarget.dependencies %}
-  spec.dependency '{{dependency.name}}', '{{globals.version}}'
+  spec.dependency '{{dependency.name}}', '{{dependency.version}}'
   {% endfor %}
 ¶
   # Dummy data required by cocoapods

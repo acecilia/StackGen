@@ -1,2 +1,2 @@
 dependencies:
-  - firstParty: ../SwiftModule2
+  - module: ../SwiftModule2

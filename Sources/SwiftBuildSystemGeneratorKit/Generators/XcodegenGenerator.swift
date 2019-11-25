@@ -34,6 +34,7 @@ public class XcodegenGenerator: GeneratorInterface {
         let file = OutputPath.projectFile
         Reporter.print("Generating: \(file.relativePath(for: module))")
 
+        print(try module.asContext(basePath: module.path, globals: globals))
         let rendered = try TemplateEngine.shared.render(
             templateName: OutputPath.projectFileName,
             context: try module.asContext(basePath: module.path, globals: globals),
@@ -62,10 +63,17 @@ public class XcodegenGenerator: GeneratorInterface {
         Reporter.print("Generating: \(file.relativePath(for: module))")
 
         let projectReference = XCWorkspaceDataFileRef(location: .group(module.name + ".xcodeproj"))
-        let dependencies = module.mainTarget.dependencies
+        let dependencies: [XCWorkspaceDataElement] = module.mainTarget.dependencies
             .map {
-                let xcodeProjectPath = ($0.path/($0.name + ".xcodeproj")).relative(to: module.path)
-                return XCWorkspaceDataFileRef(location: .group(xcodeProjectPath))
+                switch $0 {
+                case let .module(dependency):
+                    let xcodeProjectPath = (dependency.path/(dependency.name + ".xcodeproj")).relative(to: module.path)
+                    return XCWorkspaceDataFileRef(location: .group(xcodeProjectPath))
+
+                case .framework:
+                    fatalError("Unimplemented")
+                }
+
             }
             .map { XCWorkspaceDataElement.file($0) }
         let dependenciesGroup = XCWorkspaceDataGroup(location: .group(""), name: "Dependencies", children: dependencies)

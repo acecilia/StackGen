@@ -20,8 +20,10 @@ targets:
     dependencies:
     {% endif %}
     {% for dependency in mainTarget.dependencies %}
+    {% if dependency.type == "module" %}
       - framework: {{dependency.name}}.framework
         implicit: true
+    {% endif %}
     {% endfor %}
     info:
       path: {{globals.supportPath}}/{{mainTarget.name}}/Info.plist

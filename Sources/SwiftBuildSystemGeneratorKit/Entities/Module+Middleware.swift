@@ -3,7 +3,7 @@ import Yams
 import Foundation
 
 extension Module {
-    public struct Middleware: Codable {
+    public struct Middleware: Decodable {
         public let path: Path
         public let yamlModule: Module.Yaml
 

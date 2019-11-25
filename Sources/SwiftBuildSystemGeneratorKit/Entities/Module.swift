@@ -2,7 +2,7 @@ import Path
 import Yams
 import Foundation
 
-public struct Module: Codable, ContextConvertible {
+public struct Module: Encodable, ContextConvertible {
     public let name: String
     public let version: String
     public let path: Path
@@ -38,19 +38,20 @@ public struct Module: Codable, ContextConvertible {
         _ globals: Globals,
         _ dependencies: [Dependency.Yaml]?,
         _ middlewareModules: [Module.Middleware]
-    ) throws -> [Module] {
+    ) throws -> [Dependency] {
         return try (dependencies ?? []).map { dependency in
 
             switch dependency {
-            case let .firstParty(path):
+            case let .module(path):
                 guard let middlewareModule = middlewareModules.first(where: { $0.path == path }) else {
                     let dependency = path.relative(to: modulePath)
                     let modules = middlewareModules.map { $0.path.relative(to: Options.rootPath) }.joined(separator: "', '")
                     throw UnexpectedError("Module '\(name)' specifies the dependency '\(dependency)', but such dependency could not be found among the considered modules: '\(modules)'")
                 }
-                return try Module(middlewareModule, globals, resolveDependenciesUsing: middlewareModules)
+                let module = try Module(middlewareModule, globals, resolveDependenciesUsing: middlewareModules)
+                return .module(module)
 
-            case let .thirdParty(name):
+            case let .framework(name):
                 fatalError("Third party '\(name)' is not supported yet")
             }
 
