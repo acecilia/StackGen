@@ -7,10 +7,7 @@ public class CleanCommand: Command {
     public static let name: String = "clean"
     public let shortDescription: String = "Removes all generated build system configurations"
 
-    let reporter: ReporterInterface
-    public init(reporter: ReporterInterface) {
-        self.reporter = reporter
-    }
+    public init() { }
 
     public func execute() throws {
         try CleanAction().execute()

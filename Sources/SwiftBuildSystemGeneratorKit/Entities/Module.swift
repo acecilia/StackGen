@@ -18,7 +18,16 @@ public struct Module: Encodable, ContextConvertible {
         self.name = path.basename()
         self.version = middlewareModule.yamlModule.version ?? Current.globals.version
         self.path = path
-        let folderStructure = Current.globals.folderStructure.build()
+
+        let folderStructure: FolderStructureInterface
+        switch Current.globals.folderStructure {
+        case .gradle:
+            folderStructure = GradleFolderStructure("swift")
+
+        case .custom:
+            folderStructure = CustomFolderStructure(name)
+        }
+
         self.mainTarget = Target(
             name: name,
             sources: folderStructure.sources.map { path/$0 },

@@ -12,10 +12,7 @@ public class GenerateCommand: Command {
     let generateXcodeProject = Flag("-x", "--generateXcodeProject", description: "In addition to the build files, also generate the Xcode project and workspace. Default value is '\(Options.defaultGenerateXcodeProject)'")
     let generators = VariadicKey<Generator>("-g", "--generators", description: "A comma separated list of values specifying which generators to execute. Default value is all of them: '\(Generator.allCases.map { $0.rawValue }.joined(separator: " ,"))'")
 
-    let reporter: ReporterInterface
-    public init(reporter: ReporterInterface) {
-        self.reporter = reporter
-    }
+    public init() { }
 
     public func execute() throws {
         let options = Options.Yaml(

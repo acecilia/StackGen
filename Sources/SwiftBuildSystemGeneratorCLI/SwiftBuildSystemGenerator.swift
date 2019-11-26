@@ -5,13 +5,13 @@ import SwiftBuildSystemGeneratorKit
 public class SwiftBuildSystemGeneratorCLI {
     let cli: CLI
 
-    public init(reporter: ReporterInterface = DefaultReporter()) {
+    public init() {
         cli = CLI(
             name: "swiftbuildsystemgenerator",
             description: "Generates build system configurations for swift projects",
             commands: [
-                GenerateCommand(reporter: reporter),
-                CleanCommand(reporter: reporter)
+                GenerateCommand(),
+                CleanCommand()
             ]
         )
 
