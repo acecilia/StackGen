@@ -6,5 +6,6 @@ class Tests: XCTestCase {
     func test() {
         XCTAssertEqual(moduleName, "SwiftModule")
         XCTAssertEqual(dependency1Name, "SwiftModule2")
+        XCTAssertEqual(fileKitName, "FileKit")
     }
 }

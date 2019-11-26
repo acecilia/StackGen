@@ -13,7 +13,7 @@ public func setCurrent(_ commandLineOptions: Options.Yaml = Options.Yaml()) thro
     let options = Options(
         yaml: commandLineOptions.merge(with: workspace.options)
     )
-    let globals = Globals(yaml: workspace.globals)
+    let globals = Globals(workspace.globals)
     Current = World(options, globals)
 }
 

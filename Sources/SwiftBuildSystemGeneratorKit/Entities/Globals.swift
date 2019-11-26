@@ -1,5 +1,6 @@
 import Foundation
 import Version
+import Path
 
 public struct Globals: Codable, DictionaryConvertible {
     public static let defaultSupportPath = "SupportingFiles"
@@ -10,7 +11,7 @@ public struct Globals: Codable, DictionaryConvertible {
     public let folderStructure: FolderStructure
     public let supportPath: String
 
-    public init(yaml: Yaml) {
+    public init(_ yaml: Yaml) {
         self.bundleIdPrefix = yaml.bundleIdPrefix
         self.version = yaml.version
         self.folderStructure = yaml.folderStructure ?? Self.defaultFolderStructure

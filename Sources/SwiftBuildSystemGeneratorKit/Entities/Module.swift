@@ -62,7 +62,7 @@ public struct Module: Encodable, ContextConvertible {
             case let .framework(name):
                 let framework = Framework(
                     name: name,
-                    version: Version(0, 0, 1) // Unimplemented
+                    version: try CarthageService.shared.version(for: name)
                 )
                 return .framework(framework)
             }

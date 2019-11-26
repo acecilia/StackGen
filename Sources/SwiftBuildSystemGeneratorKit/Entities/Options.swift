@@ -5,11 +5,13 @@ public struct Options {
     public static let defaultFileName = "module.yml"
     public static let defaultTemplatesPath = "Templates"
     public static let defaultGenerateXcodeProject = false
+    public static let defaultCarthagePath = Path(Path.cwd)
 
     public let fileName: String
     public let templatePath: String
     public let generateXcodeProject: Bool
     public let generators: [Generator]
+    public let carthagePath: Path
 
     public init(
         yaml: Yaml?
@@ -22,6 +24,7 @@ public struct Options {
         } else {
             self.generators = Generator.allCases
         }
+        self.carthagePath = yaml?.carthagePath ?? Self.defaultCarthagePath
     }
 }
 
@@ -31,17 +34,20 @@ extension Options {
         public let templatePath: String?
         public let generateXcodeProject: Bool?
         public let generators: [Generator]?
+        public let carthagePath: Path?
 
         public init(
             fileName: String? = nil,
             templatePath: String? = nil,
             generateXcodeProject: Bool? = nil,
-            generators: [Generator]? = nil
+            generators: [Generator]? = nil,
+            carthagePath: Path? = nil
         ) {
             self.fileName = fileName
             self.templatePath = templatePath
             self.generateXcodeProject = generateXcodeProject
             self.generators = generators
+            self.carthagePath = carthagePath
         }
 
         public func merge(with yaml: Yaml?) -> Yaml {
@@ -49,7 +55,8 @@ extension Options {
                 fileName: fileName ?? yaml?.fileName,
                 templatePath: templatePath ?? yaml?.templatePath,
                 generateXcodeProject: generateXcodeProject ?? yaml?.generateXcodeProject,
-                generators: generators ?? yaml?.generators
+                generators: generators ?? yaml?.generators,
+                carthagePath: carthagePath ?? yaml?.carthagePath
             )
         }
     }

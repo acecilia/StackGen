@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
   s.source_files           = 'Libraries/SwiftModule/src/main/swift/*.swift'
 
   spec.dependency 'SwiftModule2', '1.0.0'
-  spec.dependency 'RxSwift', '0.0.1'
+  spec.dependency 'FileKit', '6.0.0'
 
   # Dummy data required by cocoapods
   s.authors                = 'dummy'

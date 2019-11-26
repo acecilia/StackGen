@@ -1,0 +1,3 @@
+[submodule "submodules/Carthage"]
+	path = submodules/Carthage
+	url = https://github.com/acecilia/Carthage.git

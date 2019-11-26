@@ -16,12 +16,13 @@ let package = Package(
         ),
         .package(url: "https://github.com/jpsim/Yams.git", .upToNextMajor(from: "2.0.0")),
         .package(url: "https://github.com/mxcl/Path.swift.git", .upToNextMajor(from: "1.0.0-alpha.3")),
-        .package(url: "https://github.com/jakeheis/SwiftCLI", .upToNextMajor(from: "5.3.3")),
+        .package(url: "https://github.com/jakeheis/SwiftCLI.git", .upToNextMajor(from: "5.3.3")),
         // The version of xcodeproj is tight with the one used by XcodeGen
         .package(url: "https://github.com/tuist/xcodeproj.git", .exact("7.1.0")),
         .package(url: "https://github.com/yonaskolb/XcodeGen.git", .upToNextMajor(from: "2.10.0")),
-        .package(url: "https://github.com/Flight-School/AnyCodable", .upToNextMajor(from: "0.2.3")),
-        .package(url: "https://github.com/mxcl/Version.git", .upToNextMajor(from: "1.1.2"))
+        .package(url: "https://github.com/Flight-School/AnyCodable.git", .upToNextMajor(from: "0.2.3")),
+        .package(url: "https://github.com/mxcl/Version.git", .upToNextMajor(from: "1.1.2")),
+        .package(path: "submodules/Carthage")
     ],
     targets: [
         .target(
@@ -45,6 +46,8 @@ let package = Package(
                 "XcodeGenKit",
                 "AnyCodable",
                 "Version",
+                "CarthageKit",
+                "XCDBLD",
             ]
         ),
         .testTarget(
