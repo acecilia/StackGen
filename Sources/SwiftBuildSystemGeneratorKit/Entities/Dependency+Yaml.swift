@@ -2,7 +2,7 @@ import Foundation
 import Path
 
 extension Dependency {
-    public enum Yaml: Decodable {
+    public enum Yaml: Codable {
         case module(Path)
         case framework(String)
 
@@ -17,6 +17,18 @@ extension Dependency {
                     in: container,
                     debugDescription: "The specified dependency is not supported"
                 )
+            }
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.singleValueContainer()
+
+            switch self {
+            case let .module(path):
+                try container.encode(Module(module: path))
+
+            case let .framework(name):
+                try container.encode(Framework(framework: name))
             }
         }
     }

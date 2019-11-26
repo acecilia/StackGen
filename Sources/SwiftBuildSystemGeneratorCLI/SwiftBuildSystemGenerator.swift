@@ -11,7 +11,8 @@ public class SwiftBuildSystemGeneratorCLI {
             description: "Generates build system configurations for swift projects",
             commands: [
                 GenerateCommand(),
-                CleanCommand()
+                CleanCommand(),
+                XcodeGenConvertCommand()
             ]
         )
 

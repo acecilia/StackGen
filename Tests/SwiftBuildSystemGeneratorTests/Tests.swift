@@ -10,7 +10,7 @@ final class Tests: XCTestCase {
 
             FileManager.default.changeCurrentDirectoryPath(destination.string)
             let cli = SwiftBuildSystemGeneratorCLI()
-            let status = cli.execute(with: [CleanCommand.name])
+            let status = cli.execute(with: cleanCommandArgs())
             XCTAssertEqual(status, 0)
 
             let result = FileManager.default.contentsEqual(

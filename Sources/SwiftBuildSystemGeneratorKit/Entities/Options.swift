@@ -37,11 +37,11 @@ extension Options {
         public let carthagePath: Path?
 
         public init(
-            fileName: String? = nil,
-            templatePath: String? = nil,
-            generateXcodeProject: Bool? = nil,
-            generators: [Generator]? = nil,
-            carthagePath: Path? = nil
+            fileName: String?,
+            templatePath: String?,
+            generateXcodeProject: Bool?,
+            generators: [Generator]?,
+            carthagePath: Path?
         ) {
             self.fileName = fileName
             self.templatePath = templatePath

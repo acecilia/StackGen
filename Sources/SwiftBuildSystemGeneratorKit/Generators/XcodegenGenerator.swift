@@ -79,27 +79,30 @@ public class XcodegenGenerator: GeneratorInterface {
     }
 }
 
-private enum OutputPath: String, OutputPathInterface {
-    static let projectFileName = "project.yml"
+extension XcodegenGenerator {
+    public enum OutputPath: String, OutputPathInterface {
+        public static let projectFileName = "project.yml"
 
-    case projectFile
-    case xcodeproj
-    case xcworkspace
-    case supportingFiles
+        case projectFile
+        case xcodeproj
+        case xcworkspace
+        case supportingFiles
 
-    func path(for module: Module) -> Path {
-        switch self {
-        case .projectFile:
-            return module.path/Self.projectFileName
+        public func path(for module: Module) -> Path {
+            switch self {
+            case .projectFile:
+                return module.path/Self.projectFileName
 
-        case .xcodeproj:
-            return module.path/"\(module.name).xcodeproj"
+            case .xcodeproj:
+                return module.path/"\(module.name).xcodeproj"
 
-        case .xcworkspace:
-            return module.path/"\(module.name).xcworkspace"
+            case .xcworkspace:
+                return module.path/"\(module.name).xcworkspace"
 
-        case .supportingFiles:
-            return module.path/OutputPath.supportingFiles.rawValue
+            case .supportingFiles:
+                return module.path/OutputPath.supportingFiles.rawValue
+            }
         }
     }
+
 }

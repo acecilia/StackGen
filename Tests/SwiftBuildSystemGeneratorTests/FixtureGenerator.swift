@@ -13,7 +13,8 @@ final class FixtureGenerator: XCTestCase {
 
             FileManager.default.changeCurrentDirectoryPath(fixturePath.string)
             let cli = SwiftBuildSystemGeneratorCLI()
-            let status = cli.execute(with: generateCommandArgs(generator))
+            let args = generateCommandArgs(generator)
+            let status = cli.execute(with: args)
             XCTAssertEqual(status, 0)
         }
     }

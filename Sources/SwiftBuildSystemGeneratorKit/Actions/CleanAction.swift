@@ -2,8 +2,8 @@ import Foundation
 import Path
 
 public class CleanAction {
-    public init() throws {
-        try setCurrent()
+    public init(_ commandLineOptions: Options.Yaml) throws {
+        try setCurrent(commandLineOptions)
     }
 
     public func execute() throws {

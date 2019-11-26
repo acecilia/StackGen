@@ -31,15 +31,18 @@ public class CocoaPodsGenerator: GeneratorInterface {
     }
 }
 
-private enum OutputPath: String, OutputPathInterface{
-    static let templateName = "podspec"
+extension CocoaPodsGenerator {
+    public enum OutputPath: String, OutputPathInterface {
+        public static let templateName = "podspec"
 
-    case podspec
+        case podspec
 
-    func path(for module: Module) -> Path {
-        switch self {
-        case .podspec:
-            return Current.wd/"\(module.name).podspec"
+        public func path(for module: Module) -> Path {
+            switch self {
+            case .podspec:
+                return Current.wd/"\(module.name).podspec"
+            }
         }
     }
 }
+

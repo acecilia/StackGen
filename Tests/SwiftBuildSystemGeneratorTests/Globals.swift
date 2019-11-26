@@ -37,7 +37,24 @@ func generateCommandArgs(_ generator: Generator) -> [String] {
         "-x",
         "-t", "\((rootPath/"Templates").string)",
         "-g", "\(generator.rawValue)",
-        "-c", "../../"
+        "-c", rootPath.relative(to: Path.cwd)
     ]
 }
 
+func cleanCommandArgs(_ generator: Generator? = nil) -> [String] {
+    var args = [
+        CleanCommand.name,
+        "-c", rootPath.relative(to: Path.cwd)
+    ]
+
+    if let generator = generator {
+        args.append(contentsOf: [
+            "-g", "\(generator.rawValue)"
+        ])
+    }
+    return args
+}
+
+func xcodeGenConvertCommandArgs() -> [String] {
+    return [XcodeGenConvertCommand.name]
+}
