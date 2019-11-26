@@ -4,7 +4,7 @@ import AnyCodable
 
 public enum Dependency: Encodable {
     case module(Module)
-    case framework(String)
+    case framework(Framework)
 
     private enum CodingKeys: String, CodingKey {
         case type
@@ -34,10 +34,10 @@ public enum Dependency: Encodable {
             dict = try module.asDictionary(basePath: encoder.userInfo[.relativePath] as? Path).mapValues {
                 AnyCodable($0)
             }
-        case let .framework(name):
-            dict = [
-                CodingKeys.name.rawValue: AnyCodable(name)
-            ]
+        case let .framework(framework):
+            dict = try framework.asDictionary(basePath: encoder.userInfo[.relativePath] as? Path).mapValues {
+                AnyCodable($0)
+            }
         }
 
         dict[CodingKeys.type.rawValue] = AnyCodable(type.rawValue)

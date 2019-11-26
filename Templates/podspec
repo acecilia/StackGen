@@ -6,7 +6,13 @@ Pod::Spec.new do |s|
 ¶
   {% endif %}
   {% for dependency in mainTarget.dependencies %}
+  {% if dependency.type == "module" %}
   spec.dependency '{{dependency.name}}', '{{dependency.version}}'
+  {% elif dependency.type == "framework" %}
+  spec.dependency '{{dependency.name}}', '{{dependency.version}}'
+  {% endif %}
+
+
   {% endfor %}
 ¶
   # Dummy data required by cocoapods

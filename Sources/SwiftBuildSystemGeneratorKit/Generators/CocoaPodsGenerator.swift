@@ -2,13 +2,9 @@ import Foundation
 import Path
 
 public class CocoaPodsGenerator: GeneratorInterface {
-    private let options: Options
-    private let globals: Globals
     private let modules: [Module]
 
-    public init(_ options: Options, _ globals: Globals, _ modules: [Module]) {
-        self.options = options
-        self.globals = globals
+    public init(_ modules: [Module]) {
         self.modules = modules
     }
 
@@ -19,8 +15,7 @@ public class CocoaPodsGenerator: GeneratorInterface {
             
             let rendered = try TemplateEngine.shared.render(
                 templateName: OutputPath.templateName,
-                context: try module.asContext(basePath: Options.rootPath, globals: globals),
-                options
+                context: try module.asContext(basePath: Current.wd)
             )
 
             let outputPath = file.path(for: module)
@@ -44,7 +39,7 @@ private enum OutputPath: String, OutputPathInterface{
     func path(for module: Module) -> Path {
         switch self {
         case .podspec:
-            return Options.rootPath/"\(module.name).podspec"
+            return Current.wd/"\(module.name).podspec"
         }
     }
 }

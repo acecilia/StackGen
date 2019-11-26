@@ -1,2 +1,3 @@
 dependencies:
   - module: ../SwiftModule2
+  - framework: RxSwift

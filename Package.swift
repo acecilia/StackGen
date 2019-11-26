@@ -21,6 +21,7 @@ let package = Package(
         .package(url: "https://github.com/tuist/xcodeproj.git", .exact("7.1.0")),
         .package(url: "https://github.com/yonaskolb/XcodeGen.git", .upToNextMajor(from: "2.10.0")),
         .package(url: "https://github.com/Flight-School/AnyCodable", .upToNextMajor(from: "0.2.3")),
+        .package(url: "https://github.com/mxcl/Version.git", .upToNextMajor(from: "1.1.2"))
     ],
     targets: [
         .target(
@@ -43,6 +44,7 @@ let package = Package(
                 "XcodeProj",
                 "XcodeGenKit",
                 "AnyCodable",
+                "Version",
             ]
         ),
         .testTarget(

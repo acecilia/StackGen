@@ -1,11 +1,12 @@
 import Foundation
+import Version
 
 public struct Globals: Codable, DictionaryConvertible {
     public static let defaultSupportPath = "SupportingFiles"
     public static let defaultFolderStructure: FolderStructure = .gradle
 
     public let bundleIdPrefix: String
-    public let version: String
+    public let version: Version
     public let folderStructure: FolderStructure
     public let supportPath: String
 
@@ -20,7 +21,7 @@ public struct Globals: Codable, DictionaryConvertible {
 extension Globals {
     public struct Yaml: Codable {
         public let bundleIdPrefix: String
-        public let version: String
+        public let version: Version
         public let folderStructure: FolderStructure?
         public let supportPath: String?
     }

@@ -13,7 +13,6 @@ public class CleanCommand: Command {
     }
 
     public func execute() throws {
-        let action = CleanAction()
-        try action.execute()
+        try CleanAction().execute()
     }
 }

@@ -1,9 +1,10 @@
 import Foundation
 import Path
+import Version
 
 extension Module {
     public struct Yaml: Decodable {
-        public let version: String?
+        public let version: Version?
         public let dependencies: [Dependency.Yaml]?
 
         public init() {

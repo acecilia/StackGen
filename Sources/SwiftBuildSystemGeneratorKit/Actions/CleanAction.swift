@@ -2,26 +2,23 @@ import Foundation
 import Path
 
 public class CleanAction {
-    public init() { }
+    public init() throws {
+        try setCurrent()
+    }
 
     public func execute() throws {
-        Reporter.print("Removing existing configuration files from path: \(Options.rootPath)")
+        Reporter.print("Removing existing configuration files from path: \(Current.wd)")
 
-        let workspace = try Workspace.decode(from: Options.rootPath)
-
-        let options = Options(yaml: workspace.options)
-        let globals = Globals(yaml: workspace.globals)
-        let fileIterator = FileIterator(options)
-        let modules = try fileIterator.start(globals)
+        let modules = try FileIterator().start()
 
         Reporter.print("Found modules:")
         modules.forEach {
-            let relativePath = $0.path.relative(to: Options.rootPath)
+            let relativePath = $0.path.relative(to: Current.wd)
             Reporter.print("\(relativePath)")
         }
 
-        let generators: [GeneratorInterface] = options.generators.map {
-            $0.build(options, globals, modules)
+        let generators: [GeneratorInterface] = Current.options.generators.map {
+            $0.build(modules)
         }
 
         for generator in generators {

@@ -24,8 +24,7 @@ public class GenerateCommand: Command {
             generateXcodeProject: generateXcodeProject.value,
             generators: generators.value
         )
-        let action = GenerateAction(commandLineOptions: options)
-        try action.execute()
+        try GenerateAction(options).execute()
     }
 }
 

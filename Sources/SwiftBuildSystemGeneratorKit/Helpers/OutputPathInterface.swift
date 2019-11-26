@@ -7,7 +7,7 @@ public protocol OutputPathInterface: CaseIterable {
 
 public extension OutputPathInterface {
     func relativePath(for module: Module) -> String {
-        return path(for: module).relative(to: Options.rootPath)
+        return path(for: module).relative(to: Current.wd)
     }
 
     func absolutePath(for module: Module) -> String {
@@ -24,7 +24,7 @@ public extension OutputPathInterface {
         }
 
         if removedFiles.isEmpty == false {
-            let removedFilesList = removedFiles.map { $0.relative(to: Options.rootPath) }.joined(separator: ", ")
+            let removedFilesList = removedFiles.map { $0.relative(to: Current.wd) }.joined(separator: ", ")
             Reporter.print("Removed files: \(removedFilesList)")
         }
     }

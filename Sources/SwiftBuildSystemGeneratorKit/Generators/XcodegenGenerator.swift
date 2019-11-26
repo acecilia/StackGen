@@ -4,20 +4,16 @@ import ProjectSpec
 import XcodeGenKit
 
 public class XcodegenGenerator: GeneratorInterface {
-    private let options: Options
-    private let globals: Globals
     private let modules: [Module]
 
-    public init(_ options: Options, _ globals: Globals, _ modules: [Module]) {
-        self.options = options
-        self.globals = globals
+    public init(_ modules: [Module]) {
         self.modules = modules
     }
 
     public func generate() throws {
         for module in modules {
             try generateProjectFile(module)
-            if options.generateXcodeProject {
+            if Current.options.generateXcodeProject {
                 try generateXcodeProject(module)
                 try generateWorkspace(module)
             }
@@ -34,11 +30,9 @@ public class XcodegenGenerator: GeneratorInterface {
         let file = OutputPath.projectFile
         Reporter.print("Generating: \(file.relativePath(for: module))")
 
-        print(try module.asContext(basePath: module.path, globals: globals))
         let rendered = try TemplateEngine.shared.render(
             templateName: OutputPath.projectFileName,
-            context: try module.asContext(basePath: module.path, globals: globals),
-            options
+            context: try module.asContext(basePath: module.path)
         )
 
         let outputPath = file.path(for: module)
@@ -64,14 +58,15 @@ public class XcodegenGenerator: GeneratorInterface {
 
         let projectReference = XCWorkspaceDataFileRef(location: .group(module.name + ".xcodeproj"))
         let dependencies: [XCWorkspaceDataElement] = module.mainTarget.dependencies
-            .map {
+            .compactMap {
                 switch $0 {
                 case let .module(dependency):
                     let xcodeProjectPath = (dependency.path/(dependency.name + ".xcodeproj")).relative(to: module.path)
                     return XCWorkspaceDataFileRef(location: .group(xcodeProjectPath))
 
                 case .framework:
-                    fatalError("Unimplemented")
+                    // Nothing to do
+                    return nil
                 }
 
             }

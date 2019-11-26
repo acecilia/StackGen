@@ -2,10 +2,6 @@ import Foundation
 import Path
 
 public struct Options {
-    public static var rootPath: Path {
-        return Path(Path.cwd)
-    }
-
     public static let defaultFileName = "module.yml"
     public static let defaultTemplatesPath = "Templates"
     public static let defaultGenerateXcodeProject = false
@@ -37,10 +33,10 @@ extension Options {
         public let generators: [Generator]?
 
         public init(
-            fileName: String?,
-            templatePath: String?,
-            generateXcodeProject: Bool?,
-            generators: [Generator]?
+            fileName: String? = nil,
+            templatePath: String? = nil,
+            generateXcodeProject: Bool? = nil,
+            generators: [Generator]? = nil
         ) {
             self.fileName = fileName
             self.templatePath = templatePath

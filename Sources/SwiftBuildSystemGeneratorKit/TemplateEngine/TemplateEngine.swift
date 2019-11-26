@@ -6,8 +6,8 @@ class TemplateEngine {
     
     private init() { }
 
-    func render(templateName: String, context: [String: Any], _ options: Options) throws -> String {
-        let environment = Environment(loader: FileSystemLoader(paths: [.init(options.templatePath)]))
+    func render(templateName: String, context: [String: Any]) throws -> String {
+        let environment = Environment(loader: FileSystemLoader(paths: [.init(Current.options.templatePath)]))
         let rendered = try environment.renderTemplate(name: templateName, context: context)
         return trimNewLines(rendered)
     }
