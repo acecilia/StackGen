@@ -7,5 +7,8 @@
    <Group
       location = "group:"
       name = "Dependencies">
+      <FileRef
+         location = "group:../SwiftModule1/SwiftModule1.xcodeproj">
+      </FileRef>
    </Group>
 </Workspace>

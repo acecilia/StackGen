@@ -14,6 +14,9 @@ targets:
     platform: iOS
     sources:
     - src/main/swift
+    dependencies:
+    - framework: SwiftModule1.framework
+      implicit: true
     info:
       path: SupportingFiles/SwiftModule3/Info.plist
 

@@ -3,6 +3,8 @@ Pod::Spec.new do |s|
   s.version                = '1.0.0'
   s.source_files           = 'Libraries/SwiftModule3/src/main/swift/*.swift'
 
+  spec.dependency 'SwiftModule1', '1.0.0'
+
   # Dummy data required by cocoapods
   s.authors                = 'dummy'
   s.summary                = 'dummy'

@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:SwiftModule.xcodeproj">
+      location = "group:SwiftModule1.xcodeproj">
    </FileRef>
    <Group
       location = "group:"

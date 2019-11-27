@@ -1,4 +1,4 @@
-name: SwiftModule
+name: SwiftModule1
 fileGroups: [module.yml, project.yml]
 
 options:
@@ -9,7 +9,7 @@ options:
   minimumXcodeGenVersion: 2.10.1
 
 targets:
-  SwiftModule:
+  SwiftModule1:
     type: framework.static
     platform: iOS
     sources:
@@ -19,9 +19,9 @@ targets:
       implicit: true
     - framework: ../../../../../../../../Carthage/Build/iOS/FileKit.framework
     info:
-      path: SupportingFiles/SwiftModule/Info.plist
+      path: SupportingFiles/SwiftModule1/Info.plist
 
-  SwiftModuleTests:
+  SwiftModule1Tests:
     type: bundle.unit-test
     platform: iOS
     settings:
@@ -31,19 +31,19 @@ targets:
     sources:
     - src/test/swift
     dependencies:
-    - target: SwiftModule
+    - target: SwiftModule1
     - framework: SwiftModule3.framework
       implicit: true
     info:
-      path: SupportingFiles/SwiftModuleTests/Info.plist
+      path: SupportingFiles/SwiftModule1Tests/Info.plist
 
 schemes:
-  SwiftModule:
+  SwiftModule1:
     build:
       targets:
-        SwiftModule: all
+        SwiftModule1: all
     test:
       gatherCoverageData: true
       targets:
-        - name: SwiftModuleTests
+        - name: SwiftModule1Tests
           randomExecutionOrder: true
