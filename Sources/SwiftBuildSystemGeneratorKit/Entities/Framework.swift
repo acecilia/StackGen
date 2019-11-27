@@ -2,7 +2,7 @@ import Foundation
 import Path
 import Version
 
-public struct Framework: Encodable, ContextConvertible {
+public struct Framework: Encodable, Hashable, ContextConvertible {
     public let name: String
     public let version: Version
     public let path: Path
@@ -10,6 +10,6 @@ public struct Framework: Encodable, ContextConvertible {
     init(name: String, version: Version) {
         self.name = name
         self.version = version
-        self.path = Current.wd/"Carthage"/"Build"/"iOS"/"\(name).framework"
+        self.path = Current.options.carthagePath/"Carthage"/"Build"/"iOS"/"\(name).framework"
     }
 }

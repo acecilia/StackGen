@@ -57,22 +57,31 @@ public class XcodegenGenerator: GeneratorInterface {
         Reporter.print("Generating: \(file.relativePath(for: module))")
 
         let projectReference = XCWorkspaceDataFileRef(location: .group(module.name + ".xcodeproj"))
-        let dependencies: [XCWorkspaceDataElement] = module.mainTarget.dependencies
+        let allDependencies = (module.mainTarget.dependencies + module.testTarget.dependencies)
             .compactMap {
                 switch $0 {
                 case let .module(dependency):
-                    let xcodeProjectPath = (dependency.path/(dependency.name + ".xcodeproj")).relative(to: module.path)
-                    return XCWorkspaceDataFileRef(location: .group(xcodeProjectPath))
+                    return dependency
 
                 case .framework:
-                    // Nothing to do
+                    // Nothing to do, this will be handled by the xcodeGen file
                     return nil
                 }
-
             }
-            .map { XCWorkspaceDataElement.file($0) }
-        let dependenciesGroup = XCWorkspaceDataGroup(location: .group(""), name: "Dependencies", children: dependencies)
+        .reduce(into: Set<Module>()) { (result, element) in
+            // Remove duplicated dependencies
+            result.insert(element)
+        }
 
+        let dependencies: [XCWorkspaceDataElement] = Array(allDependencies)
+            .compactMap {
+                let xcodeProjectPath = ($0.path/($0.name + ".xcodeproj")).relative(to: module.path)
+                return XCWorkspaceDataFileRef(location: .group(xcodeProjectPath))
+            }
+            .map {
+                XCWorkspaceDataElement.file($0)
+            }
+        let dependenciesGroup = XCWorkspaceDataGroup(location: .group(""), name: "Dependencies", children: dependencies)
         let workspaceData = XCWorkspaceData(children: [.file(projectReference), .group(dependenciesGroup)])
         let workspace = XCWorkspace(data: workspaceData)
         try workspace.write(path: .init(file.absolutePath(for: module)), override: true)

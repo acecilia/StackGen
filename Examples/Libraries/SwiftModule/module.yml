@@ -1,3 +1,6 @@
 dependencies:
   - module: ../SwiftModule2
   - framework: FileKit
+
+testDependencies:
+  - module: ../SwiftModule3

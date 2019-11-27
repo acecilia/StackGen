@@ -17,31 +17,19 @@ public class XcodeGenConvertAction {
             Reporter.print("Converting '\(xcodeGenFile)'")
 
             let project = try Project(path: .init(xcodeGenFile.string))
-            guard let mainTarget = project.targets.first, mainTarget.type == .framework else {
+            guard let mainTarget = project.targets.first, mainTarget.type == .framework,
+                let testTarget = project.targets[safe: 1], testTarget.type == .unitTestBundle else {
                 continue
             }
 
-            var dependencies: [Dependency.Yaml] = []
-            for dependency in mainTarget.dependencies {
-                let name = getName(for: dependency)
+            let dependencies = try getDependencies(for: mainTarget, using: xcodeGenFiles)
+            let testDependencies = try getDependencies(for: testTarget, using: xcodeGenFiles)
 
-                switch dependency.type {
-                case .framework:
-                    let path = try xcodeGenFiles
-                        .map { OutputPath.modulePath.path(for: $0) }
-                        .first { $0.basename() == name }
-                        .unwrap(onFailure: "The specified module could not be found. Reference: \(dependency.reference). Name: \(name)")
-                    dependencies.append(.module(path))
-
-                case .carthage:
-                    dependencies.append(.framework(dependency.reference))
-                case .package, .sdk, .target:
-                    // Will be handled in the templates
-                    continue
-                }
-            }
-
-            let module = Module.Yaml(dependencies: dependencies)
+            let module = Module.Yaml(
+                version: nil,
+                dependencies: dependencies,
+                testDependencies: testDependencies
+            )
 
             let encoder = YAMLEncoder()
             let content = try encoder.encode(
@@ -53,6 +41,34 @@ public class XcodeGenConvertAction {
             try outputPath.delete()
             try content.write(to: outputPath)
         }
+    }
+
+    private func getDependencies(
+        for target: ProjectSpec.Target,
+        using xcodeGenFiles: [Path]
+    ) throws -> [Dependency.Yaml] {
+        var dependencies: [Dependency.Yaml] = []
+
+        for dependency in target.dependencies {
+            let name = getName(for: dependency)
+
+            switch dependency.type {
+            case .framework:
+                let path = try xcodeGenFiles
+                    .map { OutputPath.modulePath.path(for: $0) }
+                    .first { $0.basename() == name }
+                    .unwrap(onFailure: "The specified module could not be found. Reference: \(dependency.reference). Name: \(name)")
+                dependencies.append(.module(path))
+
+            case .carthage:
+                dependencies.append(.framework(dependency.reference))
+            case .package, .sdk, .target:
+                // Nothing to do: will be handled in the templates
+                continue
+            }
+        }
+
+        return dependencies
     }
 
     private func getName(for dependency: ProjectSpec.Dependency) -> String {

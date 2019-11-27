@@ -3,12 +3,12 @@ import Yams
 import Foundation
 import Version
 
-public struct Module: Encodable, ContextConvertible {
+public struct Module: Encodable, Hashable, ContextConvertible {
     public let name: String
     public let version: Version
     public let path: Path
     public let mainTarget: Target
-    public let testTarget: Target?
+    public let testTarget: Target
 
     public init(
         _ middlewareModule: Module.Middleware,
@@ -37,7 +37,7 @@ public struct Module: Encodable, ContextConvertible {
         self.testTarget = Target(
             name: name + "Tests",
             sources: folderStructure.tests.map { path/$0 },
-            dependencies: []
+            dependencies: try Self.computeDependencies(name, path, middlewareModule.yamlModule.testDependencies, middlewareModules)
         )
     }
 

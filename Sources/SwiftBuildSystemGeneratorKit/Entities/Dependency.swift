@@ -2,7 +2,7 @@ import Foundation
 import Path
 import AnyCodable
 
-public enum Dependency: Encodable {
+public enum Dependency: Encodable, Hashable {
     case module(Module)
     case framework(Framework)
 

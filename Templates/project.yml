@@ -43,6 +43,14 @@ targets:
     {% endfor %}
     dependencies:
       - target: {{mainTarget.name}}
+    {% for dependency in testTarget.dependencies %}
+    {% if dependency.type == "module" %}
+      - framework: {{dependency.name}}.framework
+        implicit: true
+    {% elif dependency.type == "framework" %}
+      - framework: {{ dependency.path }}
+    {% endif %}
+    {% endfor %}
     info:
       path: {{globals.supportPath}}/{{testTarget.name}}/Info.plist
 ¶
