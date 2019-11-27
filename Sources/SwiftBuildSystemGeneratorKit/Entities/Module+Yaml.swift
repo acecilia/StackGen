@@ -5,13 +5,13 @@ import Version
 extension Module {
     public struct Yaml: Codable {
         public var version: Version?
-        public var dependencies: [Dependency.Yaml]?
-        public var testDependencies: [Dependency.Yaml]?
+        public var dependencies: [String]?
+        public var testDependencies: [String]?
 
         public init(
             version: Version?,
-            dependencies: [Dependency.Yaml]?,
-            testDependencies: [Dependency.Yaml]?
+            dependencies: [String]?,
+            testDependencies: [String]?
         ) {
             self.version = version
             self.dependencies = dependencies?.isEmpty == true ? nil : dependencies

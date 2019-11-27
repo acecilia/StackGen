@@ -8,10 +8,10 @@
       location = "group:"
       name = "Dependencies">
       <FileRef
-         location = "group:../SwiftModule2/SwiftModule2.xcodeproj">
+         location = "group:../SwiftModule3/SwiftModule3.xcodeproj">
       </FileRef>
       <FileRef
-         location = "group:../SwiftModule3/SwiftModule3.xcodeproj">
+         location = "group:../SwiftModule2/SwiftModule2.xcodeproj">
       </FileRef>
    </Group>
 </Workspace>

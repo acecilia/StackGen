@@ -1,5 +1,5 @@
 dependencies:
-  - module: ../SwiftModule2
-  - framework: FileKit
+  - SwiftModule2
+  - FileKit
 testDependencies:
-  - module: ../SwiftModule3
+  - SwiftModule3

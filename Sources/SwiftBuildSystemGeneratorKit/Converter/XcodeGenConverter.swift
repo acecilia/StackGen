@@ -51,25 +51,16 @@ public class XcodeGenConverter: ConverterInterface {
     private func getDependencies(
         for target: ProjectSpec.Target,
         using xcodeGenFiles: [Path]
-    ) throws -> [Dependency.Yaml] {
-        var dependencies: [Dependency.Yaml] = []
+    ) throws -> [String] {
+        var dependencies: [String] = []
 
         for dependency in target.dependencies {
             let name = getName(for: dependency)
 
             switch dependency.type {
-            case .framework where dependency.implicit == true:
-                let path = try xcodeGenFiles
-                    .map { $0.parent }
-                    .first { $0.basename() == name }
-                    .unwrap(onFailure: "The specified module could not be found. Reference: \(dependency.reference). Name: \(name)")
-                dependencies.append(.module(path))
+            case .framework, .carthage:
+                dependencies.append(name)
 
-            case .carthage:
-                dependencies.append(.framework(dependency.reference))
-            case .framework:
-                let name = (Path.cwd/dependency.reference).basename(dropExtension: true)
-                dependencies.append(.framework(name))
             case .package, .sdk, .target:
                 // Nothing to do: will be handled in the templates
                 continue
@@ -80,7 +71,7 @@ public class XcodeGenConverter: ConverterInterface {
     }
 
     private func getName(for dependency: ProjectSpec.Dependency) -> String {
-        return dependency.reference.replacingOccurrences(of: ".framework", with: "")
+        return (Path.cwd/dependency.reference).basename(dropExtension: true)
     }
 
     public func clean() throws {

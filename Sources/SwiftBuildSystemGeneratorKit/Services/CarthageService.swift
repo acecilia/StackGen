@@ -8,18 +8,18 @@ public class CarthageService {
     static let shared = CarthageService(Current.options.carthagePath)
 
     public let path: Path
-    private var frameworksCache: [String: Version]?
+    private var frameworksCache: [Framework]?
 
     private init(_ path: Path) {
         self.path = path
     }
 
-    private func getFrameworks() throws -> [String: Version] {
+    public func getFrameworks() throws -> [Framework] {
         if let frameworksCache = frameworksCache {
             return frameworksCache
         }
 
-        var frameworks: [String: Version] = [:]
+        var frameworks: [Framework] = []
 
         let resolvedCartfileUrl = ResolvedCartfile.url(in: path.url)
         let resolvedCartfileContent = try String(contentsOf: resolvedCartfileUrl)
@@ -34,16 +34,23 @@ public class CarthageService {
                 .unwrap(onFailure: "The Carthage version is not valid. Dependency: \(dependency.name). Version: \(pinnedVersion.commitish)")
             let frameworkNames = versionFile.iOS?.map { $0.name } ?? []
             for frameworkName in frameworkNames {
-                frameworks[frameworkName] = version
+                frameworks.append(Framework(frameworkName, version))
             }
         }
 
         frameworksCache = frameworks
         return frameworks
     }
+}
 
-    public func version(for framework: String) throws -> Version {
-        let dict = try getFrameworks()
-        return try dict[framework].unwrap(onFailure: "No version found for framework '\(framework)'")
+public extension CarthageService {
+    struct Framework {
+        public let name: String
+        public let version: Version
+
+        public init(_ name: String, _ version: Version) {
+            self.name = name
+            self.version = version
+        }
     }
 }

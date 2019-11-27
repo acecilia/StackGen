@@ -5,8 +5,8 @@ import Version
 
 public struct Module: Encodable, Hashable, ContextConvertible {
     public let name: String
-    public let version: Version
     public let path: Path
+    public let version: Version
     public let mainTarget: Target
     public let testTarget: Target
 
@@ -15,9 +15,9 @@ public struct Module: Encodable, Hashable, ContextConvertible {
         resolveDependenciesUsing middlewareModules: [Module.Middleware]
     ) throws {
         let path = middlewareModule.path
-        self.name = path.basename()
-        self.version = middlewareModule.yamlModule.version ?? Current.globals.version
+        self.name = middlewareModule.name
         self.path = path
+        self.version = middlewareModule.yamlModule.version ?? Current.globals.version
 
         let folderStructure: FolderStructureInterface
         switch Current.globals.folderStructure {
@@ -44,29 +44,29 @@ public struct Module: Encodable, Hashable, ContextConvertible {
     private static func computeDependencies(
         _ name: String,
         _ modulePath: Path,
-        _ dependencies: [Dependency.Yaml]?,
+        _ dependencies: [String]?,
         _ middlewareModules: [Module.Middleware]
     ) throws -> [Dependency] {
         return try (dependencies ?? []).map { dependency in
-
-            switch dependency {
-            case let .module(path):
-                guard let middlewareModule = middlewareModules.first(where: { $0.path == path }) else {
-                    let dependency = path.relative(to: modulePath)
-                    let modules = middlewareModules.map { $0.path.relative(to: Current.wd) }.joined(separator: "', '")
-                    throw UnexpectedError("Module '\(name)' specifies the dependency '\(dependency)', but such dependency could not be found among the considered modules: '\(modules)'")
-                }
+            if let middlewareModule = middlewareModules.first(where: { $0.name == dependency }) {
                 let module = try Module(middlewareModule, resolveDependenciesUsing: middlewareModules)
                 return .module(module)
-
-            case let .framework(name):
+            } else if let framework = try CarthageService.shared.getFrameworks().first(where: { $0.name == dependency })  {
                 let framework = Framework(
-                    name: name,
-                    version: try CarthageService.shared.version(for: name)
+                    name: dependency,
+                    version: framework.version
                 )
                 return .framework(framework)
-            }
+            } else {
+                let modules = [
+                    middlewareModules.map { $0.path.relative(to: Current.wd) },
+                    try CarthageService.shared.getFrameworks().map { $0.name }
+                    ]
+                    .flatMap { $0 }
+                    .joined(separator: ", ")
 
+                throw UnexpectedError("Module '\(name)' specifies the dependency '\(dependency)', but such dependency could not be found among the considered modules: '\(modules)'")
+            }
         }
     }
 }
