@@ -13,7 +13,7 @@ targets:
     type: framework.static
     platform: iOS
     sources:
-      - src/main/swift
+    - src/main/swift
     info:
       path: SupportingFiles/SwiftModule3/Info.plist
 
@@ -25,9 +25,9 @@ targets:
         # Needed for getting proper test coverage percentages when using static frameworks
         OTHER_LDFLAGS: -all_load
     sources:
-      - src/test/swift
+    - src/test/swift
     dependencies:
-      - target: SwiftModule3
+    - target: SwiftModule3
     info:
       path: SupportingFiles/SwiftModule3Tests/Info.plist
 

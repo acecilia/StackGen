@@ -1,5 +1,5 @@
 dependencies:
-  - SwiftModule2
-  - FileKit
+- SwiftModule2
+- FileKit
 testDependencies:
-  - SwiftModule3
+- SwiftModule3

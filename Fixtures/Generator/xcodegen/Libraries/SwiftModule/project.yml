@@ -13,11 +13,11 @@ targets:
     type: framework.static
     platform: iOS
     sources:
-      - src/main/swift
+    - src/main/swift
     dependencies:
-      - framework: SwiftModule2.framework
-        implicit: true
-      - framework: ../../../../../../../../Carthage/Build/iOS/FileKit.framework
+    - framework: SwiftModule2.framework
+      implicit: true
+    - framework: ../../../../../../../../Carthage/Build/iOS/FileKit.framework
     info:
       path: SupportingFiles/SwiftModule/Info.plist
 
@@ -29,11 +29,11 @@ targets:
         # Needed for getting proper test coverage percentages when using static frameworks
         OTHER_LDFLAGS: -all_load
     sources:
-      - src/test/swift
+    - src/test/swift
     dependencies:
-      - target: SwiftModule
-      - framework: SwiftModule3.framework
-        implicit: true
+    - target: SwiftModule
+    - framework: SwiftModule3.framework
+      implicit: true
     info:
       path: SupportingFiles/SwiftModuleTests/Info.plist
 

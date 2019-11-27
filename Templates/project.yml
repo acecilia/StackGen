@@ -14,17 +14,17 @@ targets:
     platform: iOS
     sources:
     {% for source in mainTarget.sources %}
-      - {{source}}
+    - {{source}}
     {% endfor %}
     {% if mainTarget.dependencies %}
     dependencies:
     {% endif %}
     {% for dependency in mainTarget.dependencies %}
     {% if dependency.type == "module" %}
-      - framework: {{dependency.name}}.framework
-        implicit: true
+    - framework: {{dependency.name}}.framework
+      implicit: true
     {% elif dependency.type == "framework" %}
-      - framework: {{ dependency.path }}
+    - framework: {{ dependency.path }}
     {% endif %}
     {% endfor %}
     info:
@@ -39,16 +39,16 @@ targets:
         OTHER_LDFLAGS: -all_load
     sources:
     {% for source in testTarget.sources %}
-      - {{source}}
+    - {{source}}
     {% endfor %}
     dependencies:
-      - target: {{mainTarget.name}}
+    - target: {{mainTarget.name}}
     {% for dependency in testTarget.dependencies %}
     {% if dependency.type == "module" %}
-      - framework: {{dependency.name}}.framework
-        implicit: true
+    - framework: {{dependency.name}}.framework
+      implicit: true
     {% elif dependency.type == "framework" %}
-      - framework: {{ dependency.path }}
+    - framework: {{ dependency.path }}
     {% endif %}
     {% endfor %}
     info:
