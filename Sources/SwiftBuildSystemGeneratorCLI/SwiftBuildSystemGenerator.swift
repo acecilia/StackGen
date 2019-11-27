@@ -12,7 +12,7 @@ public class SwiftBuildSystemGeneratorCLI {
             commands: [
                 GenerateCommand(),
                 CleanCommand(),
-                XcodeGenConvertCommand()
+                ConvertCommand()
             ]
         )
 

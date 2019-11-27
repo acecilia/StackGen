@@ -1,7 +1,7 @@
 import Foundation
 import Path
 
-public class CleanAction {
+public class CleanAction: Action {
     public init(_ commandLineOptions: Options.Yaml) throws {
         try setCurrent(commandLineOptions)
     }
@@ -23,6 +23,14 @@ public class CleanAction {
 
         for generator in generators {
             try generator.clean()
+        }
+
+        let converters: [ConverterInterface] = Current.options.converters.map {
+            $0.build()
+        }
+
+        for converter in converters {
+            try converter.clean()
         }
 
         Reporter.print("Done")

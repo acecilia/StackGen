@@ -11,10 +11,11 @@ extension Module {
             self.path = moduleFilePath.parent
 
             let content = try String(contentsOf: moduleFilePath)
+            // The YAMLDecoder fails if the file to decode is empty
             if content.isEmpty {
                 self.yamlModule = Module.Yaml()
             } else {
-                self.yamlModule = try YAMLDecoder().decode(Module.Yaml.self, from: content, userInfo: [.relativePath: path])
+                self.yamlModule = try YAMLDecoder().decode(from: content, userInfo: [.relativePath: path])
             }
         }
     }

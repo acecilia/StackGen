@@ -22,8 +22,12 @@ public struct CommandLineOptions {
         VariadicKey<Generator>("-g", "--generators", description: "A comma separated list of values specifying which generators to execute. Default value is all of them: '\(Generator.allCases.map { $0.rawValue }.joined(separator: " ,"))'")
     }
 
+    var converters: VariadicKey<Converter> {
+        VariadicKey<Converter>("-c", "--converters", description: "A comma separated list of values specifying which converters to execute. Default value is all of them: '\(Converter.allCases.map { $0.rawValue }.joined(separator: " ,"))'")
+    }
+
     var carthagePath:Key<Path> {
-        Key<Path>("-c", "--carthagePath", description: "The path to the folder containing the 'Cartfile'. Default value is the current working directory: \(Options.defaultCarthagePath)")
+        Key<Path>("-r", "--carthagePath", description: "The path to the folder containing the 'Cartfile'. Default value is the current working directory: \(Options.defaultCarthagePath)")
     }
 }
 
@@ -35,3 +39,5 @@ extension Path: ConvertibleFromString {
 }
 
 extension Generator: ConvertibleFromString { }
+
+extension Converter: ConvertibleFromString { }

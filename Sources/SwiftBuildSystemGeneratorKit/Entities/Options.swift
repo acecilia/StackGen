@@ -11,6 +11,7 @@ public struct Options {
     public let templatePath: String
     public let generateXcodeProject: Bool
     public let generators: [Generator]
+    public let converters: [Converter]
     public let carthagePath: Path
 
     public init(
@@ -24,6 +25,11 @@ public struct Options {
         } else {
             self.generators = Generator.allCases
         }
+        if let converters = yaml?.converters, converters.isEmpty == false {
+            self.converters = converters
+        } else {
+            self.converters = Converter.allCases
+        }
         self.carthagePath = yaml?.carthagePath ?? Self.defaultCarthagePath
     }
 }
@@ -34,6 +40,7 @@ extension Options {
         public let templatePath: String?
         public let generateXcodeProject: Bool?
         public let generators: [Generator]?
+        public let converters: [Converter]?
         public let carthagePath: Path?
 
         public init(
@@ -41,12 +48,14 @@ extension Options {
             templatePath: String?,
             generateXcodeProject: Bool?,
             generators: [Generator]?,
+            converters: [Converter]?,
             carthagePath: Path?
         ) {
             self.fileName = fileName
             self.templatePath = templatePath
             self.generateXcodeProject = generateXcodeProject
             self.generators = generators
+            self.converters = converters
             self.carthagePath = carthagePath
         }
 
@@ -56,6 +65,7 @@ extension Options {
                 templatePath: templatePath ?? yaml?.templatePath,
                 generateXcodeProject: generateXcodeProject ?? yaml?.generateXcodeProject,
                 generators: generators ?? yaml?.generators,
+                converters: converters ?? yaml?.converters,
                 carthagePath: carthagePath ?? yaml?.carthagePath
             )
         }

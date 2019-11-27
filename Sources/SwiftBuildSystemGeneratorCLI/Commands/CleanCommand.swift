@@ -9,6 +9,7 @@ public class CleanCommand: Command {
 
     private let fileName = CommandLineOptions.shared.fileName
     private let generators = CommandLineOptions.shared.generators
+    private let converters = CommandLineOptions.shared.converters
     private let carthagePath = CommandLineOptions.shared.carthagePath
 
     public init() { }
@@ -19,6 +20,7 @@ public class CleanCommand: Command {
             templatePath: nil,
             generateXcodeProject: nil,
             generators: generators.value,
+            converters: converters.value,
             carthagePath: carthagePath.value
         )
         try CleanAction(options).execute()

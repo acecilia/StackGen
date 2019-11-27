@@ -1,7 +1,7 @@
 import Foundation
 import Path
 
-public class GenerateAction {
+public class GenerateAction: Action {
     public init(_ commandLineOptions: Options.Yaml) throws {
         try setCurrent(commandLineOptions)
     }

@@ -17,7 +17,7 @@ targets:
     dependencies:
       - framework: SwiftModule2.framework
         implicit: true
-      - framework: ../../../../Carthage/Build/iOS/FileKit.framework
+      - framework: ../../../../../Carthage/Build/iOS/FileKit.framework
     info:
       path: SupportingFiles/SwiftModule/Info.plist
 

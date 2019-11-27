@@ -2,22 +2,23 @@ import Foundation
 import Path
 
 public protocol OutputPathInterface: CaseIterable {
-    func path(for module: Module) -> Path
+    associatedtype T
+    func path(for object: T) -> Path
 }
 
 public extension OutputPathInterface {
-    func relativePath(for module: Module) -> String {
-        return path(for: module).relative(to: Current.wd)
+    func relativePath(for object: T) -> String {
+        return path(for: object).relative(to: Current.wd)
     }
 
-    func absolutePath(for module: Module) -> String {
-        return path(for: module).string
+    func absolutePath(for object: T) -> String {
+        return path(for: object).string
     }
 
-    static func cleanAll(for module: Module) throws {
+    static func cleanAll(for object: T) throws {
         var removedFiles: [Path] = []
 
-        let filesToRemove = Self.allCases.map { $0.path(for: module) }
+        let filesToRemove = Self.allCases.map { $0.path(for: object) }
         for fileToRemove in filesToRemove where fileToRemove.exists {
             try fileToRemove.delete()
             removedFiles.append(fileToRemove)

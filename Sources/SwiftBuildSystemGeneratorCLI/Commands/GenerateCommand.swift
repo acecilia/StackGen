@@ -21,6 +21,7 @@ public class GenerateCommand: Command {
             templatePath: templatesPath.value,
             generateXcodeProject: generateXcodeProject.value,
             generators: generators.value,
+            converters: nil,
             carthagePath: carthagePath.value
         )
         try GenerateAction(options).execute()
