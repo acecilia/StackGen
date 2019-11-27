@@ -72,6 +72,7 @@ public class XcodegenGenerator: GeneratorInterface {
             // Remove duplicated dependencies
             result.insert(element)
         }
+        .sorted { $0.name < $1.name }
 
         let dependencies: [XCWorkspaceDataElement] = Array(allDependencies)
             .compactMap {
