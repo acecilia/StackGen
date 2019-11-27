@@ -1,7 +1,7 @@
 import Foundation
 
 protocol FolderStructureInterface: class {
-    func testTargetName(for targetName: String) -> String?
+    func testTargetName(for targetName: String) -> String
     var sources: [String] { get }
 //    var resources: [String] { get }
     var tests: [String] { get }
@@ -9,7 +9,7 @@ protocol FolderStructureInterface: class {
 }
 
 extension FolderStructureInterface {
-    func testTargetName(for targetName: String) -> String? {
-        return nil
+    func testTargetName(for targetName: String) -> String {
+        return "\(targetName)Tests"
     }
 }

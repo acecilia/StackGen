@@ -37,7 +37,7 @@ public struct Module: Encodable, Hashable, ContextConvertible {
         )
 
         self.testTarget = Target(
-            name: folderStructure.testTargetName(for: name) ?? (name + "Tests"),
+            name: folderStructure.testTargetName(for: name),
             sources: folderStructure.tests.map { path/$0 },
             dependencies: try Self.computeDependencies(name, path, middlewareModule.yamlModule.testDependencies, middlewareModules)
         )

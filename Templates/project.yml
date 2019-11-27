@@ -1,5 +1,4 @@
 name: {{name}}
-fileGroups: [module.yml, project.yml]
 ¶
 options:
   defaultConfig: Release
@@ -7,6 +6,8 @@ options:
   transitivelyLinkDependencies: true
   createIntermediateGroups: true
   minimumXcodeGenVersion: 2.10.1
+¶
+fileGroups: [module.yml, project.yml]
 ¶
 targets:
   {{mainTarget.name}}:
