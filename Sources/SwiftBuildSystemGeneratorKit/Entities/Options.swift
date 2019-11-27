@@ -25,11 +25,7 @@ public struct Options {
         } else {
             self.generators = Generator.allCases
         }
-        if let converters = yaml?.converters, converters.isEmpty == false {
-            self.converters = converters
-        } else {
-            self.converters = Converter.allCases
-        }
+        self.converters = yaml?.converters ?? []
         self.carthagePath = yaml?.carthagePath ?? Self.defaultCarthagePath
     }
 }

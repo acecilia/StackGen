@@ -9,6 +9,9 @@ let testsOutputPath = rootPath/".build"/"TestsOutput"
 let examplesPath = rootPath/"Examples"
 let fixturesPath = rootPath/"Fixtures"
 
+let generatorFixturesPath = fixturesPath/"\(Generator.self)"
+let converterFixturesPath = fixturesPath/"\(Converter.self)"
+
 func tmp(testFilePath: String = #file, testName: String = #function) throws -> Path {
     guard let testFileName = Path(testFilePath)?.basename(dropExtension: true) else {
         fatalError("The path to the test file is malformed")
@@ -41,7 +44,7 @@ func generateCommandArgs(_ generator: Generator) -> [String] {
     ]
 }
 
-func cleanCommandArgs(_ generator: Generator? = nil) -> [String] {
+func cleanCommandArgs(generator: Generator? = nil, converter: Converter? = nil) -> [String] {
     var args = [
         CleanCommand.name,
         "-r", rootPath.relative(to: Path.cwd)
@@ -52,6 +55,13 @@ func cleanCommandArgs(_ generator: Generator? = nil) -> [String] {
             "-g", "\(generator.rawValue)"
         ])
     }
+
+    if let converter = converter {
+        args.append(contentsOf: [
+            "-c", "\(converter.rawValue)"
+        ])
+    }
+
     return args
 }
 

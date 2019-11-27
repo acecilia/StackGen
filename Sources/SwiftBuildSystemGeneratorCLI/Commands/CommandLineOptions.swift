@@ -23,7 +23,7 @@ public struct CommandLineOptions {
     }
 
     var converters: VariadicKey<Converter> {
-        VariadicKey<Converter>("-c", "--converters", description: "A comma separated list of values specifying which converters to execute. Default value is all of them: '\(Converter.allCases.map { $0.rawValue }.joined(separator: " ,"))'")
+        VariadicKey<Converter>("-c", "--converters", description: "A comma separated list of values specifying which converters to execute. Default value is none of them")
     }
 
     var carthagePath:Key<Path> {

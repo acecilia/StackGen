@@ -17,20 +17,22 @@ public class CleanAction: Action {
             Reporter.print("\(relativePath)")
         }
 
-        let generators: [GeneratorInterface] = Current.options.generators.map {
-            $0.build(modules)
-        }
-
-        for generator in generators {
-            try generator.clean()
-        }
-
         let converters: [ConverterInterface] = Current.options.converters.map {
             $0.build()
         }
 
-        for converter in converters {
-            try converter.clean()
+        if converters.isEmpty == false {
+            for converter in converters {
+                try converter.clean()
+            }
+        } else {
+            let generators: [GeneratorInterface] = Current.options.generators.map {
+                $0.build(modules)
+            }
+
+            for generator in generators {
+                try generator.clean()
+            }
         }
 
         Reporter.print("Done")

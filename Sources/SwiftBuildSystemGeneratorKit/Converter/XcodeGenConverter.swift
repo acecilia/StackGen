@@ -12,7 +12,7 @@ public class XcodeGenConverter: ConverterInterface {
             Reporter.print("Converting '\(xcodeGenFile)'")
 
             let project = try Project(path: .init(xcodeGenFile.string))
-            guard let mainTarget = project.targets.first, mainTarget.type == .framework,
+            guard let mainTarget = project.targets.first, [.framework, .staticFramework].contains(mainTarget.type),
                 let testTarget = project.targets[safe: 1], testTarget.type == .unitTestBundle else {
                 continue
             }
@@ -31,7 +31,7 @@ public class XcodeGenConverter: ConverterInterface {
                 module,
                 userInfo: [.relativePath: xcodeGenFile.parent]
             )
-            if content == "{}" {
+            if content == "{}\n" {
                 // The YAMLEncoder adds brackets when there is nothing to encode. They should be removed
                 content = ""
             }
@@ -58,7 +58,7 @@ public class XcodeGenConverter: ConverterInterface {
             let name = getName(for: dependency)
 
             switch dependency.type {
-            case .framework:
+            case .framework where dependency.implicit == true:
                 let path = try xcodeGenFiles
                     .map { $0.parent }
                     .first { $0.basename() == name }
@@ -67,6 +67,9 @@ public class XcodeGenConverter: ConverterInterface {
 
             case .carthage:
                 dependencies.append(.framework(dependency.reference))
+            case .framework:
+                let name = (Path.cwd/dependency.reference).basename(dropExtension: true)
+                dependencies.append(.framework(name))
             case .package, .sdk, .target:
                 // Nothing to do: will be handled in the templates
                 continue
