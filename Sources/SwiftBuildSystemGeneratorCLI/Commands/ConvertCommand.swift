@@ -20,6 +20,6 @@ public class ConvertCommand: Command {
             converters: converters.value,
             carthagePath: nil
         )
-        try XcodeGenConvertAction().execute()
+        try ConvertAction(options).execute()
     }
 }
