@@ -21,7 +21,6 @@ public class XcodeGenConverter: ConverterInterface {
             let testDependencies = try getDependencies(for: testTarget, using: xcodeGenFiles)
 
             let module = Module.Yaml(
-                version: nil,
                 dependencies: dependencies,
                 testDependencies: testDependencies
             )
@@ -67,7 +66,7 @@ public class XcodeGenConverter: ConverterInterface {
             }
         }
 
-        return dependencies
+        return dependencies.sorted { $0 < $1 }
     }
 
     private func getName(for dependency: ProjectSpec.Dependency) -> String {

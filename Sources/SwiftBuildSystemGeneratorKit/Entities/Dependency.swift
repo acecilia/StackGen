@@ -1,9 +1,10 @@
 import Foundation
 import Path
 import AnyCodable
+import Version
 
 public enum Dependency: Encodable, Hashable {
-    case module(Module)
+    case module(Dependency.Module)
     case framework(Framework)
 
     private enum CodingKeys: String, CodingKey {
@@ -44,5 +45,13 @@ public enum Dependency: Encodable, Hashable {
 
         var container = encoder.singleValueContainer()
         try container.encode(dict)
+    }
+}
+
+public extension Dependency {
+    struct Module: Encodable, Hashable, ContextConvertible {
+        public let name: String
+        public let path: Path
+        public let version: Version
     }
 }

@@ -15,9 +15,11 @@ public struct Module: Encodable, Hashable, ContextConvertible {
         resolveDependenciesUsing middlewareModules: [Module.Middleware]
     ) throws {
         let path = middlewareModule.path
-        self.name = middlewareModule.name
+        let name = middlewareModule.name
+
+        self.name = name
         self.path = path
-        self.version = middlewareModule.yamlModule.version ?? Current.globals.version
+        self.version = Current.globals.version
 
         let folderStructure: FolderStructureInterface
         switch Current.globals.folderStructure {
@@ -35,7 +37,7 @@ public struct Module: Encodable, Hashable, ContextConvertible {
         )
 
         self.testTarget = Target(
-            name: name + "Tests",
+            name: folderStructure.testTargetName(for: name) ?? (name + "Tests"),
             sources: folderStructure.tests.map { path/$0 },
             dependencies: try Self.computeDependencies(name, path, middlewareModule.yamlModule.testDependencies, middlewareModules)
         )
@@ -49,7 +51,11 @@ public struct Module: Encodable, Hashable, ContextConvertible {
     ) throws -> [Dependency] {
         return try (dependencies ?? []).map { dependency in
             if let middlewareModule = middlewareModules.first(where: { $0.name == dependency }) {
-                let module = try Module(middlewareModule, resolveDependenciesUsing: middlewareModules)
+                let module = Dependency.Module(
+                    name: middlewareModule.name,
+                    path: middlewareModule.path,
+                    version: Current.globals.version
+                )
                 return .module(module)
             } else if let framework = try CarthageService.shared.getFrameworks().first(where: { $0.name == dependency })  {
                 let framework = Framework(

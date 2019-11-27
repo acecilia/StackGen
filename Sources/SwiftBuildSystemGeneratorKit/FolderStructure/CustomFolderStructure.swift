@@ -1,18 +1,22 @@
 import Foundation
 
 /// https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_project_layout
-class CustomFolderStructure: FolderStructureInterface {
-    let targetName: String
+public class CustomFolderStructure: FolderStructureInterface {
+    public let targetName: String
 
-    init(_ targetName: String) {
+    public init(_ targetName: String) {
         self.targetName = targetName
     }
 
-    var sources: [String] {
+    func testTargetName(for targetName: String) -> String {
+        return "\(targetName)UnitTests"
+    }
+
+    public var sources: [String] {
         ["\(targetName)"]
     }
 
-    var tests: [String] {
-        ["\(targetName)UnitTests"]
+    public var tests: [String] {
+        [testTargetName(for: targetName)]
     }
 }

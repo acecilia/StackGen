@@ -68,7 +68,7 @@ public class XcodegenGenerator: GeneratorInterface {
                     return nil
                 }
             }
-        .reduce(into: Set<Module>()) { (result, element) in
+        .reduce(into: Set<Dependency.Module>()) { (result, element) in
             // Remove duplicated dependencies
             result.insert(element)
         }
