@@ -22,12 +22,12 @@ public struct CommandLineOptions {
         Flag("-w", "--generateXcodeWorkspace", description: "In addition to the build files, also generate the Xcode workspace. Default value is '\(Options.defaultGenerateXcodeWorkspace)'")
     }
 
-    var generators: VariadicKey<Generator> {
-        VariadicKey<Generator>("-g", "--generators", description: "A comma separated list of values specifying which generators to execute. Default value is all of them: '\(Generator.allCases.map { $0.rawValue }.joined(separator: " ,"))'")
+    var generators: Key<[Generator]> {
+        Key<[Generator]>("-g", "--generators", description: "A comma separated list of values specifying which generators to execute. Default value is all of them: '\(Generator.allCases.map { $0.rawValue }.joined(separator: " ,"))'")
     }
 
-    var converters: VariadicKey<Converter> {
-        VariadicKey<Converter>("-c", "--converters", description: "A comma separated list of values specifying which converters to execute. Default value is none of them")
+    var converters: Key<[Converter]> {
+        Key<[Converter]>("-c", "--converters", description: "A comma separated list of values specifying which converters to execute. Default value is none of them")
     }
 
     var carthagePath:Key<Path> {
@@ -42,6 +42,10 @@ extension Path: ConvertibleFromString {
     }
 }
 
-extension Generator: ConvertibleFromString { }
-
-extension Converter: ConvertibleFromString { }
+extension Array: ConvertibleFromString where Element: RawRepresentable, Element.RawValue == String, Element: CaseIterable {
+    public static func convert(from: String) -> Array<Element>? {
+        let elements = from.components(separatedBy: ",")
+        let castedElements = elements.compactMap { Element.init(rawValue: $0) }
+        return castedElements.count == elements.count ? castedElements : nil
+    }
+}
