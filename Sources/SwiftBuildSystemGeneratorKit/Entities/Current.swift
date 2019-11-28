@@ -5,7 +5,7 @@ public var cwd: Path {
     return Path(Path.cwd)
 }
 
-public internal (set) var Current: World {
+public private(set) var Current: World {
     get { return _Current }
     set { _Current = newValue }
 }
@@ -17,16 +17,18 @@ public func setCurrent(_ commandLineOptions: Options.Yaml) throws {
     let options = Options(
         yaml: commandLineOptions.merge(with: workspace.options)
     )
-    let globals = Globals(workspace.globals)
+    let globals = Globals(workspace.globals, templatePath: options.templatePath)
     Current = World(options, globals)
 }
 
 public struct World {
-    public var options: Options
-    public var globals: Globals
+    public let options: Options
+    public let globals: Globals
+    public let carthageService: CarthageService
 
     public init(_ options: Options, _ globals: Globals) {
         self.options = options
         self.globals = globals
+        self.carthageService = CarthageService(options.carthagePath)
     }
 }

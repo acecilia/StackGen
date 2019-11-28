@@ -57,7 +57,7 @@ public struct Module: Encodable, Hashable, ContextConvertible {
                     version: Current.globals.version
                 )
                 return .module(module)
-            } else if let framework = try CarthageService.shared.getFrameworks().first(where: { $0.name == dependency })  {
+            } else if let framework = try Current.carthageService.getFrameworks().first(where: { $0.name == dependency })  {
                 let framework = Framework(
                     name: dependency,
                     version: framework.version
@@ -66,7 +66,7 @@ public struct Module: Encodable, Hashable, ContextConvertible {
             } else {
                 let modules = [
                     middlewareModules.map { $0.path.relative(to: cwd) },
-                    try CarthageService.shared.getFrameworks().map { $0.name }
+                    try Current.carthageService.getFrameworks().map { $0.name }
                     ]
                     .flatMap { $0 }
                     .joined(separator: ", ")

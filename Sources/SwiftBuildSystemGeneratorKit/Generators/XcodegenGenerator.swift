@@ -15,7 +15,9 @@ public class XcodegenGenerator: GeneratorInterface {
             try generateProjectFile(module)
             if Current.options.generateXcodeProject {
                 try generateXcodeProject(module)
-                try generateWorkspace(module)
+                if Current.options.generateXcodeWorkspace {
+                    try generateWorkspace(module)
+                }
             }
         }
     }
@@ -110,7 +112,7 @@ extension XcodegenGenerator {
                 return module.path/"\(module.name).xcworkspace"
 
             case .supportingFiles:
-                return module.path/OutputPath.supportingFiles.rawValue
+                return module.path/Current.globals.supportPath
             }
         }
     }

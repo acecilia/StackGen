@@ -15,7 +15,11 @@ public struct CommandLineOptions {
     }
 
     var generateXcodeProject: Flag {
-        Flag("-x", "--generateXcodeProject", description: "In addition to the build files, also generate the Xcode project and workspace. Default value is '\(Options.defaultGenerateXcodeProject)'")
+        Flag("-x", "--generateXcodeProject", description: "In addition to the build files, also generate the Xcode project. Default value is '\(Options.defaultGenerateXcodeProject)'")
+    }
+
+    var generateXcodeWorkspace: Flag {
+        Flag("-w", "--generateXcodeWorkspace", description: "In addition to the build files, also generate the Xcode workspace. Default value is '\(Options.defaultGenerateXcodeWorkspace)'")
     }
 
     var generators: VariadicKey<Generator> {

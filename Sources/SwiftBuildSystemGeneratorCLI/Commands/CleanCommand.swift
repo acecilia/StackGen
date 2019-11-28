@@ -19,6 +19,7 @@ public class CleanCommand: Command {
             fileName: fileName.value,
             templatePath: nil,
             generateXcodeProject: nil,
+            generateXcodeWorkspace: nil,
             generators: generators.value,
             converters: converters.value,
             carthagePath: carthagePath.value

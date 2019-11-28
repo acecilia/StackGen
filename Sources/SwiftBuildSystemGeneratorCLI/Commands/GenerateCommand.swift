@@ -10,6 +10,7 @@ public class GenerateCommand: Command {
     private let fileName = CommandLineOptions.shared.fileName
     private let templatesPath = CommandLineOptions.shared.templatesPath
     private let generateXcodeProject = CommandLineOptions.shared.generateXcodeProject
+    private let generateXcodeWorkspace = CommandLineOptions.shared.generateXcodeWorkspace
     private let generators = CommandLineOptions.shared.generators
     private let carthagePath = CommandLineOptions.shared.carthagePath
 
@@ -20,6 +21,7 @@ public class GenerateCommand: Command {
             fileName: fileName.value,
             templatePath: templatesPath.value,
             generateXcodeProject: generateXcodeProject.value,
+            generateXcodeWorkspace: generateXcodeWorkspace.value,
             generators: generators.value,
             converters: nil,
             carthagePath: carthagePath.value

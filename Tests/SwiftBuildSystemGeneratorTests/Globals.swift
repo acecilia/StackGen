@@ -38,6 +38,7 @@ func generateCommandArgs(_ generator: Generator) -> [String] {
     return [
         GenerateCommand.name,
         "-x",
+        "-w",
         "-t", "\((rootPath/"Templates").string)",
         "-g", "\(generator.rawValue)",
         "-r", rootPath.relative(to: cwd)

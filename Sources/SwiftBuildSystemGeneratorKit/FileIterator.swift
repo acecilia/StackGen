@@ -5,7 +5,7 @@ public class FileIterator {
     public init() { }
     
     public func start() throws -> [Module] {
-        let configurationFiles = cwd.find().type(.file).filter { $0.basename() == Current.options.fileName }
+        let configurationFiles = cwd.find(name: Current.options.fileName)
         let middlewareModules = try configurationFiles.map { try Module.Middleware($0) }
 
         try Self.performDuplicatedModulesCheck(middlewareModules)
@@ -17,7 +17,7 @@ public class FileIterator {
     private static func performDuplicatedModulesCheck(_ middlewareModules: [Module.Middleware]) throws {
         var modules = [
             middlewareModules.map { (name: $0.name, description: $0.path.relative(to: cwd)) },
-            try CarthageService.shared.getFrameworks().map { (name: $0.name, description: "carthage: \($0.name)") }
+            try Current.carthageService.getFrameworks().map { (name: $0.name, description: "carthage: \($0.name)") }
             ]
             .flatMap { $0 }
 

@@ -42,9 +42,7 @@ public class XcodeGenConverter: ConverterInterface {
     }
 
     private func getXcodeGenFiles() -> [Path] {
-        return cwd.find().type(.file).filter {
-            $0.basename() == XcodegenGenerator.OutputPath.projectFileName
-        }
+        return cwd.find(name: XcodegenGenerator.OutputPath.projectFileName)
     }
 
     private func getDependencies(
@@ -83,14 +81,12 @@ public class XcodeGenConverter: ConverterInterface {
 
 extension XcodeGenConverter {
     public enum OutputPath: String, OutputPathInterface {
-        public static let moduleFileName = "module.yml"
-
         case moduleFile
 
         public func path(for xcodeGenFilePath: Path) -> Path {
             switch self {
             case .moduleFile:
-                return xcodeGenFilePath.parent/Self.moduleFileName
+                return xcodeGenFilePath.parent/Current.options.fileName
             }
         }
     }

@@ -5,12 +5,10 @@ import Version
 import Path
 
 public class CarthageService {
-    static let shared = CarthageService(Current.options.carthagePath)
-
     public let path: Path
     private var frameworksCache: [Framework]?
 
-    private init(_ path: Path) {
+    public init(_ path: Path) {
         self.path = path
     }
 

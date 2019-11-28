@@ -10,12 +10,16 @@ public struct Globals: Codable, DictionaryConvertible {
     public let version: Version
     public let folderStructure: FolderStructure
     public let supportPath: String
+    public let ignore: [Path]
+    public let workspacePath: Path
 
-    public init(_ yaml: Yaml) {
+    public init(_ yaml: Yaml, templatePath: Path) {
         self.bundleIdPrefix = yaml.bundleIdPrefix
         self.version = yaml.version
         self.folderStructure = yaml.folderStructure ?? Self.defaultFolderStructure
         self.supportPath = yaml.supportPath ?? Self.defaultSupportPath
+        self.ignore = (yaml.ignore ?? []) + [templatePath]
+        self.workspacePath = cwd
     }
 }
 
@@ -25,5 +29,6 @@ extension Globals {
         public let version: Version
         public let folderStructure: FolderStructure?
         public let supportPath: String?
+        public let ignore: [Path]?
     }
 }

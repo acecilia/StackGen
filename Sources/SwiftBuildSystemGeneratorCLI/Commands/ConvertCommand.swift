@@ -16,6 +16,7 @@ public class ConvertCommand: Command {
             fileName: fileName.value,
             templatePath: nil,
             generateXcodeProject: nil,
+            generateXcodeWorkspace: nil,
             generators: nil,
             converters: converters.value,
             carthagePath: nil
