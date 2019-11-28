@@ -37,8 +37,8 @@ func functionName(_ methodSignature: String) -> String {
 func generateCommandArgs(_ generator: Generator) -> [String] {
     return [
         GenerateCommand.name,
-        "-x",
-        "-w",
+        "-x", "true",
+        "-w", "true",
         "-t", "\((rootPath/"Templates").string)",
         "-g", "\(generator.rawValue)",
         "-r", rootPath.relative(to: cwd)

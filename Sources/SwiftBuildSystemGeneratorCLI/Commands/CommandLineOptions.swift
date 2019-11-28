@@ -14,12 +14,12 @@ public struct CommandLineOptions {
         Key<String>("-t", "--templates", description: "The path to the folder containing the templates to use. Default value is '\(Options.defaultTemplatesPath)'")
     }
 
-    var generateXcodeProject: Flag {
-        Flag("-x", "--generateXcodeProject", description: "In addition to the build files, also generate the Xcode project. Default value is '\(Options.defaultGenerateXcodeProject)'")
+    var generateXcodeProject: Key<Bool> {
+        Key<Bool>("-x", "--generateXcodeProject", description: "In addition to the build files, also generate the Xcode project. Default value is '\(Options.defaultGenerateXcodeProject)'")
     }
 
-    var generateXcodeWorkspace: Flag {
-        Flag("-w", "--generateXcodeWorkspace", description: "In addition to the build files, also generate the Xcode workspace. Default value is '\(Options.defaultGenerateXcodeWorkspace)'")
+    var generateXcodeWorkspace: Key<Bool> {
+        Key<Bool>("-w", "--generateXcodeWorkspace", description: "In addition to the build files, also generate the Xcode workspace. Default value is '\(Options.defaultGenerateXcodeWorkspace)'")
     }
 
     var generators: Key<[Generator]> {
