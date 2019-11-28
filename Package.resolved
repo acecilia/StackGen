@@ -20,6 +20,15 @@
         }
       },
       {
+        "package": "Carthage",
+        "repositoryURL": "https://github.com/acecilia/Carthage.git",
+        "state": {
+          "branch": null,
+          "revision": "68316f0019dfe0fbd7ade19f02fef792d9c7cddd",
+          "version": null
+        }
+      },
+      {
         "package": "Commandant",
         "repositoryURL": "https://github.com/Carthage/Commandant.git",
         "state": {
