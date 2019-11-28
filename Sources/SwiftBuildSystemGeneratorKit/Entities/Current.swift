@@ -1,6 +1,10 @@
 import Foundation
 import Path
 
+public var cwd: Path {
+    return Path(Path.cwd)
+}
+
 public internal (set) var Current: World {
     get { return _Current }
     set { _Current = newValue }
@@ -17,10 +21,7 @@ public func setCurrent(_ commandLineOptions: Options.Yaml) throws {
     Current = World(options, globals)
 }
 
-private var cwd: Path { Path(Path.cwd) }
-
 public struct World {
-    public var wd: Path { cwd }
     public var options: Options
     public var globals: Globals
 

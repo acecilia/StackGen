@@ -28,7 +28,7 @@ public class XcodegenGenerator: GeneratorInterface {
 
     private func generateProjectFile(_ module: Module) throws {
         let file = OutputPath.projectFile
-        Reporter.print("Generating: \(file.relativePath(for: module))")
+        Reporter.info("generating '\(file.relativePath(for: module))'")
 
         let rendered = try TemplateEngine.shared.render(
             templateName: OutputPath.projectFileName,
@@ -41,7 +41,7 @@ public class XcodegenGenerator: GeneratorInterface {
     }
 
     private func generateXcodeProject(_ module: Module) throws {
-        Reporter.print("Generating: \(OutputPath.xcodeproj.relativePath(for: module))")
+        Reporter.info("generating '\(OutputPath.xcodeproj.relativePath(for: module))'")
 
         // From: https://github.com/yonaskolb/XcodeGen/blob/master/Tests/FixtureTests/FixtureTests.swift
         let project = try Project(path: .init(OutputPath.projectFile.absolutePath(for: module)))
@@ -54,7 +54,7 @@ public class XcodegenGenerator: GeneratorInterface {
 
     private func generateWorkspace(_ module: Module) throws {
         let file = OutputPath.xcworkspace
-        Reporter.print("Generating: \(file.relativePath(for: module))")
+        Reporter.info("generating '\(file.relativePath(for: module))'")
 
         let projectReference = XCWorkspaceDataFileRef(location: .group(module.name + ".xcodeproj"))
         let allDependencies = (module.mainTarget.dependencies + module.testTarget.dependencies)

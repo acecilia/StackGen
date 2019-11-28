@@ -9,7 +9,7 @@ public class XcodeGenConverter: ConverterInterface {
         let xcodeGenFiles = getXcodeGenFiles()
 
         for xcodeGenFile in xcodeGenFiles {
-            Reporter.print("Converting '\(xcodeGenFile)'")
+            Reporter.info("converting '\(xcodeGenFile)'")
 
             let project = try Project(path: .init(xcodeGenFile.string))
             guard let mainTarget = project.targets.first, [.framework, .staticFramework].contains(mainTarget.type),
@@ -42,7 +42,7 @@ public class XcodeGenConverter: ConverterInterface {
     }
 
     private func getXcodeGenFiles() -> [Path] {
-        return Path.cwd.find().type(.file).filter {
+        return cwd.find().type(.file).filter {
             $0.basename() == XcodegenGenerator.OutputPath.projectFileName
         }
     }
@@ -70,7 +70,7 @@ public class XcodeGenConverter: ConverterInterface {
     }
 
     private func getName(for dependency: ProjectSpec.Dependency) -> String {
-        return (Path.cwd/dependency.reference).basename(dropExtension: true)
+        return (cwd/dependency.reference).basename(dropExtension: true)
     }
 
     public func clean() throws {

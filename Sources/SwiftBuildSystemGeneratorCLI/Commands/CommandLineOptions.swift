@@ -34,7 +34,7 @@ public struct CommandLineOptions {
 
 extension Path: ConvertibleFromString {
     public static func convert(from: String) -> Path? {
-        return Path.cwd/from
+        return cwd/from
     }
 }
 

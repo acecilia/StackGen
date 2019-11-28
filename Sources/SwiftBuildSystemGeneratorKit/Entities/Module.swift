@@ -65,7 +65,7 @@ public struct Module: Encodable, Hashable, ContextConvertible {
                 return .framework(framework)
             } else {
                 let modules = [
-                    middlewareModules.map { $0.path.relative(to: Current.wd) },
+                    middlewareModules.map { $0.path.relative(to: cwd) },
                     try CarthageService.shared.getFrameworks().map { $0.name }
                     ]
                     .flatMap { $0 }

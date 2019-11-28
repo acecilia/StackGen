@@ -4,8 +4,6 @@ public class ConvertAction: Action {
     }
 
     public func execute() throws {
-        Reporter.print("Converting build files to 'module.yml' files")
-
         let converters: [ConverterInterface] = Current.options.converters.map {
             $0.build()
         }
@@ -13,7 +11,5 @@ public class ConvertAction: Action {
         for converter in converters {
             try converter.convert()
         }
-
-        Reporter.print("Done")
     }
 }

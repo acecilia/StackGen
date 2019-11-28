@@ -40,14 +40,14 @@ func generateCommandArgs(_ generator: Generator) -> [String] {
         "-x",
         "-t", "\((rootPath/"Templates").string)",
         "-g", "\(generator.rawValue)",
-        "-r", rootPath.relative(to: Path.cwd)
+        "-r", rootPath.relative(to: cwd)
     ]
 }
 
 func cleanCommandArgs(generator: Generator? = nil, converter: Converter? = nil) -> [String] {
     var args = [
         CleanCommand.name,
-        "-r", rootPath.relative(to: Path.cwd)
+        "-r", rootPath.relative(to: cwd)
     ]
 
     if let generator = generator {

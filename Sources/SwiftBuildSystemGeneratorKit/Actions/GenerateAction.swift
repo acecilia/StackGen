@@ -7,16 +7,11 @@ public class GenerateAction: Action {
     }
 
     public func execute() throws {
-        Reporter.print("Generating configuration files from path: \(Current.wd)")
-
         let fileIterator = FileIterator()
         let modules = try fileIterator.start()
 
-        Reporter.print("Found modules:")
-        modules.forEach {
-            let relativePath = $0.path.relative(to: Current.wd)
-            Reporter.print("\(relativePath)")
-        }
+        let foundModules = modules.map { $0.path.relative(to: cwd) }.joined(separator: ", ")
+        Reporter.info("found modules '\(foundModules)'")
 
         let generators: [GeneratorInterface] = Current.options.generators.map {
             $0.build(modules)
@@ -25,7 +20,5 @@ public class GenerateAction: Action {
         for generator in generators {
             try generator.generate()
         }
-
-        Reporter.print("Done")
     }
 }

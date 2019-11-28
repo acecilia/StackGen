@@ -21,6 +21,9 @@ public class SwiftBuildSystemGeneratorCLI {
     }
 
     public func execute(with arguments: [String] = []) -> Int32 {
-        return cli.go(with: arguments)
+        Reporter.start(arguments)
+        let status = cli.go(with: arguments)
+        Reporter.end(status)
+        return status
     }
 }

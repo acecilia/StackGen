@@ -11,11 +11,11 @@ public class CocoaPodsGenerator: GeneratorInterface {
     public func generate() throws {
         for module in modules {
             let file = OutputPath.podspec
-            Reporter.print("Generating: \(file.relativePath(for: module))")
+            Reporter.info("generating '\(file.relativePath(for: module))'")
             
             let rendered = try TemplateEngine.shared.render(
                 templateName: OutputPath.templateName,
-                context: try module.asContext(basePath: Current.wd)
+                context: try module.asContext(basePath: cwd)
             )
 
             let outputPath = file.path(for: module)
@@ -40,7 +40,7 @@ extension CocoaPodsGenerator {
         public func path(for module: Module) -> Path {
             switch self {
             case .podspec:
-                return Current.wd/"\(module.name).podspec"
+                return cwd/"\(module.name).podspec"
             }
         }
     }

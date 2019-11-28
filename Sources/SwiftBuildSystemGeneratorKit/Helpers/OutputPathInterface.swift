@@ -8,7 +8,7 @@ public protocol OutputPathInterface: CaseIterable {
 
 public extension OutputPathInterface {
     func relativePath(for object: T) -> String {
-        return path(for: object).relative(to: Current.wd)
+        return path(for: object).relative(to: cwd)
     }
 
     func absolutePath(for object: T) -> String {
@@ -25,8 +25,8 @@ public extension OutputPathInterface {
         }
 
         if removedFiles.isEmpty == false {
-            let removedFilesList = removedFiles.map { $0.relative(to: Current.wd) }.joined(separator: ", ")
-            Reporter.print("Removed files: \(removedFilesList)")
+            let removedFilesList = removedFiles.map { $0.relative(to: cwd) }.joined(separator: ", ")
+            Reporter.info("removed files: \(removedFilesList)")
         }
     }
 }

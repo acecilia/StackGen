@@ -22,20 +22,23 @@ public class CarthageService {
         var frameworks: [Framework] = []
 
         let resolvedCartfileUrl = ResolvedCartfile.url(in: path.url)
-        let resolvedCartfileContent = try String(contentsOf: resolvedCartfileUrl)
-        let resolvedCartfile = try ResolvedCartfile.from(string: resolvedCartfileContent).get()
-        for (dependency, pinnedVersion) in resolvedCartfile.dependencies {
-            let versionFileURL = VersionFile.url(for: dependency, rootDirectoryURL: path.url)
-            guard let versionFile = VersionFile(url: versionFileURL) else {
-                // Version file not found for dependency
-                continue
+        if let resolvedCartfileContent = try? String(contentsOf: resolvedCartfileUrl) {
+            let resolvedCartfile = try ResolvedCartfile.from(string: resolvedCartfileContent).get()
+            for (dependency, pinnedVersion) in resolvedCartfile.dependencies {
+                let versionFileURL = VersionFile.url(for: dependency, rootDirectoryURL: path.url)
+                guard let versionFile = VersionFile(url: versionFileURL) else {
+                    Reporter.warning("Carthage version file not found for dependency '\(dependency.name)'")
+                    continue
+                }
+                let version = try Version(tolerant: pinnedVersion.commitish)
+                    .unwrap(onFailure: "The Carthage version is not valid. Dependency: \(dependency.name). Version: \(pinnedVersion.commitish)")
+                let frameworkNames = versionFile.iOS?.map { $0.name } ?? []
+                for frameworkName in frameworkNames {
+                    frameworks.append(Framework(frameworkName, version))
+                }
             }
-            let version = try Version(tolerant: pinnedVersion.commitish)
-                .unwrap(onFailure: "The Carthage version is not valid. Dependency: \(dependency.name). Version: \(pinnedVersion.commitish)")
-            let frameworkNames = versionFile.iOS?.map { $0.name } ?? []
-            for frameworkName in frameworkNames {
-                frameworks.append(Framework(frameworkName, version))
-            }
+        } else {
+            Reporter.warning("The 'Carthage.resolved' file was not found at path '\(resolvedCartfileUrl.absoluteString)'")
         }
 
         frameworksCache = frameworks

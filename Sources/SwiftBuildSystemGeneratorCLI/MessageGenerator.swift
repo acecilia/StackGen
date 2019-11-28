@@ -1,5 +1,6 @@
 import Foundation
 import SwiftCLI
+import SwiftBuildSystemGeneratorKit
 
 public class MessageGenerator: HelpMessageGenerator {
     public func writeUnrecognizedErrorMessage(for error: Error, to out: WritableStream) {
@@ -10,5 +11,10 @@ public class MessageGenerator: HelpMessageGenerator {
             error.localizedDescription
         ]
         writeErrorLine(for: description.joined(separator: ". "), to: out)
+    }
+
+    public func writeErrorLine(for errorMessage: String, to out: WritableStream) {
+        let message = Reporter.formatAsError(errorMessage)
+        out.print(message)
     }
 }

@@ -5,7 +5,7 @@ public struct Options {
     public static let defaultFileName = "module.yml"
     public static let defaultTemplatesPath = "Templates"
     public static let defaultGenerateXcodeProject = false
-    public static let defaultCarthagePath = Path(Path.cwd)
+    public static let defaultCarthagePath = cwd
 
     public let fileName: String
     public let templatePath: String
