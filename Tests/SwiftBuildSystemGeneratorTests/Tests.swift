@@ -39,9 +39,9 @@ final class Tests: XCTestCase {
 
                 do {
                     // Clean module.yml
-                    let cli = SwiftBuildSystemGeneratorCLI()
-                    let status = cli.execute(with: cleanCommandArgs(converter: .xcodegen))
-                    XCTAssertEqual(status, 0)
+                    try Path.cwd.find(name: "module.yml").forEach {
+                        try $0.delete()
+                    }
                 }
 
                 do {

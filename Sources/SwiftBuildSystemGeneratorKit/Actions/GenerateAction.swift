@@ -7,11 +7,7 @@ public class GenerateAction: Action {
     }
 
     public func execute() throws {
-        let fileIterator = FileIterator()
-        let modules = try fileIterator.start()
-
-        let foundModules = modules.map { $0.path.relative(to: cwd) }.joined(separator: ", ")
-        Reporter.info("found modules '\(foundModules)'")
+        let modules = try FileIterator().start()
 
         let generators: [GeneratorInterface] = Current.options.generators.map {
             $0.build(modules)

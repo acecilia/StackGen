@@ -8,6 +8,7 @@ public struct Globals: Codable, DictionaryConvertible {
 
     public let bundleIdPrefix: String
     public let version: Version
+    public let swiftVersion: Version
     public let folderStructure: FolderStructure
     public let supportPath: String
     public let ignore: [Path]
@@ -16,6 +17,7 @@ public struct Globals: Codable, DictionaryConvertible {
     public init(_ yaml: Yaml, templatePath: Path) {
         self.bundleIdPrefix = yaml.bundleIdPrefix
         self.version = yaml.version
+        self.swiftVersion = yaml.swiftVersion
         self.folderStructure = yaml.folderStructure ?? Self.defaultFolderStructure
         self.supportPath = yaml.supportPath ?? Self.defaultSupportPath
         self.ignore = (yaml.ignore ?? []) + [templatePath]
@@ -27,6 +29,7 @@ extension Globals {
     public struct Yaml: Codable {
         public let bundleIdPrefix: String
         public let version: Version
+        public let swiftVersion: Version
         public let folderStructure: FolderStructure?
         public let supportPath: String?
         public let ignore: [Path]?

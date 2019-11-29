@@ -7,27 +7,14 @@ public class CleanAction: Action {
     }
 
     public func execute() throws {
-        let converters: [ConverterInterface] = Current.options.converters.map {
-            $0.build()
+        let modules = try FileIterator().start()
+        
+        let generators: [GeneratorInterface] = Current.options.generators.map {
+            $0.build(modules)
         }
 
-        if converters.isEmpty {
-            let modules = try FileIterator().start()
-
-            let foundModules = modules.map { $0.path.relative(to: cwd) }.joined(separator: ", ")
-            Reporter.info("found modules '\(foundModules)'")
-
-            let generators: [GeneratorInterface] = Current.options.generators.map {
-                $0.build(modules)
-            }
-
-            for generator in generators {
-                try generator.clean()
-            }
-        } else {
-            for converter in converters {
-                try converter.clean()
-            }
+        for generator in generators {
+            try generator.clean()
         }
     }
 }

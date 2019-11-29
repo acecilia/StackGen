@@ -11,6 +11,9 @@ public class FileIterator {
         try Self.performDuplicatedModulesCheck(middlewareModules)
 
         let modules = try middlewareModules.map { try Module($0, resolveDependenciesUsing: middlewareModules) }
+        let foundModules = modules.map { $0.path.relative(to: cwd) }.joined(separator: ", ")
+        Reporter.info("found modules '\(foundModules)'")
+        
         return modules
     }
 

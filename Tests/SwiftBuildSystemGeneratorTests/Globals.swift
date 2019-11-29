@@ -45,7 +45,7 @@ func generateCommandArgs(_ generator: Generator) -> [String] {
     ]
 }
 
-func cleanCommandArgs(generator: Generator? = nil, converter: Converter? = nil) -> [String] {
+func cleanCommandArgs(generator: Generator? = nil) -> [String] {
     var args = [
         CleanCommand.name,
         "-r", rootPath.relative(to: cwd)
@@ -54,12 +54,6 @@ func cleanCommandArgs(generator: Generator? = nil, converter: Converter? = nil) 
     if let generator = generator {
         args.append(contentsOf: [
             "-g", "\(generator.rawValue)"
-        ])
-    }
-
-    if let converter = converter {
-        args.append(contentsOf: [
-            "-c", "\(converter.rawValue)"
         ])
     }
 
