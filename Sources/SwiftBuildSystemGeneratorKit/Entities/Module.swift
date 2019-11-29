@@ -69,9 +69,8 @@ public struct Module: Encodable, Hashable, ContextConvertible {
                     try Current.carthageService.getFrameworks().map { $0.name }
                     ]
                     .flatMap { $0 }
-                    .joined(separator: ", ")
 
-                throw UnexpectedError("Module '\(name)' specifies the dependency '\(dependency)', but such dependency could not be found among the considered modules: '\(modules)'")
+                throw CustomError(.dependencyNotFoundAmongDetectedModules(moduleName: name, dependencyName: dependency, detectedModules: modules))
             }
         }
     }

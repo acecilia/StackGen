@@ -25,9 +25,9 @@ public class FileIterator {
             .flatMap { $0 }
 
         while let module = modules.popLast() {
-            let duplications = modules.filter { $0.name == module.name }.map { $0.description }.joined(separator: ", ")
+            let duplications = modules.filter { $0.name == module.name }.map { $0.description }
             if duplications.isEmpty == false {
-                throw UnexpectedError("Found multiple modules with the same name. Modules: '\(duplications)'")
+                throw CustomError(.multipleModulesWithSameName(modules: duplications))
             }
         }
     }
