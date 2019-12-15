@@ -17,18 +17,18 @@ public func setCurrent(_ commandLineOptions: Options.Yaml) throws {
     let options = Options(
         yaml: commandLineOptions.merge(with: workspace.options)
     )
-    let globals = Globals(workspace.globals, templatePath: options.templatePath)
-    Current = World(options, globals)
+    Current = World(options, workspace.globals)
 }
 
 public struct World {
     public let options: Options
-    public let globals: Globals
+    @RawWrapper
+    public var globals: Global
     public let carthageService: CarthageService
 
-    public init(_ options: Options, _ globals: Globals) {
+    public init(_ options: Options, _ globals: RawWrapper<Global>) {
         self.options = options
-        self.globals = globals
+        self._globals = globals
         self.carthageService = CarthageService(options.carthagePath)
     }
 }

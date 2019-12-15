@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name                   = 'SwiftModule3'
   s.version                = '1.0.0'
-  s.swift_version          = '5.1.0'
+  s.swift_version          = '5.1'
   s.source_files           = 'Libraries/SwiftModule3/src/main/swift/*.swift'
 
   spec.dependency 'SwiftModule1', '1.0.0'
