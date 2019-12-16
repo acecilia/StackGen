@@ -1,0 +1,15 @@
+{# From https://code-craftsman.fr/2017/09/24/AutoInit/ and https://gist.github.com/Liquidsoul/efa4f65af055acfde64afed6cda0007d #}
+
+{% for type in types.structs %}
+{% if type|annotated:"AutoInit" %}
+{% set spacing %}{% if type.parentName %}    {% endif %}{% endset %}
+{% map type.storedVariables into parameters using var %}{{ var.name }}: {{ var.typeName }}{% endmap %}
+// sourcery:inline:auto:{{ type.name }}.AutoInit
+{{spacing}}    {{ type.accessLevel }} init({{ parameters|join:", " }}) { // swiftlint:disable:this line_length
+{{spacing}}        {% for variable in type.storedVariables %}
+{{spacing}}        self.{{ variable.name }} = {{ variable.name }}
+{{spacing}}        {% endfor %}
+{{spacing}}    }
+// sourcery:end
+{% endif %}
+{% endfor %}
