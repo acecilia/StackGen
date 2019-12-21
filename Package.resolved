@@ -201,11 +201,11 @@
       },
       {
         "package": "Version",
-        "repositoryURL": "https://github.com/acecilia/Version.git",
+        "repositoryURL": "https://github.com/mxcl/Version.git",
         "state": {
           "branch": null,
-          "revision": "d367727b03253687ff911f3fa90b62b3dca475aa",
-          "version": null
+          "revision": "200046c93f6d5d78a6d72bfd9c0b27a95e9c0a2b",
+          "version": "1.2.0"
         }
       },
       {

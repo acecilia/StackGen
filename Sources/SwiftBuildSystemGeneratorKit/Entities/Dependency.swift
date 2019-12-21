@@ -3,55 +3,31 @@ import Path
 import AnyCodable
 import Version
 
-public enum Dependency: Encodable, Hashable {
-    case module(Dependency.Module)
-    case framework(Framework)
+public struct Dependency: Encodable, Hashable, ContextConvertible {
+    public let name: String
+    public let path: Path
+    public let version: Version
+    public let type: Kind
 
-    private enum CodingKeys: String, CodingKey {
-        case type
-        case name
+    public init(_ middlewareModule: Module.Middleware) {
+        self.name = middlewareModule.name
+        self.path = middlewareModule.path
+        self.version = Current.globals.version
+        self.type = .module
     }
 
-    public enum Kind: String, Codable {
-        case module
-        case framework
-    }
-
-    public var type: Kind {
-        switch self {
-        case .module:
-            return .module
-
-        case .framework:
-            return .framework
-        }
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var dict: [String: AnyCodable]
-
-        switch self {
-        case let .module(module):
-            dict = try module.asDictionary(basePath: encoder.userInfo[.relativePath] as? Path).mapValues {
-                AnyCodable($0)
-            }
-        case let .framework(framework):
-            dict = try framework.asDictionary(basePath: encoder.userInfo[.relativePath] as? Path).mapValues {
-                AnyCodable($0)
-            }
-        }
-
-        dict[CodingKeys.type.rawValue] = AnyCodable(type.rawValue)
-
-        var container = encoder.singleValueContainer()
-        try container.encode(dict)
+    public init(_ framework: CarthageService.Framework) {
+        self.name = framework.name
+        // Only support dynamic linked frameworks for now
+        self.path = Current.options.carthagePath/"Carthage"/"Build"/"iOS"/"\(name).framework"
+        self.version = framework.version
+        self.type = .framework
     }
 }
 
 public extension Dependency {
-    struct Module: Encodable, Hashable, ContextConvertible {
-        public let name: String
-        public let path: Path
-        public let version: Version
+    enum Kind: String, Codable {
+        case module
+        case framework
     }
 }

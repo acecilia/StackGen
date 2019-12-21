@@ -33,36 +33,26 @@ public struct Module: Encodable, Hashable, ContextConvertible {
         self.mainTarget = Target(
             name: name,
             sources: folderStructure.sources.map { path/$0 },
-            dependencies: try Self.computeDependencies(name, path, middlewareModule.yamlModule.dependencies, middlewareModules)
+            dependencies: try Self.computeDependencies(name, middlewareModule.yamlModule.dependencies, middlewareModules)
         )
 
         self.testTarget = Target(
             name: folderStructure.testTargetName(for: name),
             sources: folderStructure.tests.map { path/$0 },
-            dependencies: try Self.computeDependencies(name, path, middlewareModule.yamlModule.testDependencies, middlewareModules)
+            dependencies: try Self.computeDependencies(name, middlewareModule.yamlModule.testDependencies, middlewareModules)
         )
     }
 
     private static func computeDependencies(
         _ name: String,
-        _ modulePath: Path,
         _ dependencies: [String]?,
         _ middlewareModules: [Module.Middleware]
     ) throws -> [Dependency] {
         return try (dependencies ?? []).map { dependency in
             if let middlewareModule = middlewareModules.first(where: { $0.name == dependency }) {
-                let module = Dependency.Module(
-                    name: middlewareModule.name,
-                    path: middlewareModule.path,
-                    version: Current.globals.version
-                )
-                return .module(module)
+                return Dependency(middlewareModule)
             } else if let framework = try Current.carthageService.getFrameworks().first(where: { $0.name == dependency })  {
-                let framework = Framework(
-                    name: dependency,
-                    version: framework.version
-                )
-                return .framework(framework)
+                return Dependency(framework)
             } else {
                 let modules = [
                     middlewareModules.map { $0.path.relative(to: cwd) },

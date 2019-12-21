@@ -61,16 +61,16 @@ public class XcodegenGenerator: GeneratorInterface {
         let projectReference = XCWorkspaceDataFileRef(location: .group(module.name + ".xcodeproj"))
         let allDependencies = (module.mainTarget.dependencies + module.testTarget.dependencies)
             .compactMap {
-                switch $0 {
-                case let .module(dependency):
-                    return dependency
+                switch $0.type {
+                case .module:
+                    return $0
 
                 case .framework:
                     // Nothing to do, this will be handled by the xcodeGen file
                     return nil
                 }
             }
-        .reduce(into: Set<Dependency.Module>()) { (result, element) in
+        .reduce(into: Set<Dependency>()) { (result, element) in
             // Remove duplicated dependencies
             result.insert(element)
         }

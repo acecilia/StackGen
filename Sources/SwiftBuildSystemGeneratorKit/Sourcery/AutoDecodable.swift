@@ -1,1 +1,0 @@
-protocol AutoDecodable: Decodable {}

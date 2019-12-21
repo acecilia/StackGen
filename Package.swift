@@ -21,16 +21,12 @@ let package = Package(
         .package(url: "https://github.com/tuist/xcodeproj.git", .exact("7.1.0")),
         .package(url: "https://github.com/yonaskolb/XcodeGen.git", .upToNextMajor(from: "2.10.1")),
         .package(url: "https://github.com/Flight-School/AnyCodable.git", .upToNextMajor(from: "0.2.3")),
-        .package(
-            url: "https://github.com/acecilia/Version.git",
-            .revision("d367727b03253687ff911f3fa90b62b3dca475aa") // Latest on master at the time of writing
-            // Using a fork until https://github.com/mxcl/Version/pull/9 is merged and released
-        ),
+        .package(url: "https://github.com/mxcl/Version.git", .upToNextMajor(from: "1.2.0")),
         .package(
             url: "https://github.com/acecilia/Carthage.git",
             .revision("68316f0019dfe0fbd7ade19f02fef792d9c7cddd") // Latest on master at the time of writing
             // Using a fork until https://github.com/Carthage/Carthage/pull/2910 is merged and released
-        ),
+        ),        
     ],
     targets: [
         .target(

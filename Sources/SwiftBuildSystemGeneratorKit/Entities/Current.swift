@@ -5,11 +5,7 @@ public var cwd: Path {
     return Path(Path.cwd)
 }
 
-public private(set) var Current: World {
-    get { return _Current }
-    set { _Current = newValue }
-}
-
+public var Current: World { _Current }
 private var _Current: World!
 
 public func setCurrent(_ commandLineOptions: Options.Yaml) throws {
@@ -17,7 +13,7 @@ public func setCurrent(_ commandLineOptions: Options.Yaml) throws {
     let options = Options(
         yaml: commandLineOptions.merge(with: workspace.options)
     )
-    Current = World(options, workspace.globals)
+    _Current = World(options, workspace.globals)
 }
 
 public struct World {

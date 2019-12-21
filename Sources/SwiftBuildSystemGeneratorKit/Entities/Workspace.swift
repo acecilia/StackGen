@@ -11,7 +11,7 @@ public struct Workspace: Decodable {
         let content = try String(contentsOf: path/"workspace.yml")
         let userInfo: [CodingUserInfoKey: Any] = [
             .relativePath: path,
-            .tolerantVersion: true
+            .decodingMethod: DecodingMethod.tolerant
         ]
         return try YAMLDecoder().decode(Workspace.self, from: content, userInfo: userInfo)
     }

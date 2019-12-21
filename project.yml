@@ -1,0 +1,17 @@
+name: SwiftBuildSystemGenerator
+
+# localPackages:
+#   - .
+
+aggregateTargets:
+  sourcery:
+    buildScripts:
+      - name: Sourcery
+        script: |
+          sourcery
+
+  xcodegen:
+    buildScripts:
+      - name: Xcodegen
+        script: |
+          xcodegen
