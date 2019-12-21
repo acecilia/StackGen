@@ -8,21 +8,12 @@ extension Module {
         public var testDependencies: [String]?
 
         public init(
-            dependencies: [String]?,
-            testDependencies: [String]?
+            dependencies: [String]? = nil,
+            testDependencies: [String]? = nil
         ) {
-            self.dependencies = dependencies?.isEmpty == true ? nil : dependencies
-            self.testDependencies = testDependencies?.isEmpty == true ? nil : testDependencies
-        }
-
-        public init() {
-            self.init(
-                dependencies: nil,
-                testDependencies: nil
-            )
+            self.dependencies = dependencies?.somethingOrNil()
+            self.testDependencies = testDependencies?.somethingOrNil()
         }
     }
 }
-
-
 

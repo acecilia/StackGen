@@ -16,26 +16,20 @@ public struct Options {
     public let converters: [Converter]
     public let carthagePath: Path
 
-    public init(
-        yaml: Yaml?
-    ) {
+    public init(yaml: Yaml?) {
         self.fileName = yaml?.fileName ?? Self.defaultFileName
         let templatePathString = yaml?.templatePath ?? Self.defaultTemplatesPath
         self.templatePath = Path(templatePathString) ?? cwd/templatePathString
         self.generateXcodeProject = yaml?.generateXcodeProject ?? Self.defaultGenerateXcodeProject
         self.generateXcodeWorkspace = yaml?.generateXcodeWorkspace ?? Self.defaultGenerateXcodeWorkspace
-        if let generators = yaml?.generators, generators.isEmpty == false {
-            self.generators = generators
-        } else {
-            self.generators = Generator.allCases
-        }
+        self.generators = yaml?.generators?.somethingOrNil() ?? Generator.allCases
         self.converters = yaml?.converters ?? []
         self.carthagePath = yaml?.carthagePath ?? Self.defaultCarthagePath
     }
 }
 
 extension Options {
-    // sourcery: AutoInit
+    // sourcery: AutoInit, AutoMerge
     public struct Yaml: Codable {
         public let fileName: String?
         public let templatePath: String?
@@ -45,20 +39,16 @@ extension Options {
         public let converters: [Converter]?
         public let carthagePath: Path?
 
-        public func merge(with yaml: Yaml?) -> Yaml {
-            return Yaml(
-                fileName: fileName ?? yaml?.fileName,
-                templatePath: templatePath ?? yaml?.templatePath,
-                generateXcodeProject: generateXcodeProject ?? yaml?.generateXcodeProject,
-                generateXcodeWorkspace: generateXcodeWorkspace ?? yaml?.generateXcodeWorkspace,
-                generators: generators ?? yaml?.generators,
-                converters: converters ?? yaml?.converters,
-                carthagePath: carthagePath ?? yaml?.carthagePath
-            )
-        }
-
 // sourcery:inline:auto:Options.Yaml.AutoInit
-        public init(fileName: String?, templatePath: String?, generateXcodeProject: Bool?, generateXcodeWorkspace: Bool?, generators: [Generator]?, converters: [Converter]?, carthagePath: Path?) { // swiftlint:disable:this line_length
+        public init(
+            fileName: String?,
+            templatePath: String?,
+            generateXcodeProject: Bool?,
+            generateXcodeWorkspace: Bool?,
+            generators: [Generator]?,
+            converters: [Converter]?,
+            carthagePath: Path?
+         ) {
             self.fileName = fileName
             self.templatePath = templatePath
             self.generateXcodeProject = generateXcodeProject

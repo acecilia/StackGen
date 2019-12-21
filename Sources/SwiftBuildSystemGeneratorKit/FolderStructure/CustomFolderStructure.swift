@@ -1,6 +1,5 @@
 import Foundation
 
-/// https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_project_layout
 public class CustomFolderStructure: FolderStructureInterface {
     public let targetName: String
 
