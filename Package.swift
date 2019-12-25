@@ -24,7 +24,7 @@ let package = Package(
         .package(url: "https://github.com/mxcl/Version.git", .upToNextMajor(from: "1.2.0")),
         .package(
             url: "https://github.com/acecilia/Carthage.git",
-            .revision("68316f0019dfe0fbd7ade19f02fef792d9c7cddd") // Latest on master at the time of writing
+            .revision("aebb5b2dda0fcb489f2baa3605aa79b2d742af67") // Latest on master at the time of writing
             // Using a fork until https://github.com/Carthage/Carthage/pull/2910 is merged and released
         ),        
     ],

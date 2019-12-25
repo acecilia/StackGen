@@ -2,7 +2,6 @@
 // DO NOT EDIT
 
 
-
 // MARK: - Options.Yaml AutoMerge
 extension Options.Yaml {
     public func merge(with rhs: Options.Yaml?) -> Options.Yaml {
