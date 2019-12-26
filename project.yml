@@ -1,5 +1,5 @@
 name: SwiftBuildSystemGenerator
-fileGroups: [project.yml]
+fileGroups: [project.yml, .sourcery.yml]
 # localPackages:
 #   - .
 

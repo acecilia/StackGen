@@ -23,3 +23,13 @@ class TemplateEngine {
             .replacingOccurrences(of: "¶", with: "\n")
     }
 }
+
+extension Stencil.TemplateSyntaxError: ThirdPartyErrorInterface {
+    public var thirdPartyErrorDescription: String {
+        let reporter = SimpleErrorReporter()
+        return """
+        Template syntax error.
+        \(reporter.renderError(self))
+        """
+    }
+}

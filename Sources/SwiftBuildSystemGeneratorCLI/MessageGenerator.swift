@@ -11,10 +11,17 @@ public class MessageGenerator: HelpMessageGenerator {
             fileInformation = nil
         }
 
+        let errorDescription: String
+        if let error = error as? ThirdPartyErrorInterface {
+            errorDescription = error.thirdPartyErrorDescription
+        } else {
+            errorDescription = String(describing: error)
+        }
+
         let description: [String] = [
             // The localizedDescription of the error is useless if it does not conform to LocalizedError:
             // the useful error message can be obtained by using String(describing: error)
-            String(describing: error),
+            errorDescription,
             fileInformation
             ]
             .compactMap { $0 }

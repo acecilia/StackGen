@@ -12,7 +12,7 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/acecilia/Stencil.git",
-            .revision("6f6a983a938b0d37e3fe00a723043c56026116fc")
+            .revision("1c4eab02c5d2c4ba64418dd23bd0801b8cd4eb2d")
             // Using a fork until https://github.com/stencilproject/Stencil/pull/289 is merged and released
         ),
         .package(url: "https://github.com/jpsim/Yams.git", .upToNextMajor(from: "2.0.0")),
