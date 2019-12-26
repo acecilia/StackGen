@@ -11,7 +11,7 @@ private var _Current: World!
 public func setCurrent(_ commandLineOptions: Options.Yaml) throws {
     let workspace = try Workspace.decode(from: cwd)
     let options = Options(
-        yaml: commandLineOptions.merge(with: workspace.options)
+        yaml: commandLineOptions.merging(workspace.options)
     )
     _Current = World(options, workspace.globals)
 }

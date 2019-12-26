@@ -6,7 +6,7 @@ public struct RawWrapper<T: DictionaryConvertible & Decodable>: DictionaryConver
     public let raw: [String: Any]
     public let typed: T
 
-    public func asDictionary(basePath: Path?) throws -> [String: Any] {
+    public func asDictionary(basePath: Path) throws -> [String: Any] {
         let typedDict = try typed.asDictionary(basePath: basePath)
         let dict = raw.merging(typedDict) { _, new in new }
         return dict

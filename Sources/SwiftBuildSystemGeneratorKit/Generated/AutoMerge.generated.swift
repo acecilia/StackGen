@@ -4,15 +4,15 @@
 
 // MARK: - Options.Yaml AutoMerge
 extension Options.Yaml {
-    public func merge(with rhs: Options.Yaml?) -> Options.Yaml {
+    public func merging(_ other: Options.Yaml?) -> Options.Yaml {
         return Options.Yaml(
-            fileName: fileName ?? rhs?.fileName,
-            templatePath: templatePath ?? rhs?.templatePath,
-            generateXcodeProject: generateXcodeProject ?? rhs?.generateXcodeProject,
-            generateXcodeWorkspace: generateXcodeWorkspace ?? rhs?.generateXcodeWorkspace,
-            generators: generators ?? rhs?.generators,
-            converters: converters ?? rhs?.converters,
-            carthagePath: carthagePath ?? rhs?.carthagePath
+            fileName: fileName ?? other?.fileName,
+            templatePath: templatePath ?? other?.templatePath,
+            generateXcodeProject: generateXcodeProject ?? other?.generateXcodeProject,
+            generateXcodeWorkspace: generateXcodeWorkspace ?? other?.generateXcodeWorkspace,
+            generators: generators ?? other?.generators,
+            converters: converters ?? other?.converters,
+            carthagePath: carthagePath ?? other?.carthagePath
         )
     }
 }

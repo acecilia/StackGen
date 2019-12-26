@@ -5,10 +5,10 @@
 {% for type in types.types|!enum where type.implements.AutoMerge or type|annotated:"AutoMerge" %}
 // MARK: - {{ type.name }} AutoMerge
 extension {{ type.name }} {
-{{spacing}}    {{ type.accessLevel }} func merge(with rhs: {{ type.name }}?) -> {{ type.name }} {
+{{spacing}}    {{ type.accessLevel }} func merging(_ other: {{ type.name }}?) -> {{ type.name }} {
 {{spacing}}        return {{ type.name }}(
 {{spacing}}            {% for variable in type.storedVariables %}
-{{spacing}}            {{ variable.name }}: {{ variable.name }} ?? rhs?.{{ variable.name }}{% if not forloop.last %},{% endif %}
+{{spacing}}            {{ variable.name }}: {{ variable.name }} ?? other?.{{ variable.name }}{% if not forloop.last %},{% endif %}
 {{spacing}}            {% endfor %}
 {{spacing}}        )
 {{spacing}}    }
