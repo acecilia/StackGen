@@ -11,8 +11,9 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/stencilproject/Stencil.git",
-            .revision("a229b59d3d888cd6bed2d372bdce627d71ea5e66") // Latest on master at the time of writing
+            url: "https://github.com/acecilia/Stencil.git",
+            .revision("6f6a983a938b0d37e3fe00a723043c56026116fc")
+            // Using a fork until https://github.com/stencilproject/Stencil/pull/289 is merged and released
         ),
         .package(url: "https://github.com/jpsim/Yams.git", .upToNextMajor(from: "2.0.0")),
         .package(url: "https://github.com/mxcl/Path.swift.git", .upToNextMajor(from: "1.0.0-alpha.3")),

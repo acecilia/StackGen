@@ -7,7 +7,10 @@ class TemplateEngine {
     private init() { }
 
     func render(templateName: String, context: [String: Any]) throws -> String {
-        let environment = Environment(loader: FileSystemLoader(paths: [.init(Current.options.templatePath.string)]))
+        let environment = Environment(
+          loader: FileSystemLoader(paths: [.init(Current.options.templatePath.string)]),
+          throwOnUnresolvedVariable: true
+        )
         let rendered = try environment.renderTemplate(name: templateName, context: context)
         return trimNewLines(rendered)
     }

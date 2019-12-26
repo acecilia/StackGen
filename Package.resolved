@@ -174,10 +174,10 @@
       },
       {
         "package": "Stencil",
-        "repositoryURL": "https://github.com/stencilproject/Stencil.git",
+        "repositoryURL": "https://github.com/acecilia/Stencil.git",
         "state": {
           "branch": null,
-          "revision": "a229b59d3d888cd6bed2d372bdce627d71ea5e66",
+          "revision": "6f6a983a938b0d37e3fe00a723043c56026116fc",
           "version": null
         }
       },
