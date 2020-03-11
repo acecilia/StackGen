@@ -10,6 +10,5 @@ final class FixtureGenerator: XCTestCase {
         Snapshot.recording = true
         let tests = Tests()
         try tests.testGenerate()
-        try tests.testConverters()
     }
 }

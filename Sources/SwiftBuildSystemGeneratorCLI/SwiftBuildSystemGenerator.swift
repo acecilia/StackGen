@@ -10,9 +10,7 @@ public class SwiftBuildSystemGeneratorCLI {
             name: "swiftbuildsystemgenerator",
             description: "Generates build system configurations for swift projects",
             commands: [
-                GenerateCommand(),
-                CleanCommand(),
-                ConvertCommand()
+                GenerateCommand()
             ]
         )
 

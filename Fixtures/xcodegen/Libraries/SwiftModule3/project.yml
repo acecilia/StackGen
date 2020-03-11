@@ -1,0 +1,46 @@
+name: SwiftModule3
+
+options:
+  defaultConfig: Release
+  bundleIdPrefix: com.acecilia
+  transitivelyLinkDependencies: true
+  createIntermediateGroups: true
+  minimumXcodeGenVersion: 2.10.1
+
+fileGroups: [module.yml, project.yml]
+
+targets:
+  SwiftModule3:
+    type: framework.static
+    platform: iOS
+    sources:
+    - src/main/swift
+    dependencies:
+    - framework: ../../../../../../../../Carthage/Build/iOS/FileKit.framework
+    info:
+      path: SupportingFiles/SwiftModule3/Info.plist
+
+  SwiftModule3Tests:
+    type: bundle.unit-test
+    platform: iOS
+    settings:
+      base:
+        # Needed for getting proper test coverage percentages when using static frameworks
+        OTHER_LDFLAGS: -all_load
+    sources:
+    - src/test/swift
+    dependencies:
+    - target: SwiftModule3
+    info:
+      path: SupportingFiles/SwiftModule3Tests/Info.plist
+
+schemes:
+  SwiftModule3:
+    build:
+      targets:
+        SwiftModule3: all
+    test:
+      gatherCoverageData: true
+      targets:
+        - name: SwiftModule3Tests
+          randomExecutionOrder: true

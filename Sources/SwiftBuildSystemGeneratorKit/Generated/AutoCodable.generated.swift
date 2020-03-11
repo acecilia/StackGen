@@ -2,41 +2,30 @@
 // DO NOT EDIT
 
 
-extension Dependency.Yaml {
+extension Context {
 
     enum CodingKeys: String, CodingKey {
+        case global
         case module
-        case framework
     }
 
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
+    internal init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
 
-        if container.allKeys.contains(.module), try container.decodeNil(forKey: .module) == false {
-            var associatedValues = try container.nestedUnkeyedContainer(forKey: .module)
-            let associatedValue0 = try associatedValues.decode(Path.self)
-            self = .module(associatedValue0)
-            return
+        let enumCase = try container.decode(String.self)
+        switch enumCase {
+        case CodingKeys.global.rawValue: self = .global
+        case CodingKeys.module.rawValue: self = .module
+        default: throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "Unknown enum case '\(enumCase)'"))
         }
-        if container.allKeys.contains(.framework), try container.decodeNil(forKey: .framework) == false {
-            var associatedValues = try container.nestedUnkeyedContainer(forKey: .framework)
-            let associatedValue0 = try associatedValues.decode(String.self)
-            self = .framework(associatedValue0)
-            return
-        }
-        throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "Unknown enum case"))
     }
 
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
+    internal func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
 
         switch self {
-        case let .module(associatedValue0):
-            var associatedValues = container.nestedUnkeyedContainer(forKey: .module)
-            try associatedValues.encode(associatedValue0)
-        case let .framework(associatedValue0):
-            var associatedValues = container.nestedUnkeyedContainer(forKey: .framework)
-            try associatedValues.encode(associatedValue0)
+        case .global: try container.encode(CodingKeys.global.rawValue)
+        case .module: try container.encode(CodingKeys.module.rawValue)
         }
     }
 
@@ -46,7 +35,6 @@ extension Global {
 
     enum CodingKeys: String, CodingKey {
         case version
-        case folderStructure
         case supportPath
         case ignore
     }
@@ -55,9 +43,53 @@ extension Global {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         version = try container.decode(Version.self, forKey: .version)
-        folderStructure = (try? container.decode(FolderStructure.self, forKey: .folderStructure)) ?? Global.defaultFolderStructure
         supportPath = (try? container.decode(String.self, forKey: .supportPath)) ?? Global.defaultSupportPath
         ignore = (try? container.decode([Path].self, forKey: .ignore)) ?? Global.defaultIgnore
+    }
+
+}
+
+extension Module.Input {
+
+    enum CodingKeys: String, CodingKey {
+        case name
+        case dependencies
+    }
+
+    internal init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        name = try container.decode(String.self, forKey: .name)
+        dependencies = (try? container.decode([String: [String]].self, forKey: .dependencies)) ?? Module.Input.defaultDependencies
+    }
+
+}
+
+extension OutputLevel {
+
+    enum CodingKeys: String, CodingKey {
+        case root
+        case module
+    }
+
+    internal init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+
+        let enumCase = try container.decode(String.self)
+        switch enumCase {
+        case CodingKeys.root.rawValue: self = .root
+        case CodingKeys.module.rawValue: self = .module
+        default: throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "Unknown enum case '\(enumCase)'"))
+        }
+    }
+
+    internal func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+
+        switch self {
+        case .root: try container.encode(CodingKeys.root.rawValue)
+        case .module: try container.encode(CodingKeys.module.rawValue)
+        }
     }
 
 }

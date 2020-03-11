@@ -1,0 +1,71 @@
+name: project.yml
+context: module
+outputLevel: module
+content: |  
+  name: {{name}}
+  ¶
+  options:
+    defaultConfig: Release
+    bundleIdPrefix: {{globals.bundleIdPrefix}}
+    transitivelyLinkDependencies: true
+    createIntermediateGroups: true
+    minimumXcodeGenVersion: 2.10.1
+  ¶
+  fileGroups: [module.yml, project.yml]
+  ¶
+  targets:
+    {{name}}:
+      type: framework.static
+      platform: iOS
+      sources:
+      - src/main/swift
+      {% if dependencies.main|default:"" %}
+      dependencies:
+      {% for dependency in dependencies.main %}
+      {% if dependency.type == "target" %}
+      - framework: {{dependency.name}}.framework
+        implicit: true
+      {% elif dependency.type == "artifact" %}
+      - framework: {{ dependency.path }}
+      {% endif %}
+      {% endfor %}
+      {% endif %}
+      info:
+        path: {{globals.supportPath}}/{{name}}/Info.plist
+  ¶
+    {% if "src/test/swift" in subpaths %}
+    {{name}}Tests:
+      type: bundle.unit-test
+      platform: iOS
+      settings:
+        base:
+          # Needed for getting proper test coverage percentages when using static frameworks
+          OTHER_LDFLAGS: -all_load
+      sources:
+      - src/test/swift
+      dependencies:
+      - target: {{name}}
+      {% for dependency in dependencies.tests|default:"" %}
+      {% if dependency.type == "target" %}
+      - framework: {{dependency.name}}.framework
+        implicit: true
+      {% elif dependency.type == "artifact" %}
+      - framework: {{ dependency.path }}
+      {% endif %}
+      {% endfor %}
+      info:
+        path: {{globals.supportPath}}/{{name}}Tests/Info.plist
+    {% endif %}
+  ¶
+  schemes:
+    {{name}}:
+      build:
+        targets:
+          {{name}}: all
+      {% if "src/test/swift" in subpaths %}
+      test:
+        gatherCoverageData: true
+        targets:
+          - name: {{name}}Tests
+            randomExecutionOrder: true
+      {% endif %}

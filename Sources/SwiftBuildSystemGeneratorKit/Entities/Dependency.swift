@@ -1,33 +1,62 @@
 import Foundation
-import Path
 import AnyCodable
-import Version
 
-public struct Dependency: Encodable, Hashable, ContextConvertible {
-    public let name: String
-    public let path: Path
-    public let version: Version
-    public let type: Kind
+enum Dependency {
+    enum Middleware {
+        case target(Target.Middleware)
+        case artifact(Artifact.Output)
 
-    public init(_ middlewareModule: Module.Middleware) {
-        self.name = middlewareModule.name
-        self.path = middlewareModule.path
-        self.version = Current.globals.version
-        self.type = .module
+        var name: String {
+            switch self {
+            case .target(let target):
+                return target.name
+
+            case .artifact(let artifact):
+                return artifact.name
+            }
+        }
     }
 
-    public init(_ framework: CarthageService.Framework) {
-        self.name = framework.name
-        // Only support dynamic linked frameworks for now
-        self.path = Current.options.carthagePath/"Carthage"/"Build"/"iOS"/"\(name).framework"
-        self.version = framework.version
-        self.type = .framework
-    }
-}
+    enum Output: Encodable {
+        case target(Target.Output)
+        case artifact(Artifact.Output)
 
-public extension Dependency {
-    enum Kind: String, Codable {
-        case module
-        case framework
+        private enum CodingKeys: String, CodingKey {
+            case type
+        }
+
+        public enum Kind: String, Codable {
+            case target
+            case artifact
+        }
+
+        public var underlyingObject: DictionaryConvertible {
+            switch self {
+            case .target(let target):
+                return target
+
+            case .artifact(let artifact):
+                return artifact
+            }
+        }
+
+        public var type: Kind {
+            switch self {
+            case .target:
+                return .target
+
+            case .artifact:
+                return .artifact
+            }
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            let basePath = encoder.userInfo[.relativePath] as! Path
+            var dict = try underlyingObject.asDictionary(basePath: basePath)
+            dict[CodingKeys.type.rawValue] = type.rawValue
+
+            var container = encoder.singleValueContainer()
+            try container.encode(dict.mapValues { AnyCodable($0) })
+        }
     }
 }

@@ -16,18 +16,18 @@ let package = Package(
             // Using a fork until https://github.com/stencilproject/Stencil/pull/289 is merged and released
         ),
         .package(url: "https://github.com/jpsim/Yams.git", .upToNextMajor(from: "2.0.0")),
-        .package(url: "https://github.com/mxcl/Path.swift.git", .upToNextMajor(from: "1.0.0-alpha.3")),
-        .package(url: "https://github.com/jakeheis/SwiftCLI.git", .upToNextMajor(from: "5.3.3")),
+        .package(url: "https://github.com/mxcl/Path.swift.git", .upToNextMajor(from: "1.0.1")),
+        .package(url: "https://github.com/jakeheis/SwiftCLI.git", .upToNextMajor(from: "6.0.1")),
         // The version of xcodeproj is tight with the one used by XcodeGen
-        .package(url: "https://github.com/tuist/xcodeproj.git", .exact("7.1.0")),
-        .package(url: "https://github.com/yonaskolb/XcodeGen.git", .upToNextMajor(from: "2.10.1")),
+        // .package(url: "https://github.com/tuist/xcodeproj.git", .exact("7.1.0")),
+        // .package(url: "https://github.com/yonaskolb/XcodeGen.git", .upToNextMajor(from: "2.10.1")),
         .package(url: "https://github.com/Flight-School/AnyCodable.git", .upToNextMajor(from: "0.2.3")),
-        .package(url: "https://github.com/mxcl/Version.git", .upToNextMajor(from: "1.2.0")),
+        .package(url: "https://github.com/mxcl/Version.git", .upToNextMajor(from: "2.0.0")),
         .package(
-            url: "https://github.com/acecilia/Carthage.git",
-            .revision("aebb5b2dda0fcb489f2baa3605aa79b2d742af67") // Latest on master at the time of writing
-            // Using a fork until https://github.com/Carthage/Carthage/pull/2910 is merged and released
-        ),        
+            url: "https://github.com/Carthage/Carthage.git",
+            .revision("de66acf88f32ace83fe99b04fd14565290711ea9") // Latest on master at the time of writing
+            // until https://github.com/Carthage/Carthage/pull/2910 is released
+        ),
     ],
     targets: [
         .target(
@@ -47,8 +47,8 @@ let package = Package(
                 "Stencil",
                 "Yams",
                 "Path",
-                "XcodeProj",
-                "XcodeGenKit",
+                // "XcodeProj",
+                // "XcodeGenKit",
                 "AnyCodable",
                 "Version",
                 "CarthageKit",

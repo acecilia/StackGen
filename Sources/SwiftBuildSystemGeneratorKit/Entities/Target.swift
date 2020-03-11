@@ -1,8 +1,18 @@
 import Foundation
-import Path
 
-public struct Target: Encodable, Hashable {
-    public let name: String
-    public let sources: [Path]
-    public let dependencies: [Dependency]
+enum Target {
+    struct Middleware {
+        let name: String
+        let path: Path
+        let dependencies: [String: [String]]
+    }
+
+    struct Output: Encodable, DictionaryConvertible, ContextConvertible {
+        let name: String
+        let path: Path
+        let subpaths: [Path]
+        let dependencies: [String: [Dependency.Output]]
+    }
 }
+
+

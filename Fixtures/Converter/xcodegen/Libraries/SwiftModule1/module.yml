@@ -1,5 +1,0 @@
-dependencies:
-- FileKit
-- SwiftModule2
-testDependencies:
-- SwiftModule3

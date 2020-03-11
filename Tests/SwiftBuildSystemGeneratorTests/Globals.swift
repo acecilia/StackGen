@@ -5,13 +5,15 @@ import Path
 
 let rootPath = Path(#file)!/".."/".."/".."
 let testsOutputPath = rootPath/".build"/"TestsOutput"
+let templatesPath = rootPath/"Templates"
+let carthagePath = rootPath/"Carthage"/"Build"/"iOS"
 
 let examplesPath = rootPath/"Examples"
 let fixturesPath = rootPath/"Fixtures"
-
-let generatorFixturesPath = fixturesPath/"\(Generator.self)"
-let converterFixturesPath = fixturesPath/"\(Converter.self)"
-
+//
+//let generatorFixturesPath = fixturesPath/"\(Generator.self)"
+//let converterFixturesPath = fixturesPath/"\(Converter.self)"
+//
 func tmp(testFilePath: String = #file, testName: String = #function) throws -> Path {
     guard let testFileName = Path(testFilePath)?.basename(dropExtension: true) else {
         fatalError("The path to the test file is malformed")
@@ -34,35 +36,15 @@ func functionName(_ methodSignature: String) -> String {
 
 }
 
-func generateCommandArgs(_ generator: Generator) -> [String] {
-    return [
-        GenerateCommand.name,
-        "-x", "true",
-        "-w", "true",
-        "-t", "\((rootPath/"Templates").string)",
-        "-g", "\(generator.rawValue)",
-        "-r", rootPath.relative(to: cwd)
-    ]
+func generateCommandArgs() -> [String] {
+    return [GenerateCommand.name]
 }
 
-func cleanCommandArgs(generator: Generator? = nil) -> [String] {
-    var args = [
-        CleanCommand.name,
-        "-r", rootPath.relative(to: cwd)
-    ]
-
-    if let generator = generator {
-        args.append(contentsOf: [
-            "-g", "\(generator.rawValue)"
-        ])
-    }
-
-    return args
-}
-
-func convertCommandArgs(_ converter: Converter) -> [String] {
-    return [
-        ConvertCommand.name,
-        "-c", "\(converter.rawValue)"
-    ]
+func patchWorkspaceFile(_ path: Path, using templatesPath: Path) throws {
+    let workspaceFilePath = path/"workspace.yml"
+    let content = try String(contentsOf: workspaceFilePath)
+        .replacingOccurrences(of: "../Carthage/Build/iOS", with: carthagePath.string)
+        .replacingOccurrences(of: "../templates/xcodegen", with: templatesPath.string)
+    try workspaceFilePath.delete()
+    try content.write(to: workspaceFilePath)
 }
