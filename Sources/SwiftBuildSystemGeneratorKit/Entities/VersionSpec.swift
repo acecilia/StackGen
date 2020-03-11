@@ -1,7 +1,7 @@
 import Foundation
 
 public enum VersionSpec: Decodable {
-    case carthage(CartfilePath: String)
+    case carthage(CartfileParentPath: Path)
     case custom(name: String, version: Version)
 
     enum CodingKeys: String, CodingKey {
@@ -12,12 +12,12 @@ public enum VersionSpec: Decodable {
         let keyedContainer = try decoder.container(keyedBy: CodingKeys.self)
         let singleValueContainer = try decoder.singleValueContainer()
 
-        if let cartfilePath = try keyedContainer.decodeIfPresent(String.self, forKey: .carthage) {
-            self = .carthage(CartfilePath: cartfilePath)
+        if let cartfileParentPath = try keyedContainer.decodeIfPresent(Path.self, forKey: .carthage) {
+            self = .carthage(CartfileParentPath: cartfileParentPath)
         } else if let pair = try? singleValueContainer.decode(CodablePair<Version>.self) {
             self = .custom(name: pair.key, version: pair.value)
         } else {
-            fatalError()
+            throw DecodingError.dataCorruptedError(in: singleValueContainer, debugDescription: "Could not decode version spec")
         }
     }
 }

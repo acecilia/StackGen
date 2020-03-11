@@ -9,9 +9,9 @@ final class Tests: XCTestCase {
             let templatesName = templatesPath.basename()
 
             let destination = try examplesPath.copy(into: try tmp())
+            FileManager.default.changeCurrentDirectoryPath(destination.string)
             try patchWorkspaceFile(destination, using: templatesPath)
 
-            FileManager.default.changeCurrentDirectoryPath(destination.string)
             let cli = SwiftBuildSystemGeneratorCLI()
             let status = cli.execute(with: generateCommandArgs())
             XCTAssertEqual(status, 0)

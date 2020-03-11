@@ -12,7 +12,11 @@ class VersionResolver: Decodable {
 
         for versionSpec in versionSpecs {
             switch versionSpec {
-            case .carthage: break // TODO
+            case .carthage(let path):
+                let service = CarthageService(path)
+                if let version = try service.getFrameworks()[dependencyName] {
+                    versions.append((versionSpec, version))
+                }
             case .custom(let name, let version):
                 if name == dependencyName {
                     versions.append((versionSpec, version))

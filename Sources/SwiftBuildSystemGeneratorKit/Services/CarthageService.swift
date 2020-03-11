@@ -6,18 +6,18 @@ import Path
 
 public class CarthageService {
     public let path: Path
-    private var frameworksCache: [Framework]?
+    private var frameworksCache: [String: Version]?
 
     public init(_ path: Path) {
         self.path = path
     }
 
-    public func getFrameworks() throws -> [Framework] {
+    public func getFrameworks() throws -> [String: Version] {
         if let frameworksCache = frameworksCache {
             return frameworksCache
         }
 
-        var frameworks: [Framework] = []
+        var frameworks: [String: Version] = [:]
 
         let resolvedCartfileUrl = ResolvedCartfile.url(in: path.url)
         if let resolvedCartfileContent = try? String(contentsOf: resolvedCartfileUrl) {
@@ -32,7 +32,7 @@ public class CarthageService {
                     .unwrap(onFailure: "The Carthage version is not valid. Dependency: \(dependency.name). Version: \(pinnedVersion.commitish)")
                 let frameworkNames = versionFile.iOS?.map { $0.name } ?? []
                 for frameworkName in frameworkNames {
-                    frameworks.append(Framework(frameworkName, version))
+                    frameworks[frameworkName] = version
                 }
             }
         } else {
@@ -41,17 +41,5 @@ public class CarthageService {
 
         frameworksCache = frameworks
         return frameworks
-    }
-}
-
-public extension CarthageService {
-    struct Framework {
-        public let name: String
-        public let version: Version
-
-        public init(_ name: String, _ version: Version) {
-            self.name = name
-            self.version = version
-        }
     }
 }

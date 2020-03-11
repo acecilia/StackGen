@@ -15,11 +15,10 @@ firstParty:
 
 artifacts:
 - regex: '.+\.framework'
-  paths: [/Users/andres/Git/SwiftBuildSystemGenerator/Carthage/Build/iOS]
+  paths: [../../../../../../Carthage/Build/iOS]
 
 versionSpecs:
-- carthage: Cartfile
-- FileKit: 6.0.0
+- carthage: '../../../../../..'
 
 options:
-  templatesPath: /Users/andres/Git/SwiftBuildSystemGenerator/Templates/xcodegen
+  templatesPath: ../../../../../../Templates/xcodegen

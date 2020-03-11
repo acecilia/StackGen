@@ -18,8 +18,7 @@ artifacts:
   paths: [../Carthage/Build/iOS]
 
 versionSpecs:
-- carthage: Cartfile
-- FileKit: 6.0.0
+- carthage: '..'
 
 options:
   templatesPath: ../templates/xcodegen

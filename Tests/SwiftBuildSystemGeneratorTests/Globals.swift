@@ -43,8 +43,9 @@ func generateCommandArgs() -> [String] {
 func patchWorkspaceFile(_ path: Path, using templatesPath: Path) throws {
     let workspaceFilePath = path/"workspace.yml"
     let content = try String(contentsOf: workspaceFilePath)
-        .replacingOccurrences(of: "../Carthage/Build/iOS", with: carthagePath.string)
-        .replacingOccurrences(of: "../templates/xcodegen", with: templatesPath.string)
+        .replacingOccurrences(of: "../Carthage/Build/iOS", with: carthagePath.relative(to: cwd))
+        .replacingOccurrences(of: "- carthage: '..'", with: "- carthage: '\(rootPath.relative(to: cwd))'")
+        .replacingOccurrences(of: "../templates/xcodegen", with: templatesPath.relative(to: cwd))
     try workspaceFilePath.delete()
     try content.write(to: workspaceFilePath)
 }

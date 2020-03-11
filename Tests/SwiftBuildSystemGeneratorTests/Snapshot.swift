@@ -22,7 +22,7 @@ extension XCTestCase {
                     let filePathLeft = files[0]
                     let filePathRight = files[1]
                     // Command to open the FileMerge app fast with all the differences
-                    diffCommand.append("(OpenDiff \(filePathLeft) \(filePathRight) >/dev/null 2>&1 &)")
+                    diffCommand.append("(OpenDiff \(filePathLeft) \(filePathRight) &)")
                 }
             }
             XCTAssertEqual(result.exitCode, 0, "\n\n\n\(diffCommand.joined())\n\n\n\(output)", file: file, line: line)
