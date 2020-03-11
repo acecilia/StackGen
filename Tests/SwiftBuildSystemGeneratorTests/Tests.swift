@@ -16,7 +16,7 @@ final class Tests: XCTestCase {
             let status = cli.execute(with: generateCommandArgs())
             XCTAssertEqual(status, 0)
 
-            assert(fixturesPath/templatesName, destination, "Template '\(templatesName)' failed")
+            assert(fixture: fixturesPath/templatesName, equals: destination)
         }
     }
 }

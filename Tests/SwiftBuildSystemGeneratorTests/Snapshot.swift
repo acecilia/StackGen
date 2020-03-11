@@ -6,12 +6,12 @@ enum Snapshot {
 }
 
 extension XCTestCase {
-    func assert(_ left: Path, _ right: Path, _ message: String = "", file: StaticString = #file, line: UInt = #line) {
+    func assert(fixture: Path, equals testOutput: Path, file: StaticString = #file, line: UInt = #line) {
         if Snapshot.recording {
-            try! left.parent.mkdir(.p)
-            try! right.copy(to: left)
+            try! fixture.parent.mkdir(.p)
+            try! testOutput.copy(to: fixture)
         } else {
-            let result = runCommand(cmd: "/usr/bin/diff", args: "-rN", "--exclude=.DS_Store", left.string, right.string)
+            let result = runCommand(cmd: "/usr/bin/diff", args: "-rN", "--exclude=.DS_Store", fixture.string, testOutput.string)
             let output = result.output.joined(separator: "\n")
 
             var diffCommand: [String] = []
@@ -25,7 +25,7 @@ extension XCTestCase {
                     diffCommand.append("(OpenDiff \(filePathLeft) \(filePathRight) >/dev/null 2>&1 &)")
                 }
             }
-            XCTAssertEqual(result.exitCode, 0, "\(message).\n\n\n\(diffCommand.joined())\n\n\n\(output)", file: file, line: line)
+            XCTAssertEqual(result.exitCode, 0, "\n\n\n\(diffCommand.joined())\n\n\n\(output)", file: file, line: line)
         }
     }
 }
