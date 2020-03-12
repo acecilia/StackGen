@@ -13,6 +13,7 @@ final class Tests: XCTestCase {
     }
 
     func testXcodegen() throws {
+        // Generate XcodeGen files
         let result = try generate(templatesPath/"xcodegen")
         XCTAssertEqual(result.exitCode, 0)
 

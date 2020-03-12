@@ -11,21 +11,33 @@ extension XCTestCase {
             try! fixture.parent.mkdir(.p)
             try! testOutput.copy(to: fixture)
         } else {
-            let result = runCommand("diff -rN --exclude=.DS_Store \(fixture.string) \(testOutput.string)")
+            let diffCommand = "diff -rN --exclude=.DS_Store"
+            let result = runCommand("\(diffCommand) \(fixture.string) \(testOutput.string)")
             let output = result.output.joined(separator: "\n")
 
-            var diffCommand: [String] = []
+            var openDiffCommand: [String] = []
             if result.exitCode != 0 {
-                let resultPerFile = output.components(separatedBy: "diff -rN --exclude=.DS_Store ").filter { $0.isEmpty == false }
+                let resultPerFile = output
+                    .components(separatedBy: diffCommand)
+                    .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                    .filter { $0.isEmpty == false }
+
                 for fileResult in resultPerFile {
                     let files = fileResult.components(separatedBy: .newlines).first!.components(separatedBy: .whitespaces)
                     let filePathLeft = files[0]
                     let filePathRight = files[1]
                     // Command to open the FileMerge app fast with all the differences
-                    diffCommand.append("(OpenDiff \(filePathLeft) \(filePathRight) &)")
+                    openDiffCommand.append("(OpenDiff \(filePathLeft) \(filePathRight) &)")
                 }
             }
-            XCTAssertEqual(result.exitCode, 0, "\n\n\n\(diffCommand.joined())\n\n\n\(output)", file: file, line: line)
+            let errorMessage = """
+            To see the differences open the following command in a terminal:
+            \(openDiffCommand.joined(separator: ";"))
+
+            Diff output:
+            \(output)
+            """
+            XCTAssertEqual(result.exitCode, 0, errorMessage, file: file, line: line)
         }
     }
 }
