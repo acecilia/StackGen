@@ -59,8 +59,9 @@ public class GenerateAction: Action {
             context: context
         )
 
-        let outputPath = outputPath/fileName
+        let outputPath = outputPath/templateFile.subdir/fileName
         try outputPath.delete()
+        try outputPath.parent.mkdir()
         try rendered.write(to: outputPath)
     }
 }

@@ -89,3 +89,25 @@ extension OutputLevel {
     }
 
 }
+
+extension TemplateFile {
+
+    enum CodingKeys: String, CodingKey {
+        case name
+        case context
+        case outputLevel
+        case subdir
+        case content
+    }
+
+    internal init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        name = try container.decode(String.self, forKey: .name)
+        context = try container.decode(Context.self, forKey: .context)
+        outputLevel = try container.decode(OutputLevel.self, forKey: .outputLevel)
+        subdir = (try? container.decode(String.self, forKey: .subdir)) ?? TemplateFile.defaultSubdir
+        content = try container.decode(String.self, forKey: .content)
+    }
+
+}

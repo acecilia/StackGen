@@ -1,9 +1,12 @@
 import Foundation
 
-struct TemplateFile: Codable {
+struct TemplateFile: Codable, AutoCodable {
+    static let defaultSubdir = ""
+
     let name: String
     let context: Context
     let outputLevel: OutputLevel
+    let subdir: String
     let content: String
 }
 
