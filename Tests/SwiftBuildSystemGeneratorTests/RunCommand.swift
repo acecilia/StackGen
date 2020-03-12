@@ -1,7 +1,13 @@
 import Foundation
 
+// From https://stackoverflow.com/a/29519615
+
 @discardableResult
-func runCommand(cmd: String, args: String...) -> (output: [String], error: [String], exitCode: Int32) {
+func runCommand(_ cmd: String) -> (output: [String], error: [String], exitCode: Int32) {
+    return runCommand(cmd: "/bin/sh", args: "--login", "-c", cmd)
+}
+
+private func runCommand(cmd: String, args: String...) -> (output: [String], error: [String], exitCode: Int32) {
     var output : [String] = []
     var error : [String] = []
 

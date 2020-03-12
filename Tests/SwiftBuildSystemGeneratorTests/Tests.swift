@@ -17,14 +17,14 @@ final class Tests: XCTestCase {
         XCTAssertEqual(result.exitCode, 0)
 
         // Generate Xcode projects
-        let scriptOutput = runCommand(cmd: "/bin/sh", args: "--login", "\(rootPath)/scripts/create-projects.sh", "\(result.destination)")
+        let scriptOutput = runCommand("cd \(result.destination) && sh scripts/create-projects.sh")
         XCTAssertEqual(scriptOutput.exitCode, 0, scriptOutput.error.joined(separator: "\n"))
 
         // Run unit tests
-        let xcodebuildOutput = runCommand(cmd: "/usr/bin/xcodebuild", args: "test", "-project", "\(result.destination)/All.xcodeproj", "-scheme", "All", "-destination", "platform=iOS Simulator,name=iPhone 8,OS=latest")
+        let xcodebuildOutput = runCommand("xcodebuild test -project \(result.destination)/All.xcodeproj -scheme All -destination 'platform=iOS Simulator,name=iPhone 8,OS=latest'")
         XCTAssertEqual(xcodebuildOutput.exitCode, 0, xcodebuildOutput.error.joined(separator: "\n"))
         if xcodebuildOutput.exitCode != 0 {
-            runCommand(cmd: "/usr/bin/open", args: "\(result.destination)/All.xcodeproj")
+            runCommand("open \(result.destination)/All.xcodeproj")
         }
     }
 

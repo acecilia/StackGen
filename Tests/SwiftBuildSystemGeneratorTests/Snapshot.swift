@@ -11,7 +11,7 @@ extension XCTestCase {
             try! fixture.parent.mkdir(.p)
             try! testOutput.copy(to: fixture)
         } else {
-            let result = runCommand(cmd: "/usr/bin/diff", args: "-rN", "--exclude=.DS_Store", fixture.string, testOutput.string)
+            let result = runCommand("diff -rN --exclude=.DS_Store \(fixture.string) \(testOutput.string)")
             let output = result.output.joined(separator: "\n")
 
             var diffCommand: [String] = []

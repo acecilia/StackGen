@@ -7,14 +7,12 @@ set -eou pipefail
 
 total_count=0
 generated_count=0
-rootPath=$1
 
-for f in $(find "$rootPath" -not -path "*/submodules/*" -not -path "*/Shared/*" -not -path "*/Carthage/*" -name 'project.yml' | sort -n); do
+for f in $(find . -name 'project.yml' | sort -n); do
   # Only create the project if it is not there already
   directory=$(dirname "$f")
   xcodeproj_files=$(find "$directory" -maxdepth 1 -name "*.xcodeproj")
   if [ -z "$xcodeproj_files" ]; then
-  echo "$f"
     xcodegen --spec "$f"
     ((generated_count++))
   fi
