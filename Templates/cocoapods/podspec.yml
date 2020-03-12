@@ -4,15 +4,15 @@ outputLevel: root
 content: |
   Pod::Spec.new do |s|
     s.name                   = '{{name}}'
-    s.version                = '{{globals.version}}'
-    s.swift_version          = '{{globals.swiftVersion}}'
+    s.version                = '{{global.version}}'
+    s.swift_version          = '{{global.swiftVersion}}'
     s.source_files           = 'src/main/swift/*.swift'
     {% if dependencies.main|default:"" %}
   ¶
     {% endif %}
     {% for dependency in dependencies.main|default:"" %}
     {% if dependency.type == "target" %}
-    spec.dependency '{{dependency.name}}', '{{globals.version}}'
+    spec.dependency '{{dependency.name}}', '{{global.version}}'
     {% elif dependency.type == "artifact" %}
     spec.dependency '{{dependency.name}}', '{{dependency.version}}'
     {% endif %}

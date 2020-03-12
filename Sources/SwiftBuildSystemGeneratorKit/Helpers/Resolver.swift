@@ -1,13 +1,13 @@
 import Foundation
 
 class Resolver {
-    let moduleEnvironments: [Target.Output]
+    let moduleContexts: [Target.Output]
 
     init(_ workspace: WorkspaceFile) throws {
         let middlewareTargets = try workspace.firstParty.map { try Self.resolve($0) }
         let artifacts = try Self.resolve(artifacts: workspace.artifacts, versionSpecs: workspace.versionSpecs)
         let dependencies: [Dependency.Middleware] = middlewareTargets.map {.target($0) } + artifacts.map {.artifact($0) }
-        self.moduleEnvironments = try Self.resolve(middlewareTargets, using: dependencies)
+        self.moduleContexts = try Self.resolve(middlewareTargets, using: dependencies)
     }
 
     private static func resolve(artifacts: [Artifact.Input], versionSpecs: [VersionSpec]) throws -> [Artifact.Output] {

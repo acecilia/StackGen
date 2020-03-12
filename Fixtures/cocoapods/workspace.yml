@@ -1,4 +1,4 @@
-globals:
+global:
   version: 0.0.1
   swiftVersion: 5.0
   bundleIdPrefix: com.acecilia
@@ -6,12 +6,10 @@ globals:
 firstParty:
 - name: SwiftModule1
   dependencies:
-    main: [SwiftModule2]
+    main: [SwiftModule2, FileKit]
     tests: [SwiftModule3]
 - name: SwiftModule2
 - name: SwiftModule3
-  dependencies:
-    main: [FileKit]
 
 artifacts:
 - regex: '.+\.framework'

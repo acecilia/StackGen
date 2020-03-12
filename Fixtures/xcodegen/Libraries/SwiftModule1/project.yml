@@ -7,7 +7,7 @@ options:
   createIntermediateGroups: true
   minimumXcodeGenVersion: 2.10.1
 
-fileGroups: [module.yml, project.yml]
+fileGroups: [project.yml]
 
 targets:
   SwiftModule1:
@@ -18,6 +18,7 @@ targets:
     dependencies:
     - framework: SwiftModule2.framework
       implicit: true
+    - framework: ../../../../../../../../Carthage/Build/iOS/FileKit.framework
     info:
       path: SupportingFiles/SwiftModule1/Info.plist
 

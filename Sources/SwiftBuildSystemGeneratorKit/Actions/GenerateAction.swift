@@ -10,7 +10,8 @@ public class GenerateAction: Action {
         let workspaceFileContent = try String(contentsOf: cwd/"workspace.yml")
         let workspaceFile: WorkspaceFile = try YAMLDecoder().decode(from: workspaceFileContent, userInfo: [.relativePath : cwd])
         let resolver = try Resolver(workspaceFile)
-        let modules = resolver.moduleEnvironments
+        let modules = resolver.moduleContexts
+        let globalContext = GlobalContext(global: workspaceFile.$global, modules: modules)
 
         // Resolve templates
         for template in workspaceFile.options.templatesPath.ls() where template.isFile {
@@ -21,7 +22,7 @@ public class GenerateAction: Action {
                 switch templateFile.context {
                 case .module:
                     for module in modules {
-                        let context = try module.asContext(basePath: module.path, globals: workspaceFile.$globals)
+                        let context = try module.asContext(basePath: module.path, globalContext: globalContext)
                         switch templateFile.outputLevel {
                         case .module:
                             try write(templateFile: templateFile, context: context, outputPath: module.path)
@@ -32,7 +33,7 @@ public class GenerateAction: Action {
                     }
 
                 case .global:
-                    let context = try workspaceFile.globals.asDictionary(basePath: cwd)
+                    let context = try globalContext.asDictionary(basePath: cwd)
                     switch templateFile.outputLevel {
                     case .module:
                         for module in modules {

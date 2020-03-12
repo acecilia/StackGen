@@ -2,20 +2,19 @@ import Foundation
 import AnyCodable
 
 @propertyWrapper
-public struct RawWrapper<T: DictionaryConvertible & Decodable>: DictionaryConvertible, Decodable {
-    public let raw: [String: Any]
+public struct RawWrapper<T: Codable>: Codable {
+    public let raw: [String: String]
     public let typed: T
-
-    public func asDictionary(basePath: Path) throws -> [String: Any] {
-        let typedDict = try typed.asDictionary(basePath: basePath)
-        let dict = raw.merging(typedDict) { _, new in new }
-        return dict
-    }
 
     public init(from decoder: Decoder) throws {
         typed = try T.init(from: decoder)
         let container = try decoder.singleValueContainer()
-        raw = try container.decode([String: AnyCodable].self) as [String: Any]
+        raw = try container.decode([String: String].self)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        try typed.encode(to: encoder)
+        try raw.encode(to: encoder)
     }
 
     public var wrappedValue: T { typed }

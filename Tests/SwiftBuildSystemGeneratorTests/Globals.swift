@@ -10,10 +10,7 @@ let carthagePath = rootPath/"Carthage"/"Build"/"iOS"
 
 let examplesPath = rootPath/"Examples"
 let fixturesPath = rootPath/"Fixtures"
-//
-//let generatorFixturesPath = fixturesPath/"\(Generator.self)"
-//let converterFixturesPath = fixturesPath/"\(Converter.self)"
-//
+
 func tmp(testFilePath: String = #file, testName: String = #function) throws -> Path {
     guard let testFileName = Path(testFilePath)?.basename(dropExtension: true) else {
         fatalError("The path to the test file is malformed")
@@ -33,7 +30,6 @@ func functionName(_ methodSignature: String) -> String {
     return methodSignature
         .replacingOccurrences(of: "(", with: "")
         .replacingOccurrences(of: ")", with: "")
-
 }
 
 func generateCommandArgs() -> [String] {

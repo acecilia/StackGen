@@ -7,7 +7,7 @@ options:
   createIntermediateGroups: true
   minimumXcodeGenVersion: 2.10.1
 
-fileGroups: [module.yml, project.yml]
+fileGroups: [project.yml]
 
 targets:
   SwiftModule2:

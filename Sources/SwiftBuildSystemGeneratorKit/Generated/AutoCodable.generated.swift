@@ -34,16 +34,12 @@ extension Context {
 extension Global {
 
     enum CodingKeys: String, CodingKey {
-        case version
-        case supportPath
         case ignore
     }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        version = try container.decode(Version.self, forKey: .version)
-        supportPath = (try? container.decode(String.self, forKey: .supportPath)) ?? Global.defaultSupportPath
         ignore = (try? container.decode([Path].self, forKey: .ignore)) ?? Global.defaultIgnore
     }
 

@@ -1,0 +1,18 @@
+name: project.yml
+context: global
+outputLevel: root
+content: |  
+  name: All
+  ¶
+  options:
+    defaultConfig: Release
+    bundleIdPrefix: {{global.bundleIdPrefix}}
+    transitivelyLinkDependencies: true
+    createIntermediateGroups: true
+    minimumXcodeGenVersion: 2.10.1
+  ¶
+  fileGroups:
+  - project.yml
+  {% for module in modules %}
+  - {{ module.path }}/{{ module.name }}.xcodeproj
+  {% endfor %}

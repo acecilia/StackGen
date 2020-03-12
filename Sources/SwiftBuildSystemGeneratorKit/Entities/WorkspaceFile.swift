@@ -2,7 +2,7 @@ import Foundation
 
 struct WorkspaceFile: Decodable {
     @RawWrapper
-    private(set) var globals: Global
+    private(set) var global: Global
     var options: Options
     let firstParty: [Module.Input]
     let artifacts: [Artifact.Input]

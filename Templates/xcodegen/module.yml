@@ -6,12 +6,12 @@ content: |
   ¶
   options:
     defaultConfig: Release
-    bundleIdPrefix: {{globals.bundleIdPrefix}}
+    bundleIdPrefix: {{global.bundleIdPrefix}}
     transitivelyLinkDependencies: true
     createIntermediateGroups: true
     minimumXcodeGenVersion: 2.10.1
   ¶
-  fileGroups: [module.yml, project.yml]
+  fileGroups: [project.yml]
   ¶
   targets:
     {{name}}:
@@ -31,7 +31,7 @@ content: |
       {% endfor %}
       {% endif %}
       info:
-        path: {{globals.supportPath}}/{{name}}/Info.plist
+        path: SupportingFiles/{{name}}/Info.plist
   ¶
     {% if "src/test/swift" in subpaths %}
     {{name}}Tests:
@@ -54,7 +54,7 @@ content: |
       {% endif %}
       {% endfor %}
       info:
-        path: {{globals.supportPath}}/{{name}}Tests/Info.plist
+        path: SupportingFiles/{{name}}Tests/Info.plist
     {% endif %}
   ¶
   schemes:
