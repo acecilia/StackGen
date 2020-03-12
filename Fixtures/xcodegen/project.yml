@@ -7,8 +7,29 @@ options:
   createIntermediateGroups: true
   minimumXcodeGenVersion: 2.10.1
 
-fileGroups:
-- project.yml
-- Libraries/SwiftModule1/SwiftModule1.xcodeproj
-- Libraries/SwiftModule2/SwiftModule2.xcodeproj
-- Libraries/SwiftModule3/SwiftModule3.xcodeproj
+fileGroups: [project.yml]
+
+projectReferences:
+  SwiftModule1:
+    path: Libraries/SwiftModule1/SwiftModule1.xcodeproj
+  SwiftModule2:
+    path: Libraries/SwiftModule2/SwiftModule2.xcodeproj
+  SwiftModule3:
+    path: Libraries/SwiftModule3/SwiftModule3.xcodeproj
+
+schemes:
+  All:
+    build:
+      targets:
+        SwiftModule1/SwiftModule1Tests: all
+        SwiftModule2/SwiftModule2Tests: all
+        SwiftModule3/SwiftModule3Tests: all
+    test:
+      gatherCoverageData: true
+      targets:
+        - name: SwiftModule1/SwiftModule1Tests
+          randomExecutionOrder: true
+        - name: SwiftModule2/SwiftModule2Tests
+          randomExecutionOrder: true
+        - name: SwiftModule3/SwiftModule3Tests
+          randomExecutionOrder: true

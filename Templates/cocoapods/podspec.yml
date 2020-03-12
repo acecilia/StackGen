@@ -1,6 +1,6 @@
 name: "{{name}}.podspec"
-context: module
-outputLevel: root
+context: "module"
+outputLevel: "root"
 content: |
   Pod::Spec.new do |s|
     s.name                   = '{{name}}'

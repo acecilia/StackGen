@@ -1,6 +1,6 @@
-name: project.yml
-context: global
-outputLevel: root
+name: "project.yml"
+context: "global"
+outputLevel: "root"
 content: |  
   name: All
   ¶
@@ -11,8 +11,27 @@ content: |
     createIntermediateGroups: true
     minimumXcodeGenVersion: 2.10.1
   ¶
-  fileGroups:
-  - project.yml
+  fileGroups: [project.yml]
+  ¶
+  projectReferences:
   {% for module in modules %}
-  - {{ module.path }}/{{ module.name }}.xcodeproj
+    {{module.name}}:
+      path: {{module.path}}/{{module.name}}.xcodeproj
   {% endfor %}
+  ¶
+  schemes:
+    All:
+      build:
+        targets:
+          {% for module in modules %}
+          {{module.name}}/{{module.name}}Tests: all
+          {% endfor %}
+      test:
+        gatherCoverageData: true
+        targets:
+        {% for module in modules %}
+          - name: {{module.name}}/{{module.name}}Tests
+            randomExecutionOrder: true
+        {% endfor %}
+
+

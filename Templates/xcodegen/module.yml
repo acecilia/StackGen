@@ -1,6 +1,6 @@
-name: project.yml
-context: module
-outputLevel: module
+name: "project.yml"
+context: "module"
+outputLevel: "module"
 content: |  
   name: {{name}}
   ¶
@@ -26,7 +26,7 @@ content: |
       - framework: {{dependency.name}}.framework
         implicit: true
       {% elif dependency.type == "artifact" %}
-      - framework: {{ dependency.path }}
+      - framework: {{dependency.path}}
       {% endif %}
       {% endfor %}
       {% endif %}
@@ -50,7 +50,7 @@ content: |
       - framework: {{dependency.name}}.framework
         implicit: true
       {% elif dependency.type == "artifact" %}
-      - framework: {{ dependency.path }}
+      - framework: {{dependency.path}}
       {% endif %}
       {% endfor %}
       info:
