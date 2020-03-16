@@ -1,17 +1,17 @@
 import Foundation
 
-enum Target {
-    struct Middleware {
-        let name: String
-        let path: Path
-        let dependencies: [String: [String]]
+public enum Target {
+    public struct Middleware {
+        public let name: String
+        public let path: Path
+        public let dependencies: [String: [String]]
     }
 
-    struct Output: Encodable, DictionaryConvertible, ContextConvertible {
-        let name: String
-        let path: Path
-        let subpaths: [Path]
-        let dependencies: [String: [Dependency.Output]]
+    public struct Output: Codable, DictionaryConvertible {
+        public let name: String
+        public let path: Path
+        public let subpaths: [Path]
+        public let dependencies: [String: [Dependency.Output]]
     }
 }
 

@@ -2,7 +2,7 @@ name: "project.yml"
 context: "module"
 outputLevel: "module"
 content: |  
-  name: {{name}}
+  name: {{module.name}}
   ¶
   options:
     defaultConfig: Release
@@ -14,14 +14,14 @@ content: |
   fileGroups: [project.yml]
   ¶
   targets:
-    {{name}}:
+    {{module.name}}:
       type: framework.static
       platform: iOS
       sources:
       - src/main/swift
-      {% if dependencies.main|default:"" %}
+      {% if module.dependencies.main|default:"" %}
       dependencies:
-      {% for dependency in dependencies.main %}
+      {% for dependency in module.dependencies.main %}
       {% if dependency.type == "target" %}
       - framework: {{dependency.name}}.framework
         implicit: true
@@ -31,10 +31,10 @@ content: |
       {% endfor %}
       {% endif %}
       info:
-        path: SupportingFiles/{{name}}/Info.plist
+        path: SupportingFiles/{{module.name}}/Info.plist
   ¶
-    {% if "src/test/swift" in subpaths %}
-    {{name}}Tests:
+    {% if "src/test/swift" in module.subpaths %}
+    {{module.name}}Tests:
       type: bundle.unit-test
       platform: iOS
       settings:
@@ -44,8 +44,8 @@ content: |
       sources:
       - src/test/swift
       dependencies:
-      - target: {{name}}
-      {% for dependency in dependencies.tests|default:"" %}
+      - target: {{module.name}}
+      {% for dependency in module.dependencies.tests|default:"" %}
       {% if dependency.type == "target" %}
       - framework: {{dependency.name}}.framework
         implicit: true
@@ -54,18 +54,18 @@ content: |
       {% endif %}
       {% endfor %}
       info:
-        path: SupportingFiles/{{name}}Tests/Info.plist
+        path: SupportingFiles/{{module.name}}Tests/Info.plist
     {% endif %}
   ¶
   schemes:
-    {{name}}:
+    {{module.name}}:
       build:
         targets:
-          {{name}}: all
-      {% if "src/test/swift" in subpaths %}
+          {{module.name}}: all
+      {% if "src/test/swift" in module.subpaths %}
       test:
         gatherCoverageData: true
         targets:
-          - name: {{name}}Tests
+          - name: {{module.name}}Tests
             randomExecutionOrder: true
       {% endif %}

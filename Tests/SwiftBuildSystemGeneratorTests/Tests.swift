@@ -1,42 +1,68 @@
 import XCTest
-import SwiftBuildSystemGeneratorCLI
+import Yams
 import SwiftBuildSystemGeneratorKit
 import Path
 
 final class Tests: XCTestCase {
     func testGenerate() throws {
         for templatesPath in templatesPath.ls().directories {
-            let result = try generate(templatesPath)
+            let result = try generate(using: templatesPath)
             XCTAssertEqual(result.exitCode, 0)
             assert(fixture: fixturesPath/templatesPath.basename(), equals: result.destination)
         }
     }
 
-    func testXcodegen() throws {
-        // Generate XcodeGen files
-        let result = try generate(templatesPath/"xcodegen")
-        XCTAssertEqual(result.exitCode, 0)
+    func testContext() throws {
+        let contextString = """
+        global:
+          aGlobalVariable: something
+          anotherGlobalVariable: somethingElse
+          ignore: 5
+        modules:
+        - dependencies:
+            main:
+            - dependencies: {}
+              name: Module2
+              path: some/path/Module2
+              subpaths:
+              - src/swift
+              type: target
+            - dependencies: {}
+              name: Module3
+              path: some/path/Module3
+              subpaths:
+              - src/swift
+              type: target
+          name: Module1
+          path: some/path/Module1
+          subpaths:
+          - src/swift
+        - dependencies: {}
+          name: Module2
+          path: some/path/Module2
+          subpaths:
+          - src/swift
+        - dependencies: {}
+          name: Module3
+          path: some/path/Module3
+          subpaths:
+          - src/swift
 
-        // Generate Xcode projects
-        let scriptOutput = runCommand("cd \(result.destination) && sh scripts/create-projects.sh")
-        XCTAssertEqual(scriptOutput.exitCode, 0, scriptOutput.error.joined(separator: "\n"))
+        """
+        do {
+            let userInfo = [CodingUserInfoKey.relativePath: cwd]
 
-        // Run unit tests
-        let xcodebuildOutput = runCommand("xcodebuild test -project \(result.destination)/All.xcodeproj -scheme All -destination 'platform=iOS Simulator,name=iPhone 8,OS=latest'")
-        XCTAssertEqual(xcodebuildOutput.exitCode, 0, xcodebuildOutput.error.joined(separator: "\n"))
-        if xcodebuildOutput.exitCode != 0 {
-            runCommand("open \(result.destination)/All.xcodeproj")
+            let decoder = YAMLDecoder()
+            let decoded = try decoder.decode(MainContext.self, from: contextString, userInfo: userInfo)
+
+            let encoder = YAMLEncoder()
+            encoder.options = YAMLEncoder.Options(sortKeys: true)
+            let encoded = try encoder.encode(decoded, userInfo: userInfo)
+
+            XCTAssertEqual(contextString, encoded)
+        } catch {
+            print(error)
+            throw error
         }
-    }
-
-    private func generate(_ templatesPath: Path, function: String = #function) throws -> (destination: Path, exitCode: Int32) {
-        let destination = try examplesPath.copy(into: try tmp(testName: function))
-        FileManager.default.changeCurrentDirectoryPath(destination.string)
-        try patchWorkspaceFile(destination, using: templatesPath)
-
-        let cli = SwiftBuildSystemGeneratorCLI()
-        let exitCode = cli.execute(with: generateCommandArgs())
-
-        return (destination: destination, exitCode: exitCode)
     }
 }

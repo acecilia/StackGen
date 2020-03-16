@@ -3,7 +3,7 @@ import SwiftBuildSystemGeneratorCLI
 import SwiftBuildSystemGeneratorKit
 import Path
 
-let rootPath = Path(#file)!/".."/".."/".."
+let rootPath = Path(#file)!/".."/".."/".."/".."
 let testsOutputPath = rootPath/".build"/"TestsOutput"
 let templatesPath = rootPath/"Templates"
 let carthagePath = rootPath/"Carthage"/"Build"/"iOS"
@@ -32,10 +32,6 @@ func functionName(_ methodSignature: String) -> String {
         .replacingOccurrences(of: ")", with: "")
 }
 
-func generateCommandArgs() -> [String] {
-    return [GenerateCommand.name]
-}
-
 func patchWorkspaceFile(_ path: Path, using templatesPath: Path) throws {
     let workspaceFilePath = path/"workspace.yml"
     let content = try String(contentsOf: workspaceFilePath)
@@ -44,4 +40,15 @@ func patchWorkspaceFile(_ path: Path, using templatesPath: Path) throws {
         .replacingOccurrences(of: "../templates/xcodegen", with: templatesPath.relative(to: cwd))
     try workspaceFilePath.delete()
     try content.write(to: workspaceFilePath)
+}
+
+func generate(using templatesPath: Path, function: String = #function) throws -> (destination: Path, exitCode: Int32) {
+    let destination = try examplesPath.copy(into: try tmp(testName: function))
+    FileManager.default.changeCurrentDirectoryPath(destination.string)
+    try patchWorkspaceFile(destination, using: templatesPath)
+
+    let cli = SwiftBuildSystemGeneratorCLI()
+    let exitCode = cli.execute(with: [GenerateCommand.name])
+
+    return (destination: destination, exitCode: exitCode)
 }

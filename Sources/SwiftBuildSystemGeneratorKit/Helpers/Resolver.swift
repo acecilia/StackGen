@@ -4,7 +4,7 @@ class Resolver {
     let moduleContexts: [Target.Output]
 
     init(_ workspace: WorkspaceFile) throws {
-        let middlewareTargets = try workspace.firstParty.map { try Self.resolve($0) }
+        let middlewareTargets = try workspace.modules.map { try Self.resolve($0) }
         let artifacts = try Self.resolve(artifacts: workspace.artifacts, versionSpecs: workspace.versionSpecs)
         let dependencies: [Dependency.Middleware] = middlewareTargets.map {.target($0) } + artifacts.map {.artifact($0) }
         self.moduleContexts = try Self.resolve(middlewareTargets, using: dependencies)

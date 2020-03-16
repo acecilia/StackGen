@@ -3,11 +3,11 @@ import Path
 
 /// https://stackoverflow.com/questions/45209743/how-can-i-use-swift-s-codable-to-encode-into-a-dictionary
 public protocol DictionaryConvertible {
-    func asDictionary(basePath: Path) throws -> [String: Any]
+    func asDictionary(_ basePath: Path) throws -> [String: Any]
 }
 
 extension DictionaryConvertible where Self: Encodable {
-    public func asDictionary(basePath: Path) throws -> [String: Any] {
+    public func asDictionary(_ basePath: Path) throws -> [String: Any] {
         let encoder = JSONEncoder()
         encoder.userInfo[.relativePath] = basePath
 

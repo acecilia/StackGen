@@ -5,13 +5,7 @@ content: |
   name: All
   ¶
   options:
-    defaultConfig: Release
-    bundleIdPrefix: {{global.bundleIdPrefix}}
-    transitivelyLinkDependencies: true
-    createIntermediateGroups: true
     minimumXcodeGenVersion: 2.10.1
-  ¶
-  fileGroups: [project.yml]
   ¶
   projectReferences:
   {% for module in modules %}

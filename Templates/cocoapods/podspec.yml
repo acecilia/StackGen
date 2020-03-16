@@ -1,16 +1,16 @@
-name: "{{name}}.podspec"
+name: "{{module.name}}.podspec"
 context: "module"
 outputLevel: "root"
 content: |
   Pod::Spec.new do |s|
-    s.name                   = '{{name}}'
+    s.name                   = '{{module.name}}'
     s.version                = '{{global.version}}'
     s.swift_version          = '{{global.swiftVersion}}'
     s.source_files           = 'src/main/swift/*.swift'
-    {% if dependencies.main|default:"" %}
+    {% if module.dependencies.main|default:"" %}
   ¶
     {% endif %}
-    {% for dependency in dependencies.main|default:"" %}
+    {% for dependency in module.dependencies.main|default:"" %}
     {% if dependency.type == "target" %}
     spec.dependency '{{dependency.name}}', '{{global.version}}'
     {% elif dependency.type == "artifact" %}

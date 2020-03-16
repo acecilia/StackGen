@@ -8,10 +8,9 @@ public class GenerateAction: Action {
     public func execute() throws {
         // Resolve modules
         let workspaceFileContent = try String(contentsOf: cwd/"workspace.yml")
-        let workspaceFile: WorkspaceFile = try YAMLDecoder().decode(from: workspaceFileContent, userInfo: [.relativePath : cwd])
+        let workspaceFile: WorkspaceFile = try YAMLDecoder().decode(from: workspaceFileContent, userInfo: [.relativePath: cwd])
         let resolver = try Resolver(workspaceFile)
-        let modules = resolver.moduleContexts
-        let globalContext = GlobalContext(global: workspaceFile.$global, modules: modules)
+        let mainContext = MainContext(global: workspaceFile.$global, modules: resolver.moduleContexts)
 
         // Resolve templates
         for template in workspaceFile.options.templatesPath.ls() where template.isFile {
@@ -21,8 +20,8 @@ public class GenerateAction: Action {
             for templateFile in templateFiles {
                 switch templateFile.context {
                 case .module:
-                    for module in modules {
-                        let context = try module.asContext(basePath: module.path, globalContext: globalContext)
+                    for module in mainContext.modules {
+                        let context = try mainContext.asDictionary(module.path, for: module)
                         switch templateFile.outputLevel {
                         case .module:
                             try write(templateFile: templateFile, context: context, outputPath: module.path)
@@ -33,10 +32,10 @@ public class GenerateAction: Action {
                     }
 
                 case .global:
-                    let context = try globalContext.asDictionary(basePath: cwd)
+                    let context = try mainContext.asDictionary(cwd)
                     switch templateFile.outputLevel {
                     case .module:
-                        for module in modules {
+                        for module in mainContext.modules {
                             try write(templateFile: templateFile, context: context, outputPath: module.path)
                         }
 

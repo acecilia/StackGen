@@ -1,17 +1,17 @@
 import Foundation
 
-public struct Artifact: Encodable, DictionaryConvertible {
-    struct Input: Decodable {
-        let regex: String
-        let paths: [Path]
+public struct Artifact {
+    public struct Input: Decodable {
+        public let regex: String
+        public let paths: [Path]
     }
 
-    struct Middleware {
+    public struct Middleware {
         public let name: String
         public let path: Path
     }
 
-    struct Output: Encodable, DictionaryConvertible {
+    public struct Output: Codable, DictionaryConvertible {
         public let name: String
         public let path: Path
         public let version: Version

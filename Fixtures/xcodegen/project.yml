@@ -1,13 +1,7 @@
 name: All
 
 options:
-  defaultConfig: Release
-  bundleIdPrefix: com.acecilia
-  transitivelyLinkDependencies: true
-  createIntermediateGroups: true
   minimumXcodeGenVersion: 2.10.1
-
-fileGroups: [project.yml]
 
 projectReferences:
   SwiftModule1:

@@ -1,12 +1,12 @@
 import Foundation
 import AnyCodable
 
-enum Dependency {
-    enum Middleware {
+public enum Dependency {
+    public enum Middleware {
         case target(Target.Middleware)
         case artifact(Artifact.Output)
 
-        var name: String {
+        public var name: String {
             switch self {
             case .target(let target):
                 return target.name
@@ -17,7 +17,7 @@ enum Dependency {
         }
     }
 
-    enum Output: Encodable {
+    public enum Output: Codable {
         case target(Target.Output)
         case artifact(Artifact.Output)
 
@@ -52,11 +52,24 @@ enum Dependency {
 
         public func encode(to encoder: Encoder) throws {
             let basePath = encoder.userInfo[.relativePath] as! Path
-            var dict = try underlyingObject.asDictionary(basePath: basePath)
+            var dict = try underlyingObject.asDictionary(basePath)
             dict[CodingKeys.type.rawValue] = type.rawValue
 
             var container = encoder.singleValueContainer()
             try container.encode(dict.mapValues { AnyCodable($0) })
+        }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let type = try container.decode(Kind.self, forKey: .type)
+            
+            switch type {
+            case .target:
+                self = .target(try Target.Output(from: decoder))
+
+            case .artifact:
+                self = .artifact(try Artifact.Output(from: decoder))
+            }
         }
     }
 }

@@ -3,7 +3,7 @@ global:
   swiftVersion: 5.0
   bundleIdPrefix: com.acecilia
 
-firstParty:
+modules:
 - name: SwiftModule1
   dependencies:
     main: [SwiftModule2, FileKit]
@@ -13,10 +13,10 @@ firstParty:
 
 artifacts:
 - regex: '.+\.framework'
-  paths: [../Carthage/Build/iOS]
+  paths: ['../Carthage/Build/iOS']
 
 versionSpecs:
 - carthage: '..'
 
 options:
-  templatesPath: ../templates/xcodegen
+  templatesPath: '../templates/xcodegen'
