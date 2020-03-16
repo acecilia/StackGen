@@ -42,8 +42,8 @@ func patchWorkspaceFile(_ path: Path, using templatesPath: Path) throws {
     try content.write(to: workspaceFilePath)
 }
 
-func generate(using templatesPath: Path, function: String = #function) throws -> (destination: Path, exitCode: Int32) {
-    let destination = try examplesPath.copy(into: try tmp(testName: function))
+func generate(using templatesPath: Path, testFilePath: String = #file, function: String = #function) throws -> (destination: Path, exitCode: Int32) {
+    let destination = try examplesPath.copy(into: try tmp(testFilePath: testFilePath, testName: function))
     FileManager.default.changeCurrentDirectoryPath(destination.string)
     try patchWorkspaceFile(destination, using: templatesPath)
 
