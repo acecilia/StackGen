@@ -3,9 +3,11 @@ import Path
 
 class VersionResolver {
     private static let versionRegex = NSRegularExpression(#"\d\.\d\.\d"#)
+    private let sources: [Path]
     private let lines: [Line]
 
     init(_ sources: [Path]) throws {
+        self.sources = sources
         self.lines = try sources.flatMap { source in
             try String(contentsOf: source).components(separatedBy: .newlines).enumerated().map {
                 Line(source: source, index: $0.offset, content: $0.element)
@@ -18,14 +20,14 @@ class VersionResolver {
 
         switch linesContainingDependency.count {
         case 0:
-            throw CustomError(.versionCouldNotBeFoundForModule(dependencyName))
+            throw CustomError(.moduleCouldNotBeFoundInSources(dependencyName, sources))
 
         case 1:
             let line = linesContainingDependency[0]
             let detectedVersions = VersionResolver.versionRegex.matches(in: line.content)
             switch detectedVersions.count {
             case 0:
-                throw CustomError(.versionCouldNotBeFoundForModule(dependencyName))
+                throw CustomError(.versionCouldNotBeFoundForModule(dependencyName, line))
 
             case 1:
                 let versionString = detectedVersions[0]
