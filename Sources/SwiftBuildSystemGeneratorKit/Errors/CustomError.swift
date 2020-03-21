@@ -18,14 +18,13 @@ public extension CustomError {
     enum Kind: CustomStringConvertible {
         // Version
         case versionCouldNotBeFoundForModule(_ moduleName: String)
-        case multipleVersionsFoundForModule(_ moduleName: String, _ versions: [VersionSpec])
+        case multipleVersionsFoundForModule(_ moduleName: String, _ path: [Line])
 
         // Module filesystem lookup
         case moduleNotFoundInFilesystem(_ moduleName: String)
         case multipleModulesWithTheSameNameFoundInFilesystem(_ moduleName: String, _ paths: [Path])
 
         // Dependency lookup
-        case moduleNotFoundAmongDetectedModules(_ moduleName: String, _ detectedModules: [String])
         case multipleModulesWithSameNameFoundAmongDetectedModules(_ moduleName: String, _ detectedModules: [String])
         
         public var description: String {
@@ -41,9 +40,6 @@ public extension CustomError {
 
             case .multipleModulesWithTheSameNameFoundInFilesystem(let moduleName, let paths):
                 return "Multiple filesystem paths were found for module '\(moduleName)': '\(paths)'"
-
-            case .moduleNotFoundAmongDetectedModules(let moduleName, let detectedModules):
-                return "Module '\(moduleName)' was not found among the detected modules: '\(detectedModules)'"
 
             case .multipleModulesWithSameNameFoundAmongDetectedModules(let moduleName, let detectedModules):
                 return "Multiple modules with the same name ('\(moduleName)') were found among the detected modules: '\(detectedModules)'"

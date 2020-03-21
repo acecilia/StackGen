@@ -1,38 +1,49 @@
 import Foundation
+import Path
 
-class VersionResolver: Decodable {
-    private let versionSpecs: [VersionSpec]
+class VersionResolver {
+    private static let versionRegex = NSRegularExpression(#"\d\.\d\.\d"#)
+    private let lines: [Line]
 
-    init(_ versionSpecs: [VersionSpec]) {
-        self.versionSpecs = versionSpecs
-    }
-
-    func resolve(dependencyName: String) throws -> Version {
-        var versions: [(spec: VersionSpec, version: Version)] = []
-
-        for versionSpec in versionSpecs {
-            switch versionSpec {
-            case .carthage(let path):
-                let service = CarthageService(path)
-                if let version = try service.getFrameworks()[dependencyName] {
-                    versions.append((versionSpec, version))
-                }
-            case .custom(let name, let version):
-                if name == dependencyName {
-                    versions.append((versionSpec, version))
-                }
+    init(_ sources: [Path]) throws {
+        self.lines = try sources.flatMap { source in
+            try String(contentsOf: source).components(separatedBy: .newlines).enumerated().map {
+                Line(source: source, index: $0.offset, content: $0.element)
             }
         }
+    }
 
-        switch versions.count {
+    func resolve(dependencyName: String) throws -> Artifact.Output {
+        let linesContainingDependency = lines.filter { $0.content.contains(dependencyName) }
+
+        switch linesContainingDependency.count {
         case 0:
             throw CustomError(.versionCouldNotBeFoundForModule(dependencyName))
 
         case 1:
-            return versions[0].version
+            let line = linesContainingDependency[0]
+            let detectedVersions = VersionResolver.versionRegex.matches(in: line.content)
+            switch detectedVersions.count {
+            case 0:
+                throw CustomError(.versionCouldNotBeFoundForModule(dependencyName))
 
+            case 1:
+                let versionString = detectedVersions[0]
+                let version = try Version(tolerant: versionString)
+                    .unwrap(onFailure: "Version '\(versionString)' is not valid for dependency '\(dependencyName)'")
+                return Artifact.Output(source: line.source, sourceParent: line.source.parent, name: dependencyName, version: version)
+
+            default:
+                throw CustomError(.multipleVersionsFoundForModule(dependencyName, [line]))
+            }
         default:
-            throw CustomError(.multipleVersionsFoundForModule(dependencyName, versions.map { $0.spec }))
+            throw CustomError(.multipleVersionsFoundForModule(dependencyName, linesContainingDependency))
         }
     }
+}
+
+public struct Line {
+    public let source: Path
+    public let index: Int
+    public let content: String
 }

@@ -25,8 +25,8 @@ content: |
       {% if dependency.type == "target" %}
       - framework: {{dependency.name}}.framework
         implicit: true
-      {% elif dependency.type == "artifact" %}
-      - framework: {{dependency.path}}
+      {% elif (dependency.type == "artifact") and ("Cartfile" in dependency.source) %}
+      - framework: {{dependency.sourceParent}}/Carthage/Build/iOS/{{dependency.name}}.framework
       {% endif %}
       {% endfor %}
       {% endif %}
@@ -49,8 +49,8 @@ content: |
       {% if dependency.type == "target" %}
       - framework: {{dependency.name}}.framework
         implicit: true
-      {% elif dependency.type == "artifact" %}
-      - framework: {{dependency.path}}
+      {% elif (dependency.type == "artifact") and ("Cartfile" in dependency.source) %}
+      - framework: {{dependency.sourceParent}}/Carthage/Build/iOS/{{dependency.name}}.framework
       {% endif %}
       {% endfor %}
       info:

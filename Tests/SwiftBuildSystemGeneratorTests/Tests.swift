@@ -21,6 +21,11 @@ final class Tests: XCTestCase {
         modules:
         - dependencies:
             main:
+            - name: FileKit
+              source: ../Cartfile
+              sourceParent: ..
+              type: artifact
+              version: 0.0.1
             - dependencies: {}
               name: Module2
               path: some/path/Module2

@@ -5,6 +5,5 @@ struct WorkspaceFile: Decodable {
     private(set) var global: Global
     var options: Options
     let modules: [Module.Input]
-    let artifacts: [Artifact.Input]
-    let versionSpecs: [VersionSpec]
+    let dependencies: [Path]
 }

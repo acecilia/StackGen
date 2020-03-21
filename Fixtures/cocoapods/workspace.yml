@@ -11,12 +11,8 @@ modules:
 - name: SwiftModule2
 - name: SwiftModule3
 
-artifacts:
-- regex: '.+\.framework'
-  paths: ['../../../../../../Carthage/Build/iOS']
-
-versionSpecs:
-- carthage: '../../../../../..'
+dependencies:
+- '../../../../../../Cartfile'
 
 options:
   templatesPath: '../../../../../../Templates/cocoapods'

@@ -11,60 +11,6 @@
         }
       },
       {
-        "package": "Carthage",
-        "repositoryURL": "https://github.com/Carthage/Carthage.git",
-        "state": {
-          "branch": null,
-          "revision": "de66acf88f32ace83fe99b04fd14565290711ea9",
-          "version": null
-        }
-      },
-      {
-        "package": "Commandant",
-        "repositoryURL": "https://github.com/Carthage/Commandant.git",
-        "state": {
-          "branch": null,
-          "revision": "ab68611013dec67413628ac87c1f29e8427bc8e4",
-          "version": "0.17.0"
-        }
-      },
-      {
-        "package": "Curry",
-        "repositoryURL": "https://github.com/thoughtbot/Curry.git",
-        "state": {
-          "branch": null,
-          "revision": "4331dd50bc1db007db664a23f32e6f3df93d4e1a",
-          "version": "4.0.2"
-        }
-      },
-      {
-        "package": "CwlCatchException",
-        "repositoryURL": "https://github.com/mattgallagher/CwlCatchException.git",
-        "state": {
-          "branch": null,
-          "revision": "7cd2f8cacc4d22f21bc0b2309c3b18acf7957b66",
-          "version": "1.2.0"
-        }
-      },
-      {
-        "package": "CwlPreconditionTesting",
-        "repositoryURL": "https://github.com/mattgallagher/CwlPreconditionTesting.git",
-        "state": {
-          "branch": null,
-          "revision": "c228db5d2ad1b01ebc84435e823e6cca4e3db98b",
-          "version": "1.2.0"
-        }
-      },
-      {
-        "package": "Nimble",
-        "repositoryURL": "https://github.com/Quick/Nimble.git",
-        "state": {
-          "branch": null,
-          "revision": "b02b00b30b6353632aa4a5fb6124f8147f7140c0",
-          "version": "8.0.5"
-        }
-      },
-      {
         "package": "Path.swift",
         "repositoryURL": "https://github.com/mxcl/Path.swift.git",
         "state": {
@@ -80,51 +26,6 @@
           "branch": null,
           "revision": "73f8e9dca9b7a3078cb79128217dc8f2e585a511",
           "version": "1.0.0"
-        }
-      },
-      {
-        "package": "PrettyColors",
-        "repositoryURL": "https://github.com/jdhealy/PrettyColors.git",
-        "state": {
-          "branch": null,
-          "revision": "afd4553a4db6f656521cfe9b1f70bece2748c7d8",
-          "version": "5.0.2"
-        }
-      },
-      {
-        "package": "Quick",
-        "repositoryURL": "https://github.com/Quick/Quick.git",
-        "state": {
-          "branch": null,
-          "revision": "33682c2f6230c60614861dfc61df267e11a1602f",
-          "version": "2.2.0"
-        }
-      },
-      {
-        "package": "ReactiveSwift",
-        "repositoryURL": "https://github.com/ReactiveCocoa/ReactiveSwift.git",
-        "state": {
-          "branch": null,
-          "revision": "c37950dc5020544c58d4bf47c0d028893686b9e6",
-          "version": "5.0.1"
-        }
-      },
-      {
-        "package": "ReactiveTask",
-        "repositoryURL": "https://github.com/Carthage/ReactiveTask.git",
-        "state": {
-          "branch": null,
-          "revision": "df1bf7625684180b9377a8ba3c076db08d98757e",
-          "version": "0.16.0"
-        }
-      },
-      {
-        "package": "Result",
-        "repositoryURL": "https://github.com/antitypical/Result.git",
-        "state": {
-          "branch": null,
-          "revision": "2ca499ba456795616fbc471561ff1d963e6ae160",
-          "version": "4.1.0"
         }
       },
       {
@@ -152,15 +53,6 @@
           "branch": null,
           "revision": "c72c4564f8c0a24700a59824880536aca45a4cae",
           "version": "6.0.1"
-        }
-      },
-      {
-        "package": "Tentacle",
-        "repositoryURL": "https://github.com/mdiep/Tentacle.git",
-        "state": {
-          "branch": null,
-          "revision": "578edd088b03bc749c49253b15ae2d5aaa9aa7df",
-          "version": "0.13.1"
         }
       },
       {
