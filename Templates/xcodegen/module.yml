@@ -9,7 +9,7 @@ content: |
     bundleIdPrefix: {{global.bundleIdPrefix}}
     transitivelyLinkDependencies: true
     createIntermediateGroups: true
-    minimumXcodeGenVersion: 2.10.1
+    minimumXcodeGenVersion: {{global.minimumXcodeGenVersion}}
   ¶
   fileGroups: [project.yml]
   ¶
@@ -32,6 +32,8 @@ content: |
       {% endif %}
       info:
         path: SupportingFiles/{{module.name}}/Info.plist
+        properties:
+          CFBundleShortVersionString: {{global.version}}
   ¶
     {% if "src/test/swift" in module.subpaths %}
     {{module.name}}Tests:

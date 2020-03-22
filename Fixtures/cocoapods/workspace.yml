@@ -3,6 +3,7 @@ global:
   swiftVersion: 5.0
   bundleIdPrefix: com.acecilia
   minimumDeploymentTarget: 10.0
+  minimumXcodeGenVersion: 2.14.0
 
 modules:
 - name: SwiftModule1

@@ -10,7 +10,7 @@ public class GenerateAction: Action {
         let workspaceFileContent = try String(contentsOf: cwd/"workspace.yml")
         let workspaceFile: WorkspaceFile = try YAMLDecoder().decode(from: workspaceFileContent, userInfo: [.relativePath: cwd])
         let resolver = try Resolver(workspaceFile)
-        let mainContext = MainContext(global: workspaceFile.$global, modules: resolver.moduleContexts)
+        let mainContext = MainContext(global: workspaceFile.$global, modules: resolver.moduleContexts, artifacts: resolver.artifacts)
 
         // Resolve templates
         for template in workspaceFile.options.templatesPath.ls() where template.isFile {

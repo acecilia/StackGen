@@ -3,7 +3,28 @@ install! 'cocoapods', :integrate_targets => false, :share_schemes_for_developmen
 use_frameworks!
 platform :ios, '10.0'
 
-pod 'SnapKit', '5.0.1'
+#################
+# Binary setup
+#################
+
+# Use binaries instead of source code, to speed up builds
+$useBinaries = true
+
+if $useBinaries
+    plugin 'cocoapods-binary'
+    enable_bitcode_for_prebuilt_frameworks!
+end
+
+#################
+# Third party modules
+#################
+
+pod 'SnapKit', '5.0.1', :binary => $useBinaries
+
+#################
+# First party modules
+#################
+
 pod 'SwiftModule1', :path => '.', :testspecs => ['Tests']
 pod 'SwiftModule2', :path => '.', :testspecs => ['Tests']
 pod 'SwiftModule3', :path => '.', :testspecs => ['Tests']

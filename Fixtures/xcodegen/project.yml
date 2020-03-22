@@ -1,7 +1,7 @@
 name: All
 
 options:
-  minimumXcodeGenVersion: 2.10.1
+  minimumXcodeGenVersion: 2.14.0
 
 projectReferences:
   SwiftModule1:

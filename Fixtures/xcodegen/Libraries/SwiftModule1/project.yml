@@ -5,7 +5,7 @@ options:
   bundleIdPrefix: com.acecilia
   transitivelyLinkDependencies: true
   createIntermediateGroups: true
-  minimumXcodeGenVersion: 2.10.1
+  minimumXcodeGenVersion: 2.14.0
 
 fileGroups: [project.yml]
 
@@ -21,6 +21,8 @@ targets:
     - framework: ../../../../../../../../Carthage/Build/iOS/SnapKit.framework
     info:
       path: SupportingFiles/SwiftModule1/Info.plist
+      properties:
+        CFBundleShortVersionString: 0.0.1
 
   SwiftModule1Tests:
     type: bundle.unit-test

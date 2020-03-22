@@ -4,7 +4,11 @@ import Foundation
 
 @discardableResult
 func runCommand(_ cmd: String) -> (output: [String], error: [String], exitCode: Int32) {
-    return runCommand(cmd: "/bin/sh", args: "--login", "-c", cmd)
+    // For this to work your zsh environment should be set in '.zshenv'
+    // See: https://unix.stackexchange.com/questions/71253/what-should-shouldnt-go-in-zshenv-zshrc-zlogin-zprofile-zlogout
+    // '.zshenv' should include '/usr/local/bin' for brew, for non-interactive shells (where it is not in the PATH by default)
+    // See: https://docs.brew.sh/FAQ#my-mac-apps-dont-find-usrlocalbin-utilities
+    return runCommand(cmd: "/bin/zsh", args: "-c", cmd)
 }
 
 private func runCommand(cmd: String, args: String...) -> (output: [String], error: [String], exitCode: Int32) {

@@ -2,13 +2,28 @@ import Foundation
 
 class Resolver {
     let moduleContexts: [Target.Output]
+    let artifacts: [Artifact.Output]
 
     init(_ workspace: WorkspaceFile) throws {
         let middlewareTargets = try workspace.modules.map { try Self.resolve($0) }
         let versionResolver = try VersionResolver(workspace.dependencies)
         self.moduleContexts = try Self.resolve(middlewareTargets, using: versionResolver)
+        self.artifacts = Self.extractArtifacts(moduleContexts)
     }
 
+    private static func extractArtifacts(_ modules: [Target.Output]) -> [Artifact.Output] {
+        var artifacts: Set<Artifact.Output> = []
+        for module in modules {
+            for (_, targetDependencies) in module.dependencies {
+                for dependency in targetDependencies {
+                    if case .artifact(let artifact) = dependency {
+                        artifacts.insert(artifact)
+                    }
+                }
+            }
+        }
+        return Array(artifacts).sorted { $0.name < $1.name }
+    }
     private static func resolve(_ module: Module.Input) throws -> Target.Middleware {
         let directories = cwd.find().type(.directory).map { $0 }
         let pathCandidates = directories.filter { $0.basename(dropExtension: true) == module.name }

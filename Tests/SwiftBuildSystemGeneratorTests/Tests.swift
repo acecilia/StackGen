@@ -14,6 +14,11 @@ final class Tests: XCTestCase {
 
     func testContext() throws {
         let contextString = """
+        artifacts:
+        - name: FileKit
+          source: ../Cartfile
+          sourceParent: ..
+          version: 0.0.1
         global:
           aGlobalVariable: something
           anotherGlobalVariable: somethingElse
