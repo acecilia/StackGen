@@ -5,7 +5,7 @@ options:
   bundleIdPrefix: com.acecilia
   transitivelyLinkDependencies: true
   createIntermediateGroups: true
-  minimumXcodeGenVersion: 2.14.0
+  xcodeGenVersion: 2.14.0
 
 fileGroups: [project.yml]
 

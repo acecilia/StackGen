@@ -4,7 +4,7 @@ outputLevel: "root"
 content: |
   Pod::Spec.new do |s|
     s.name                   = '{{module.name}}'
-    s.version                = '{{global.version}}'
+    s.version                = '{{global.moduleVersion}}'
     s.swift_version          = '{{global.swiftVersion}}'
     s.ios.deployment_target  = '{{global.minimumDeploymentTarget}}'
     s.source_files           = '{{module.path}}/src/main/swift/*.swift'
@@ -13,7 +13,7 @@ content: |
     {% endif %}
     {% for dependency in module.dependencies.main|default:"" %}
     {% if dependency.type == "target" %}
-    s.dependency '{{dependency.name}}', '{{global.version}}'
+    s.dependency '{{dependency.name}}', '{{global.moduleVersion}}'
     {% elif dependency.type == "artifact" %}
     s.dependency '{{dependency.name}}', '{{dependency.version}}'
     {% endif %}
@@ -26,7 +26,7 @@ content: |
       {% endif %}
       {% for dependency in module.dependencies.test|default:"" %}
       {% if dependency.type == "target" %}
-      test_spec.dependency '{{dependency.name}}', '{{global.version}}'
+      test_spec.dependency '{{dependency.name}}', '{{global.moduleVersion}}'
       {% elif dependency.type == "artifact" %}
       test_spec.dependency '{{dependency.name}}', '{{dependency.version}}'
       {% endif %}

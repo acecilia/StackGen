@@ -3,4 +3,4 @@ context: "global"
 outputLevel: "root"
 content: |
   yonaskolb/mint@{{ global.mintVersion }}
-  yonaskolb/xcodegen@{{ global.minimumXcodeGenVersion }}
+  yonaskolb/xcodegen@{{ global.xcodeGenVersion }}

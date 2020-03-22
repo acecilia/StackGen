@@ -1,10 +1,10 @@
 global:
   # Tools
   mintVersion: 0.14.1
-  minimumXcodeGenVersion: 2.14.0
+  xcodeGenVersion: 2.14.0
 
   # Code
-  version: 0.0.1
+  moduleVersion: 0.0.1
   swiftVersion: 5.0
   bundleIdPrefix: com.acecilia
   minimumDeploymentTarget: 10.0

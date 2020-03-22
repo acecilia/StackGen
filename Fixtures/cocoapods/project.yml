@@ -1,7 +1,7 @@
 name: All
 
 options:
-  minimumXcodeGenVersion: 2.14.0
+  xcodeGenVersion: 2.14.0
 
 projectReferences:
   Pods:

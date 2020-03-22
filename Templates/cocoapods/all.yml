@@ -5,7 +5,7 @@ content: |
   name: All
   ¶
   options:
-    minimumXcodeGenVersion: {{global.minimumXcodeGenVersion}}
+    xcodeGenVersion: {{global.xcodeGenVersion}}
   ¶
   projectReferences:
     Pods:
