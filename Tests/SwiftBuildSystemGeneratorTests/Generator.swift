@@ -4,7 +4,7 @@ import SwiftBuildSystemGeneratorKit
 import Path
 
 final class Generator: XCTestCase {
-    func testSelfGenerate() throws {
+    func test_01_SelfGenerate() throws {
         let path = rootPath
         FileManager.default.changeCurrentDirectoryPath(path.string)
 
@@ -13,7 +13,7 @@ final class Generator: XCTestCase {
         XCTAssertEqual(exitCode, 0)
     }
 
-    func testGenerateFixtures() throws {
+    func test_02_GenerateFixtures() throws {
         try fixturesPath.delete()
 
         Snapshot.recording = true

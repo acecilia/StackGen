@@ -1,0 +1,10 @@
+global: {}
+
+modules:
+- name: Templates/cocoapods
+- name: Templates/xcodegen
+
+dependencies: []
+
+options:
+  templatesPath: SelfGenerateTemplates

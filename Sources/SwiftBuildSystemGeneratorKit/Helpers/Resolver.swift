@@ -26,15 +26,16 @@ class Resolver {
     }
     private static func resolve(_ module: Module.Input) throws -> Target.Middleware {
         let directories = cwd.find().type(.directory).map { $0 }
-        let pathCandidates = directories.filter { $0.relative(to: Path.root).hasSuffix(module.name) }
+        let pathCandidates = directories.filter { $0.string.hasSuffix(module.name) }
         switch pathCandidates.count {
         case 0:
             throw CustomError(.moduleNotFoundInFilesystem(module.name))
 
         case 1:
+            let path = pathCandidates[0]
             let target = Target.Middleware(
-                name: module.name,
-                path: pathCandidates[0],
+                name: path.basename(dropExtension: true),
+                path: path,
                 dependencies: module.dependencies
             )
             return target

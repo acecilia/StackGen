@@ -6,7 +6,5 @@
 set -eou pipefail
 
 mint bootstrap --link
-pod install
-xcodegen
 
 echo "✨ Done"

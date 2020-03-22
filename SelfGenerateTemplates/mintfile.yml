@@ -1,0 +1,10 @@
+name: "mintfile.yml"
+context: "module"
+outputLevel: "module"
+content: |
+  name: "Mintfile"
+  context: "global"
+  outputLevel: "root"
+  content: |
+    yonaskolb/mint@{{ '{{' }} global.mintVersion }}
+    yonaskolb/xcodegen@{{ '{{' }} global.minimumXcodeGenVersion }}

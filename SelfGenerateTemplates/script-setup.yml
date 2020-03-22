@@ -1,0 +1,23 @@
+name: "script-setup.yml"
+context: "module"
+outputLevel: "module"
+content: |  
+  name: "setup.sh"
+  context: "global"
+  outputLevel: "root"
+  subdir: "scripts"
+  content: |
+    #!/bin/bash
+    # Initial setup of the project
+    ¶
+    # Fail if exit code is not zero, in pipes, and also if variable is not set
+    # See: https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+    set -eou pipefail
+    ¶
+    mint bootstrap --link
+    {% if module.name == "cocoapods" %}
+    pod install
+    xcodegen
+    {% endif %}
+    ¶
+    echo "✨ Done"
