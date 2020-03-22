@@ -31,21 +31,7 @@ extension Context {
 
 }
 
-extension Global {
-
-    enum CodingKeys: String, CodingKey {
-        case ignore
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        ignore = (try? container.decode([Path].self, forKey: .ignore)) ?? Global.defaultIgnore
-    }
-
-}
-
-extension Module.Input {
+extension FirstPartyModule.Input {
 
     enum CodingKeys: String, CodingKey {
         case name
@@ -56,7 +42,7 @@ extension Module.Input {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         name = try container.decode(String.self, forKey: .name)
-        dependencies = (try? container.decode([String: [String]].self, forKey: .dependencies)) ?? Module.Input.defaultDependencies
+        dependencies = (try? container.decode([String: [String]].self, forKey: .dependencies)) ?? FirstPartyModule.Input.defaultDependencies
     }
 
 }

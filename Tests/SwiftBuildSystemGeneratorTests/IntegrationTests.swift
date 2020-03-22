@@ -2,7 +2,7 @@ import XCTest
 import SwiftBuildSystemGeneratorKit
 import Path
 
-final class IntegrationTests: XCTestCase {
+final class _03_IntegrationTests: XCTestCase {
     func testXcodegen() throws {
         // Generate XcodeGen files
         let result = try generate(using: templatesPath/"xcodegen")

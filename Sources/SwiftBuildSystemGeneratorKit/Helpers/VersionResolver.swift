@@ -15,7 +15,7 @@ class VersionResolver {
         }
     }
 
-    func resolve(dependencyName: String) throws -> Artifact.Output {
+    func resolve(dependencyName: String) throws -> ThirdPartyModule.Output {
         let linesContainingDependency = lines.filter { $0.content.contains(dependencyName) }
 
         switch linesContainingDependency.count {
@@ -33,7 +33,7 @@ class VersionResolver {
                 let versionString = detectedVersions[0]
                 let version = try Version(tolerant: versionString)
                     .unwrap(onFailure: "Version '\(versionString)' is not valid for dependency '\(dependencyName)'")
-                return Artifact.Output(source: line.source, sourceParent: line.source.parent, name: dependencyName, version: version)
+                return ThirdPartyModule.Output(source: line.source, sourceParent: line.source.parent, name: dependencyName, version: version)
 
             default:
                 throw CustomError(.multipleVersionsFoundForModule(dependencyName, [line]))

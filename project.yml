@@ -18,6 +18,6 @@ aggregateTargets:
 
   carthage:
     buildScripts:
-      - name: Xcodegen
+      - name: Carthage
         script: |
           carthage bootstrap --no-use-binaries --platform iOS

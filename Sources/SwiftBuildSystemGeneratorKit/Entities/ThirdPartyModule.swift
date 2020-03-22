@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Artifact {
+public struct ThirdPartyModule {
     public struct Output: Codable, Hashable, DictionaryConvertible {
         public let source: Path
         public let sourceParent: Path

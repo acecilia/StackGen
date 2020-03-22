@@ -3,7 +3,7 @@ import Yams
 import SwiftBuildSystemGeneratorKit
 import Path
 
-final class Tests: XCTestCase {
+final class _02_Tests: XCTestCase {
     func testGenerate() throws {
         for templatesPath in templatesPath.ls().directories {
             let result = try generate(using: templatesPath)
@@ -22,27 +22,26 @@ final class Tests: XCTestCase {
         global:
           aGlobalVariable: something
           anotherGlobalVariable: somethingElse
-          ignore: 5
         modules:
         - dependencies:
             main:
             - name: FileKit
               source: ../Cartfile
               sourceParent: ..
-              type: artifact
+              type: thirdParty
               version: 0.0.1
             - dependencies: {}
               name: Module2
               path: some/path/Module2
               subpaths:
               - src/swift
-              type: target
+              type: firstParty
             - dependencies: {}
               name: Module3
               path: some/path/Module3
               subpaths:
               - src/swift
-              type: target
+              type: firstParty
           name: Module1
           path: some/path/Module1
           subpaths:

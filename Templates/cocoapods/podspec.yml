@@ -12,9 +12,9 @@ content: |
   ¶
     {% endif %}
     {% for dependency in module.dependencies.main|default:"" %}
-    {% if dependency.type == "target" %}
+    {% if dependency.type == "firstParty" %}
     s.dependency '{{dependency.name}}', '{{global.moduleVersion}}'
-    {% elif dependency.type == "artifact" %}
+    {% elif dependency.type == "thirdParty" %}
     s.dependency '{{dependency.name}}', '{{dependency.version}}'
     {% endif %}
     {% endfor %}
@@ -25,9 +25,9 @@ content: |
   ¶
       {% endif %}
       {% for dependency in module.dependencies.test|default:"" %}
-      {% if dependency.type == "target" %}
+      {% if dependency.type == "firstParty" %}
       test_spec.dependency '{{dependency.name}}', '{{global.moduleVersion}}'
-      {% elif dependency.type == "artifact" %}
+      {% elif dependency.type == "thirdParty" %}
       test_spec.dependency '{{dependency.name}}', '{{dependency.version}}'
       {% endif %}
       {% endfor %}

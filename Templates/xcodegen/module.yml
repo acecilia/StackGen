@@ -22,10 +22,10 @@ content: |
       {% if module.dependencies.main|default:"" %}
       dependencies:
       {% for dependency in module.dependencies.main %}
-      {% if dependency.type == "target" %}
+      {% if dependency.type == "firstParty" %}
       - framework: {{dependency.name}}.framework
         implicit: true
-      {% elif (dependency.type == "artifact") and ("Cartfile" in dependency.source) %}
+      {% elif (dependency.type == "thirdParty") and ("Cartfile" in dependency.source) %}
       - framework: {{dependency.sourceParent}}/Carthage/Build/iOS/{{dependency.name}}.framework
       {% endif %}
       {% endfor %}
@@ -48,10 +48,10 @@ content: |
       dependencies:
       - target: {{module.name}}
       {% for dependency in module.dependencies.test|default:"" %}
-      {% if dependency.type == "target" %}
+      {% if dependency.type == "firstParty" %}
       - framework: {{dependency.name}}.framework
         implicit: true
-      {% elif (dependency.type == "artifact") and ("Cartfile" in dependency.source) %}
+      {% elif (dependency.type == "thirdParty") and ("Cartfile" in dependency.source) %}
       - framework: {{dependency.sourceParent}}/Carthage/Build/iOS/{{dependency.name}}.framework
       {% endif %}
       {% endfor %}

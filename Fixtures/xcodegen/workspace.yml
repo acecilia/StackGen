@@ -17,7 +17,7 @@ modules:
 - name: SwiftModule2
 - name: SwiftModule3
 
-dependencies:
+versionSources:
 - '../../../../../../Cartfile'
 
 options:

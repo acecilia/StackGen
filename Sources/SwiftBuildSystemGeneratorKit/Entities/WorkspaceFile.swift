@@ -1,9 +1,8 @@
 import Foundation
 
 struct WorkspaceFile: Decodable {
-    @RawWrapper
-    private(set) var global: Global
-    var options: Options
-    let modules: [Module.Input]
-    let dependencies: [Path]
+    let global: [String: String]
+    let options: Options
+    let modules: [FirstPartyModule.Input]
+    let versionSources: [Path]
 }

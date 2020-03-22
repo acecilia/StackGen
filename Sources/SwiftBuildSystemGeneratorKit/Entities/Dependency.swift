@@ -3,50 +3,50 @@ import AnyCodable
 
 public enum Dependency {
     public enum Middleware {
-        case target(Target.Middleware)
-        case artifact(Artifact.Output)
+        case firstParty(FirstPartyModule.Middleware)
+        case thirdParty(ThirdPartyModule.Output)
 
         public var name: String {
             switch self {
-            case .target(let target):
+            case .firstParty(let target):
                 return target.name
 
-            case .artifact(let artifact):
+            case .thirdParty(let artifact):
                 return artifact.name
             }
         }
     }
 
     public enum Output: Codable {
-        case target(Target.Output)
-        case artifact(Artifact.Output)
+        case firstParty(FirstPartyModule.Output)
+        case thirdParty(ThirdPartyModule.Output)
 
         private enum CodingKeys: String, CodingKey {
             case type
         }
 
         public enum Kind: String, Codable {
-            case target
-            case artifact
+            case firstParty
+            case thirdParty
         }
 
         public var underlyingObject: DictionaryConvertible {
             switch self {
-            case .target(let target):
-                return target
+            case .firstParty(let firstPartyModule):
+                return firstPartyModule
 
-            case .artifact(let artifact):
-                return artifact
+            case .thirdParty(let thirdPartyModule):
+                return thirdPartyModule
             }
         }
 
         public var type: Kind {
             switch self {
-            case .target:
-                return .target
+            case .firstParty:
+                return .firstParty
 
-            case .artifact:
-                return .artifact
+            case .thirdParty:
+                return .thirdParty
             }
         }
 
@@ -64,11 +64,11 @@ public enum Dependency {
             let type = try container.decode(Kind.self, forKey: .type)
             
             switch type {
-            case .target:
-                self = .target(try Target.Output(from: decoder))
+            case .firstParty:
+                self = .firstParty(try FirstPartyModule.Output(from: decoder))
 
-            case .artifact:
-                self = .artifact(try Artifact.Output(from: decoder))
+            case .thirdParty:
+                self = .thirdParty(try ThirdPartyModule.Output(from: decoder))
             }
         }
     }
