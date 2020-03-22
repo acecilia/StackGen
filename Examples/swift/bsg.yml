@@ -18,7 +18,7 @@ modules:
 - name: SwiftModule3
 
 versionSources:
-- '../Cartfile'
+- 'Cartfile'
 
 options:
-  templatesPath: '../templates/xcodegen'
+  templatesPath: '../../templates/xcodegen'

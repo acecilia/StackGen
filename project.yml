@@ -20,4 +20,4 @@ aggregateTargets:
     buildScripts:
       - name: Carthage
         script: |
-          carthage bootstrap --no-use-binaries --platform iOS
+          cd Examples/swift; carthage bootstrap --no-use-binaries --platform iOS

@@ -6,9 +6,9 @@ import Path
 let rootPath = Path(#file)!/".."/".."/".."/".."
 let testsOutputPath = rootPath/".build"/"TestsOutput"
 let templatesPath = rootPath/"Templates"
-let carthagePath = rootPath/"Carthage"/"Build"/"iOS"
+let carthagePath = examplesPath/"Carthage"/"Build"/"iOS"
 
-let examplesPath = rootPath/"Examples"
+let examplesPath = rootPath/"Examples"/"swift"
 let fixturesPath = rootPath/"Fixtures"
 
 func tmp(testFilePath: String = #file, testName: String = #function) throws -> Path {
@@ -35,8 +35,8 @@ func functionName(_ methodSignature: String) -> String {
 func patchWorkspaceFile(_ path: Path, using templatesPath: Path) throws {
     let workspaceFilePath = path/"bsg.yml"
     let content = try String(contentsOf: workspaceFilePath)
-        .replacingOccurrences(of: "../Cartfile", with: "\((rootPath/"Cartfile").relative(to: cwd))")
-        .replacingOccurrences(of: "../templates/xcodegen", with: templatesPath.relative(to: cwd))
+        .replacingOccurrences(of: "Cartfile", with: "\((examplesPath/"Cartfile").relative(to: cwd))")
+        .replacingOccurrences(of: "../../templates/xcodegen", with: templatesPath.relative(to: cwd))
     try workspaceFilePath.delete()
     try content.write(to: workspaceFilePath)
 }

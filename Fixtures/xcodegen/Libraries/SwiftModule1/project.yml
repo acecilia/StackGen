@@ -18,7 +18,7 @@ targets:
     dependencies:
     - framework: SwiftModule2.framework
       implicit: true
-    - framework: ../../../../../../../../Carthage/Build/iOS/SnapKit.framework
+    - framework: ../../../../../../../../Examples/swift/Carthage/Build/iOS/SnapKit.framework
     info:
       path: SupportingFiles/SwiftModule1/Info.plist
       properties:
