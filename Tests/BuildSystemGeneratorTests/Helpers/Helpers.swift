@@ -1,6 +1,6 @@
 import Foundation
-import SwiftBuildSystemGeneratorCLI
-import SwiftBuildSystemGeneratorKit
+import BuildSystemGeneratorCLI
+import BuildSystemGeneratorKit
 import Path
 
 let rootPath = Path(#file)!/".."/".."/".."/".."
@@ -33,7 +33,7 @@ func functionName(_ methodSignature: String) -> String {
 }
 
 func patchWorkspaceFile(_ path: Path, using templatesPath: Path) throws {
-    let workspaceFilePath = path/"workspace.yml"
+    let workspaceFilePath = path/"bsg.yml"
     let content = try String(contentsOf: workspaceFilePath)
         .replacingOccurrences(of: "../Cartfile", with: "\((rootPath/"Cartfile").relative(to: cwd))")
         .replacingOccurrences(of: "../templates/xcodegen", with: templatesPath.relative(to: cwd))
@@ -46,7 +46,7 @@ func generate(using templatesPath: Path, testFilePath: String = #file, function:
     FileManager.default.changeCurrentDirectoryPath(destination.string)
     try patchWorkspaceFile(destination, using: templatesPath)
 
-    let cli = SwiftBuildSystemGeneratorCLI()
+    let cli = BuildSystemGeneratorCLI()
     let exitCode = cli.execute(with: [GenerateCommand.name])
 
     return (destination: destination, exitCode: exitCode)

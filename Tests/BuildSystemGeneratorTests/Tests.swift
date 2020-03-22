@@ -1,6 +1,6 @@
 import XCTest
 import Yams
-import SwiftBuildSystemGeneratorKit
+import BuildSystemGeneratorKit
 import Path
 
 final class _02_Tests: XCTestCase {

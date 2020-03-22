@@ -1,6 +1,6 @@
 import Foundation
-import SwiftBuildSystemGeneratorCLI
+import BuildSystemGeneratorCLI
 
-let cli = SwiftBuildSystemGeneratorCLI()
+let cli = BuildSystemGeneratorCLI()
 let status = cli.execute(with: Array(CommandLine.arguments.dropFirst()))
 exit(status)

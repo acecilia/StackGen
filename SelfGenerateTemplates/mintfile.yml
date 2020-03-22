@@ -6,5 +6,5 @@ content: |
   context: "global"
   outputLevel: "root"
   content: |
-    yonaskolb/mint@{{ '{{' }} global.mintVersion }}
-    yonaskolb/xcodegen@{{ '{{' }} global.xcodeGenVersion }}
+    yonaskolb/mint@{{'{{'}} global.mintVersion }}
+    yonaskolb/xcodegen@{{'{{'}} global.xcodeGenVersion }}

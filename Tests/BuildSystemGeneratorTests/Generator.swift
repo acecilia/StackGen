@@ -1,6 +1,6 @@
 import XCTest
-import SwiftBuildSystemGeneratorCLI
-import SwiftBuildSystemGeneratorKit
+import BuildSystemGeneratorCLI
+import BuildSystemGeneratorKit
 import Path
 
 final class _01_Generator: XCTestCase {
@@ -13,7 +13,7 @@ final class _01_Generator: XCTestCase {
         let path = rootPath
         FileManager.default.changeCurrentDirectoryPath(path.string)
 
-        let cli = SwiftBuildSystemGeneratorCLI()
+        let cli = BuildSystemGeneratorCLI()
         let exitCode = cli.execute(with: [GenerateCommand.name])
         XCTAssertEqual(exitCode, 0)
     }

@@ -1,5 +1,5 @@
 import XCTest
-import SwiftBuildSystemGeneratorKit
+import BuildSystemGeneratorKit
 import Path
 
 final class _03_IntegrationTests: XCTestCase {

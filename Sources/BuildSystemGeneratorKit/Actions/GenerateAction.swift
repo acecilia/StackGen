@@ -7,7 +7,7 @@ public class GenerateAction: Action {
 
     public func execute() throws {
         // Resolve modules
-        let workspaceFileContent = try String(contentsOf: cwd/"workspace.yml")
+        let workspaceFileContent = try String(contentsOf: cwd/"bsg.yml")
         let workspaceFile: WorkspaceFile = try YAMLDecoder().decode(from: workspaceFileContent, userInfo: [.relativePath: cwd])
         let resolver = try Resolver(workspaceFile)
         let mainContext = MainContext(global: workspaceFile.global, modules: resolver.moduleContexts, artifacts: resolver.artifacts)

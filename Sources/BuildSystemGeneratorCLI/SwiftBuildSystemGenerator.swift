@@ -1,13 +1,13 @@
 import Foundation
 import SwiftCLI
-import SwiftBuildSystemGeneratorKit
+import BuildSystemGeneratorKit
 
-public class SwiftBuildSystemGeneratorCLI {
+public class BuildSystemGeneratorCLI {
     let cli: CLI
 
     public init() {
         cli = CLI(
-            name: "swiftbuildsystemgenerator",
+            name: "BuildSystemgenerator",
             description: "Generates build system configurations for swift projects",
             commands: [
                 GenerateCommand()

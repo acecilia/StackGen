@@ -1,5 +1,6 @@
 import Stencil
 import Path
+import Foundation
 
 class TemplateEngine {
     static let shared = TemplateEngine()
@@ -19,8 +20,8 @@ class TemplateEngine {
     }
 }
 
-extension Stencil.TemplateSyntaxError: ThirdPartyErrorInterface {
-    public var thirdPartyErrorDescription: String {
+extension Stencil.TemplateSyntaxError: LocalizedError {
+    public var errorDescription: String? {
         let reporter = SimpleErrorReporter()
         return """
         Template syntax error.

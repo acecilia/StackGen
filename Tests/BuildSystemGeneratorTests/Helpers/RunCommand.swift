@@ -9,9 +9,6 @@ func runCommand(_ cmd: String) -> (output: [String], error: [String], exitCode: 
     // '.zshenv' should include '/usr/local/bin' for brew, for non-interactive shells (where it is not in the PATH by default)
     // See: https://docs.brew.sh/FAQ#my-mac-apps-dont-find-usrlocalbin-utilities
     let result = runCommand(cmd: "/bin/zsh", args: "-c", "cd \(FileManager.default.currentDirectoryPath); \(cmd)")
-    print("-- Status: \(result.exitCode)")
-    print((["-- Output:"] + result.output).joined(separator: "\n---- "))
-    print((["-- Error:"] + result.error).joined(separator: "\n---- "))
     return result
 }
 

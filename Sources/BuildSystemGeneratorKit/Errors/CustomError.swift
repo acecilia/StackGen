@@ -38,7 +38,7 @@ public extension CustomError {
                 return "A version for module '\(moduleName)' could not be found in \(line.source):\(line.index): '\(line.content)'"
 
             case .multipleVersionsFoundForModule(let moduleName, let versionSpecs):
-                return "Multiple versions found for module '\(moduleName)': '\(versionSpecs)'. Make sure the version resolvers specified in the 'workspace.yml' file are correct"
+                return "Multiple versions found for module '\(moduleName)': '\(versionSpecs)'. Make sure the version resolvers specified in the 'bsg.yml' file are correct"
 
             case .moduleNotFoundInFilesystem(let moduleName):
                 return "Module '\(moduleName)' was not found when looking for it in the filesystem"

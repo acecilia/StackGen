@@ -1,7 +1,7 @@
-name: SwiftBuildSystemGenerator
+# This file generates an Xcode project used to easily run scripts
+
+name: BuildSystemGenerator
 fileGroups: [project.yml, .sourcery.yml]
-# localPackages:
-#   - .
 
 aggregateTargets:
   sourcery:
