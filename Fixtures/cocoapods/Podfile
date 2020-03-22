@@ -1,0 +1,9 @@
+install! 'cocoapods', :integrate_targets => false, :share_schemes_for_development_pods => true
+
+use_frameworks!
+platform :ios, '10.0'
+
+pod 'SnapKit', '5.0.1'
+pod 'SwiftModule1', :path => '.', :testspecs => ['Tests']
+pod 'SwiftModule2', :path => '.', :testspecs => ['Tests']
+pod 'SwiftModule3', :path => '.', :testspecs => ['Tests']

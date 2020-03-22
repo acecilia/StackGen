@@ -21,26 +21,32 @@ public class GenerateAction: Action {
                 switch templateFile.context {
                 case .module:
                     for module in mainContext.modules {
-                        let context = try mainContext.asDictionary(module.path, for: module)
                         switch templateFile.outputLevel {
                         case .module:
-                            try write(templateFile: templateFile, context: context, outputPath: module.path)
+                            let outputPath = module.path/templateFile.subdir
+                            let context = try mainContext.asDictionary(outputPath, for: module)
+                            try write(templateFile: templateFile, context: context, outputPath: outputPath)
 
                         case .root:
-                            try write(templateFile: templateFile, context: context, outputPath: cwd)
+                            let outputPath = cwd/templateFile.subdir
+                            let context = try mainContext.asDictionary(outputPath, for: module)
+                            try write(templateFile: templateFile, context: context, outputPath: outputPath)
                         }
                     }
 
                 case .global:
-                    let context = try mainContext.asDictionary(cwd)
                     switch templateFile.outputLevel {
                     case .module:
                         for module in mainContext.modules {
-                            try write(templateFile: templateFile, context: context, outputPath: module.path)
+                            let outputPath = module.path/templateFile.subdir
+                            let context = try mainContext.asDictionary(outputPath)
+                            try write(templateFile: templateFile, context: context, outputPath: outputPath)
                         }
 
                     case .root:
-                        try write(templateFile: templateFile, context: context, outputPath: cwd)
+                        let outputPath = cwd/templateFile.subdir
+                        let context = try mainContext.asDictionary(outputPath)
+                        try write(templateFile: templateFile, context: context, outputPath: outputPath)
                     }
                 }
             }
@@ -58,7 +64,7 @@ public class GenerateAction: Action {
             context: context
         )
 
-        let outputPath = outputPath/templateFile.subdir/fileName
+        let outputPath = outputPath/fileName
         try outputPath.delete()
         try outputPath.parent.mkdir()
         try rendered.write(to: outputPath)

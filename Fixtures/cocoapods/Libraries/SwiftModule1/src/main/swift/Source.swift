@@ -1,10 +1,10 @@
 import Foundation
 import SwiftModule2
-import FileKit
+import SnapKit
 
 public let moduleName = String(reflecting: AnyClass.self).components(separatedBy:".").first!
 public let module2Name = SwiftModule2.moduleName
-public let fileKitName = String(reflecting: TextFile.self).components(separatedBy:".").first!
+public let snapKitName = String(reflecting: Constraint.self).components(separatedBy:".").first!
 
 private class AnyClass {
     init() { }

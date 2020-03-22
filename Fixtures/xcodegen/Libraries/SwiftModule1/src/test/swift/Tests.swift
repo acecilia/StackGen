@@ -9,7 +9,7 @@ class Tests: XCTestCase {
 
         XCTAssertEqual(SwiftModule1.moduleName, "SwiftModule1")
         XCTAssertEqual(module2Name, "SwiftModule2")
-        XCTAssertEqual(fileKitName, "FileKit")
+        XCTAssertEqual(snapKitName, "SnapKit")
         XCTAssertEqual(module3Name, "SwiftModule3")
     }
 }

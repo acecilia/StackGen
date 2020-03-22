@@ -1,0 +1,13 @@
+name: "Podfile"
+context: "global"
+outputLevel: "root"
+content: |
+  install! 'cocoapods', :integrate_targets => false, :share_schemes_for_development_pods => true
+  ¶
+  use_frameworks!
+  platform :ios, '{{global.minimumDeploymentTarget}}'
+  ¶
+  pod 'SnapKit', '5.0.1'
+  {% for module in modules %}
+  pod '{{module.name}}', :path => '.', :testspecs => ['Tests']
+  {% endfor %}

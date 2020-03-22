@@ -27,6 +27,3 @@ content: |
   echo "✨ Done"
   echo "✨ Number of 'project.yml' files detected: ${total_count}"
   echo "✨ Number of projects generated: ${generated_count}"
-
-
-

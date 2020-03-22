@@ -6,17 +6,32 @@ content: |
     s.name                   = '{{module.name}}'
     s.version                = '{{global.version}}'
     s.swift_version          = '{{global.swiftVersion}}'
-    s.source_files           = 'src/main/swift/*.swift'
+    s.ios.deployment_target  = '{{global.minimumDeploymentTarget}}'
+    s.source_files           = '{{module.path}}/src/main/swift/*.swift'
     {% if module.dependencies.main|default:"" %}
   ¶
     {% endif %}
     {% for dependency in module.dependencies.main|default:"" %}
     {% if dependency.type == "target" %}
-    spec.dependency '{{dependency.name}}', '{{global.version}}'
+    s.dependency '{{dependency.name}}', '{{global.version}}'
     {% elif dependency.type == "artifact" %}
-    spec.dependency '{{dependency.name}}', '{{dependency.version}}'
+    s.dependency '{{dependency.name}}', '{{dependency.version}}'
     {% endif %}
     {% endfor %}
+  ¶
+    s.test_spec 'Tests' do |test_spec|
+      test_spec.source_files = '{{module.path}}/src/test/swift/*.swift'
+      {% if module.dependencies.test|default:"" %}
+  ¶
+      {% endif %}
+      {% for dependency in module.dependencies.test|default:"" %}
+      {% if dependency.type == "target" %}
+      test_spec.dependency '{{dependency.name}}', '{{global.version}}'
+      {% elif dependency.type == "artifact" %}
+      test_spec.dependency '{{dependency.name}}', '{{dependency.version}}'
+      {% endif %}
+      {% endfor %}
+    end
   ¶
     # Dummy data required by cocoapods
     s.authors                = 'dummy'

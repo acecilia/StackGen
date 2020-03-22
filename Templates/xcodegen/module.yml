@@ -45,7 +45,7 @@ content: |
       - src/test/swift
       dependencies:
       - target: {{module.name}}
-      {% for dependency in module.dependencies.tests|default:"" %}
+      {% for dependency in module.dependencies.test|default:"" %}
       {% if dependency.type == "target" %}
       - framework: {{dependency.name}}.framework
         implicit: true
