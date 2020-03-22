@@ -8,7 +8,11 @@ func runCommand(_ cmd: String) -> (output: [String], error: [String], exitCode: 
     // See: https://unix.stackexchange.com/questions/71253/what-should-shouldnt-go-in-zshenv-zshrc-zlogin-zprofile-zlogout
     // '.zshenv' should include '/usr/local/bin' for brew, for non-interactive shells (where it is not in the PATH by default)
     // See: https://docs.brew.sh/FAQ#my-mac-apps-dont-find-usrlocalbin-utilities
-    return runCommand(cmd: "/bin/zsh", args: "-c", cmd)
+    let result = runCommand(cmd: "/bin/zsh", args: "-c", "cd \(FileManager.default.currentDirectoryPath); \(cmd)")
+    print("-- Status: \(result.exitCode)")
+    print((["-- Output:"] + result.output).joined(separator: "\n---- "))
+    print((["-- Error:"] + result.error).joined(separator: "\n---- "))
+    return result
 }
 
 private func runCommand(cmd: String, args: String...) -> (output: [String], error: [String], exitCode: Int32) {

@@ -16,7 +16,6 @@ class TemplateEngine {
         return value
             .replacingOccurrences(of: "\n( *\n)+", with: "\n", options: .regularExpression)
             .replacingOccurrences(of: "\n¶", with: "\n")
-            .replacingOccurrences(of: "¶", with: "\n")
     }
 }
 
