@@ -1,11 +1,11 @@
 import Foundation
 
 public enum FirstPartyModule {
-    struct Input: Codable, AutoCodable {
-        static let defaultDependencies: [String: [String]] = [:]
+    public struct Input: AutoCodable {
+        public static let defaultDependencies: [String: [String]] = [:]
 
-        let name: String
-        let dependencies: [String: [String]]
+        public let name: String
+        public let dependencies: [String: [String]]
     }
 
     public struct Middleware {

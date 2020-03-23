@@ -23,14 +23,14 @@ content: |
   # Third party modules
   #################
   ¶
-  {% for artifact in artifacts %}
-  pod '{{artifact.name}}', '{{artifact.version}}', :binary => $useBinaries
+  {% for module in thirdPartyModules %}
+  pod '{{module.name}}', '{{module.version}}', :binary => $useBinaries
   {% endfor %}
   ¶
   #################
   # First party modules
   #################
   ¶
-  {% for module in modules %}
+  {% for module in firstPartyModules %}
   pod '{{module.name}}', :path => '.', :testspecs => ['Tests']
   {% endfor %}

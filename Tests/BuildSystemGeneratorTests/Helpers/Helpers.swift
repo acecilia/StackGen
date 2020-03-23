@@ -32,19 +32,19 @@ func functionName(_ methodSignature: String) -> String {
         .replacingOccurrences(of: ")", with: "")
 }
 
-func patchWorkspaceFile(_ path: Path, using templatesPath: Path) throws {
-    let workspaceFilePath = path/"bsg.yml"
-    let content = try String(contentsOf: workspaceFilePath)
+func patchBsgFile(_ path: Path, using templatesPath: Path) throws {
+    let bsgFilePath = path/"\(BsgFile.fileName).yml"
+    let content = try String(contentsOf: bsgFilePath)
         .replacingOccurrences(of: "Cartfile", with: "\((examplesPath/"Cartfile").relative(to: cwd))")
         .replacingOccurrences(of: "../../templates/xcodegen", with: templatesPath.relative(to: cwd))
-    try workspaceFilePath.delete()
-    try content.write(to: workspaceFilePath)
+    try bsgFilePath.delete()
+    try content.write(to: bsgFilePath)
 }
 
 func generate(using templatesPath: Path, testFilePath: String = #file, function: String = #function) throws -> (destination: Path, exitCode: Int32) {
     let destination = try examplesPath.copy(into: try tmp(testFilePath: testFilePath, testName: function))
     FileManager.default.changeCurrentDirectoryPath(destination.string)
-    try patchWorkspaceFile(destination, using: templatesPath)
+    try patchBsgFile(destination, using: templatesPath)
 
     let cli = BuildSystemGeneratorCLI()
     let exitCode = cli.execute(with: [GenerateCommand.name])

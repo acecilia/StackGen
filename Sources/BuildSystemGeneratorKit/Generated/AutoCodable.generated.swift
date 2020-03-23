@@ -9,7 +9,7 @@ extension Context {
         case module
     }
 
-    internal init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
 
         let enumCase = try container.decode(String.self)
@@ -20,7 +20,7 @@ extension Context {
         }
     }
 
-    internal func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
 
         switch self {
@@ -38,7 +38,7 @@ extension FirstPartyModule.Input {
         case dependencies
     }
 
-    internal init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         name = try container.decode(String.self, forKey: .name)
@@ -54,7 +54,7 @@ extension OutputLevel {
         case module
     }
 
-    internal init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
 
         let enumCase = try container.decode(String.self)
@@ -65,7 +65,7 @@ extension OutputLevel {
         }
     }
 
-    internal func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
 
         switch self {
@@ -86,7 +86,7 @@ extension TemplateFile {
         case content
     }
 
-    internal init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         name = try container.decode(String.self, forKey: .name)
@@ -94,6 +94,26 @@ extension TemplateFile {
         outputLevel = try container.decode(OutputLevel.self, forKey: .outputLevel)
         subdir = (try? container.decode(String.self, forKey: .subdir)) ?? TemplateFile.defaultSubdir
         content = try container.decode(String.self, forKey: .content)
+    }
+
+}
+
+extension BsgFile {
+
+    enum CodingKeys: String, CodingKey {
+        case global
+        case modules
+        case versionSources
+        case options
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        global = (try? container.decode([String: String].self, forKey: .global)) ?? BsgFile.defaultGlobal
+        modules = (try? container.decode([FirstPartyModule.Input].self, forKey: .modules)) ?? BsgFile.defaultModules
+        versionSources = (try? container.decode([Path].self, forKey: .versionSources)) ?? BsgFile.defaultVersionSources
+        options = try container.decode(Options.self, forKey: .options)
     }
 
 }

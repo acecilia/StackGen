@@ -2,4 +2,4 @@ sources:
   - Sources
 templates: 
   - SourceryTemplates
-output: Sources/SwiftBuildSystemGeneratorKit/Generated
+output: Sources/BuildSystemGeneratorKit/Generated

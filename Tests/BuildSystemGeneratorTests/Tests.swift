@@ -14,15 +14,7 @@ final class _02_Tests: XCTestCase {
 
     func testContext() throws {
         let contextString = """
-        artifacts:
-        - name: FileKit
-          source: ../Cartfile
-          sourceParent: ..
-          version: 0.0.1
-        global:
-          aGlobalVariable: something
-          anotherGlobalVariable: somethingElse
-        modules:
+        firstPartyModules:
         - dependencies:
             main:
             - name: FileKit
@@ -56,6 +48,14 @@ final class _02_Tests: XCTestCase {
           path: some/path/Module3
           subpaths:
           - src/swift
+        global:
+          aGlobalVariable: something
+          anotherGlobalVariable: somethingElse
+        thirdPartyModules:
+        - name: FileKit
+          source: ../Cartfile
+          sourceParent: ..
+          version: 0.0.1
 
         """
         do {

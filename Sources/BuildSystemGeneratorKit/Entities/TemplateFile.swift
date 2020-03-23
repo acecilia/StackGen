@@ -1,21 +1,21 @@
 import Foundation
 
-struct TemplateFile: Codable, AutoCodable {
-    static let defaultSubdir = ""
+public struct TemplateFile: AutoCodable {
+    public static let defaultSubdir = ""
 
-    let name: String
-    let context: Context
-    let outputLevel: OutputLevel
-    let subdir: String
-    let content: String
+    public let name: String
+    public let context: Context
+    public let outputLevel: OutputLevel
+    public let subdir: String
+    public let content: String
 }
 
-enum Context: String, AutoCodable {
+public enum Context: String, AutoCodable {
     case global
     case module
 }
 
-enum OutputLevel: String, AutoCodable {
+public enum OutputLevel: String, AutoCodable {
     case root
     case module
 }

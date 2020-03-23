@@ -15,13 +15,13 @@ content: |
     All:
       build:
         targets:
-          {% for module in modules %}
+          {% for module in firstPartyModules %}
           Pods/{{module.name}}-Unit-Tests: all
           {% endfor %}
       test:
         gatherCoverageData: true
         targets:
-        {% for module in modules %}
+        {% for module in firstPartyModules %}
           - name: Pods/{{module.name}}-Unit-Tests
             randomExecutionOrder: true
         {% endfor %}

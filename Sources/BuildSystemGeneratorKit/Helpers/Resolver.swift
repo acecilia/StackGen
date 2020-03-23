@@ -1,28 +1,28 @@
 import Foundation
 
 class Resolver {
-    let moduleContexts: [FirstPartyModule.Output]
-    let artifacts: [ThirdPartyModule.Output]
+    let firstPartyModules: [FirstPartyModule.Output]
+    let thirdPartyModules: [ThirdPartyModule.Output]
 
-    init(_ workspace: WorkspaceFile) throws {
-        let middlewareTargets = try workspace.modules.map { try Self.resolve($0) }
-        let versionResolver = try VersionResolver(workspace.versionSources)
-        self.moduleContexts = try Self.resolve(middlewareTargets, using: versionResolver)
-        self.artifacts = Self.extractArtifacts(moduleContexts)
+    init(_ bsgFile: BsgFile) throws {
+        let middlewareModules = try bsgFile.modules.map { try Self.resolve($0) }
+        let versionResolver = try VersionResolver(bsgFile.versionSources)
+        self.firstPartyModules = try Self.resolve(middlewareModules, using: versionResolver)
+        self.thirdPartyModules = Self.extractThirdPartyModules(firstPartyModules)
     }
 
-    private static func extractArtifacts(_ modules: [FirstPartyModule.Output]) -> [ThirdPartyModule.Output] {
-        var artifacts: Set<ThirdPartyModule.Output> = []
+    private static func extractThirdPartyModules(_ modules: [FirstPartyModule.Output]) -> [ThirdPartyModule.Output] {
+        var thirdPartyModules: Set<ThirdPartyModule.Output> = []
         for module in modules {
             for (_, targetDependencies) in module.dependencies {
                 for dependency in targetDependencies {
-                    if case .thirdParty(let artifact) = dependency {
-                        artifacts.insert(artifact)
+                    if case .thirdParty(let module) = dependency {
+                        thirdPartyModules.insert(module)
                     }
                 }
             }
         }
-        return Array(artifacts).sorted { $0.name < $1.name }
+        return Array(thirdPartyModules).sorted { $0.name < $1.name }
     }
     private static func resolve(_ module: FirstPartyModule.Input) throws -> FirstPartyModule.Middleware {
         let directories = cwd.find().type(.directory).map { $0 }

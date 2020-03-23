@@ -7,20 +7,20 @@ public class GenerateAction: Action {
 
     public func execute() throws {
         // Resolve modules
-        let workspaceFileContent = try String(contentsOf: cwd/"bsg.yml")
-        let workspaceFile: WorkspaceFile = try YAMLDecoder().decode(from: workspaceFileContent, userInfo: [.relativePath: cwd])
-        let resolver = try Resolver(workspaceFile)
-        let mainContext = MainContext(global: workspaceFile.global, modules: resolver.moduleContexts, artifacts: resolver.artifacts)
+        let bsgFileContent = try String(contentsOf: cwd/"\(BsgFile.fileName).yml")
+        let bsgFile: BsgFile = try YAMLDecoder().decode(from: bsgFileContent, userInfo: [.relativePath: cwd])
+        let resolver = try Resolver(bsgFile)
+        let mainContext = MainContext(global: bsgFile.global, firstPartyModules: resolver.firstPartyModules, thirdPartyModules: resolver.thirdPartyModules)
 
         // Resolve templates
-        for template in workspaceFile.options.templatesPath.ls() where template.isFile {
+        for template in bsgFile.options.templatesPath.ls() where template.isFile {
             let templateFileContent = try String(contentsOf: template)
             let templateFiles: [TemplateFile] = try [YAMLDecoder().decode(from: templateFileContent)]
 
             for templateFile in templateFiles {
                 switch templateFile.context {
                 case .module:
-                    for module in mainContext.modules {
+                    for module in mainContext.firstPartyModules {
                         switch templateFile.outputLevel {
                         case .module:
                             let outputPath = module.path/templateFile.subdir
@@ -37,7 +37,7 @@ public class GenerateAction: Action {
                 case .global:
                     switch templateFile.outputLevel {
                     case .module:
-                        for module in mainContext.modules {
+                        for module in mainContext.firstPartyModules {
                             let outputPath = module.path/templateFile.subdir
                             let context = try mainContext.asDictionary(outputPath)
                             try write(templateFile: templateFile, context: context, outputPath: outputPath)

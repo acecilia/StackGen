@@ -1,10 +1,6 @@
-global: {}
-
 modules:
 - name: Templates/cocoapods
 - name: Templates/xcodegen
-
-versionSources: []
 
 options:
   templatesPath: SelfGenerateTemplates
