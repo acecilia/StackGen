@@ -1,0 +1,73 @@
+name: "BUILD.bazel"
+mode: "module"
+content: |
+  load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+  load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
+  ¶
+  ##########################
+  # Constants
+  ##########################
+  ¶
+  COPTS = [
+    # Enable the DEBUG flag, for using it in macros
+    "-DDEBUG",
+    # Do not make optimizations: compilation is faster
+    "-Onone",
+    # Print debug information
+    "-g",
+    # Make libraries testable
+    "-enable-testing",
+    # Look at the files as a unit instead of separately: compilation is faster
+    # See: https://www.skilled.io/u/swiftsummit/swift-with-a-hundred-engineers
+    "-whole-module-optimization",
+    "-swift-version", "5"
+  ]
+  ¶
+  ##########################
+  # Main module rules
+  ##########################
+  ¶
+  swift_library(
+    name = "{{module.name}}",
+    srcs = glob(["src/main/swift/**/*.swift"]),
+    deps = [
+      {% for dependency in rr.module.dependencies.main|default:"" %}
+      {% if dependency.type == "firstParty" %}
+      "//{{dependency.path}}:{{dependency.name}}",
+      {% elif (dependency.type == "thirdParty") and ("Cartfile" in dependency.source) %}
+      "//:{{dependency.name}}",
+      {% endif %}
+      {% endfor %}
+    ],
+    module_name = "{{module.name}}",
+    copts = COPTS,
+    visibility = ["//visibility:public"],
+  )
+  ¶
+  ##########################
+  # Unit test rules
+  ##########################
+  ¶
+  swift_library(
+    name = "{{module.name}}TestsLib",
+    srcs = glob(["src/test/swift/**/*.swift"]),
+    deps = [
+      ":{{module.name}}",
+      {% for dependency in rr.module.dependencies.test|default:"" %}
+      {% if dependency.type == "firstParty" %}
+      "//{{dependency.path}}:{{dependency.name}}",
+      {% elif (dependency.type == "thirdParty") and ("Cartfile" in dependency.source) %}
+      "//:{{dependency.name}}",
+      {% endif %}
+      {% endfor %}
+    ],
+    module_name = "{{module.name}}Tests",
+    copts = COPTS,
+  )
+  ¶
+  ios_unit_test(
+    name = "{{module.name}}Tests",
+    deps = [":{{module.name}}TestsLib"],
+    minimum_os_version = "{{custom.minimumDeploymentTarget}}",
+    test_host = None,
+  )

@@ -1,0 +1,28 @@
+name: "project.yml"
+mode: "root"
+content: |
+  name: All
+  ¶
+  options:
+    xcodeGenVersion: {{custom.xcodeGenVersion}}
+  ¶
+  projectReferences:
+    Pods:
+      path: Pods/Pods.xcodeproj
+  ¶
+  schemes:
+    All:
+      build:
+        targets:
+          {% for module in firstPartyModules %}
+          Pods/{{module.name}}-Unit-Tests: all
+          {% endfor %}
+      test:
+        gatherCoverageData: true
+        targets:
+        {% for module in firstPartyModules %}
+          - name: Pods/{{module.name}}-Unit-Tests
+            randomExecutionOrder: true
+        {% endfor %}
+
+

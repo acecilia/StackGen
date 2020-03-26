@@ -1,0 +1,30 @@
+name: "project.yml"
+mode: "root"
+content: |  
+  name: All
+  ¶
+  options:
+    xcodeGenVersion: {{custom.xcodeGenVersion}}
+  ¶
+  projectReferences:
+  {% for module in firstPartyModules %}
+    {{module.name}}:
+      path: {{module.path}}/{{module.name}}.xcodeproj
+  {% endfor %}
+  ¶
+  schemes:
+    All:
+      build:
+        targets:
+          {% for module in firstPartyModules %}
+          {{module.name}}/{{module.name}}Tests: all
+          {% endfor %}
+      test:
+        gatherCoverageData: true
+        targets:
+        {% for module in firstPartyModules %}
+          - name: {{module.name}}/{{module.name}}Tests
+            randomExecutionOrder: true
+        {% endfor %}
+
+

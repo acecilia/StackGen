@@ -3,33 +3,51 @@
 import PackageDescription
 
 let package = Package(
-    name: "SwiftBuildSystemGenerator",
-    platforms: [.macOS(.v10_15)],
+    name: "BuildSystemGenerator",
+    platforms: [.macOS(.v10_14)],
     products: [
-        .executable(name: "swiftbuildsystemgenerator", targets: ["SwiftBuildSystemGenerator"]),
-        .library(name: "SwiftBuildSystemGeneratorKit", targets: ["SwiftBuildSystemGeneratorKit"]),
+        .executable(name: "bsg", targets: ["BuildSystemGenerator"]),
+        .library(name: "BuildSystemGeneratorKit", targets: ["BuildSystemGeneratorKit"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/stencilproject/Stencil.git", .exact("0.13.1")),
-        .package(url: "https://github.com/jpsim/Yams.git", .exact("2.0.0")),
-        .package(url: "https://github.com/mxcl/Path.swift.git", .exact("1.0.0-alpha.3"))
+        .package(
+            url: "https://github.com/acecilia/Stencil.git",
+            .revision("b43f9dd5151f92625c51c901193549e5d0030244")
+            // Using a fork until https://github.com/stencilproject/Stencil/pull/289 is merged and released
+        ),
+        .package(url: "https://github.com/jpsim/Yams.git", .upToNextMajor(from: "2.0.0")),
+        .package(url: "https://github.com/mxcl/Path.swift.git", .upToNextMajor(from: "1.0.1")),
+        .package(url: "https://github.com/jakeheis/SwiftCLI.git", .upToNextMajor(from: "6.0.1")),
+        .package(url: "https://github.com/Flight-School/AnyCodable.git", .upToNextMajor(from: "0.2.3")),
+        .package(url: "https://github.com/mxcl/Version.git", .upToNextMajor(from: "2.0.0")),
     ],
     targets: [
         .target(
-            name: "SwiftBuildSystemGenerator",
-            dependencies: ["SwiftBuildSystemGeneratorKit"]
+            name: "BuildSystemGenerator",
+            dependencies: ["BuildSystemGeneratorCLI"]
         ),
         .target(
-            name: "SwiftBuildSystemGeneratorKit",
+            name: "BuildSystemGeneratorCLI",
+            dependencies: [
+                "BuildSystemGeneratorKit",
+                "SwiftCLI",
+            ]
+        ),
+        .target(
+            name: "BuildSystemGeneratorKit",
             dependencies: [
                 "Stencil",
                 "Yams",
                 "Path",
+                "AnyCodable",
+                "Version",
             ]
         ),
         .testTarget(
-            name: "SwiftBuildSystemGeneratorKitTests",
-            dependencies: ["SwiftBuildSystemGeneratorKit"]
-        ),
+            name: "BuildSystemGeneratorTests",
+            dependencies: [
+                "BuildSystemGeneratorCLI",
+            ]
+        )
     ]
 )

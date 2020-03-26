@@ -1,0 +1,35 @@
+name: "Podfile"
+mode: "root"
+content: |
+  install! 'cocoapods', :integrate_targets => false, :share_schemes_for_development_pods => true
+  ¶
+  use_frameworks!
+  platform :ios, '{{custom.minimumDeploymentTarget}}'
+  ¶
+  #################
+  # Binary setup
+  #################
+  ¶
+  # Use binaries instead of source code, to speed up builds
+  $useBinaries = true
+  ¶
+  if $useBinaries
+      plugin 'cocoapods-binary'
+      enable_bitcode_for_prebuilt_frameworks!
+  end
+  ¶
+  #################
+  # Third party modules
+  #################
+  ¶
+  {% for module in thirdPartyModules %}
+  pod '{{module.name}}', '{{module.version}}', :binary => $useBinaries
+  {% endfor %}
+  ¶
+  #################
+  # First party modules
+  #################
+  ¶
+  {% for module in firstPartyModules %}
+  pod '{{module.name}}', :path => '.', :testspecs => ['Tests']
+  {% endfor %}

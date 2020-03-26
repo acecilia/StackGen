@@ -1,0 +1,26 @@
+custom:
+  # Tools
+  xcodeGenVersion: 2.14.0
+  bazelVersion: 2.2.0
+  cocoapodsVersion: 1.9.1
+  cocoapodsBinaryVersion: 0.4.4
+
+  # Code
+  moduleVersion: 0.0.1
+  swiftVersion: 5.0
+  bundleIdPrefix: com.acecilia
+  minimumDeploymentTarget: 10.0
+
+modules:
+- name: SwiftModule1
+  dependencies:
+    main: [SwiftModule2, SnapKit]
+    test: [SwiftModule3]
+- name: SwiftModule2
+- name: SwiftModule3
+
+versionSources:
+- 'Cartfile'
+
+options:
+  templatesPath: '../../../../../../../Templates/cocoapods'

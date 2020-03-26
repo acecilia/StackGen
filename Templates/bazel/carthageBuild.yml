@@ -1,0 +1,14 @@
+name: "BUILD.bazel"
+mode: "root"
+content: |
+  load("@build_bazel_rules_apple//apple:apple.bzl", "apple_dynamic_framework_import")
+  ¶
+  {% for dependency in thirdPartyModules %}
+  {% if "Cartfile" in dependency.source %}
+  apple_dynamic_framework_import(
+    name = "{{dependency.name}}",
+    framework_imports = glob(["Carthage/build/iOS/{{dependency.name}}.framework/**"]),
+    visibility = ["//visibility:public"],
+  )
+  {% endif %}
+  {% endfor %}

@@ -1,0 +1,22 @@
+name: ".bazelrc"
+mode: "root"
+content: |
+  # Force bazel output to use colors (good for jenkins) and print useful errors
+  # This is disabled as messes up with the errors and warnings shown by xcode:
+  # they contain color characters, and when clicked do not take you to the offending line
+  # common --color=yes
+  ¶
+  # Needed for building and testing
+  build --apple_platform_type=ios
+  ¶
+  # Build the app FAT, so it can be run on devices. This requires a provisioning profile
+  # build --ios_multi_cpus=armv7,arm64
+  ¶
+  # I do not think this is needed
+  # build --xcode_version=10.3
+  ¶
+  # During development
+  # build -s --test_output=all --cache_test_results=no
+  ¶
+  # References:
+  # - https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/ci_build/install/.bazelrc

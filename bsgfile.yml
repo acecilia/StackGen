@@ -1,0 +1,7 @@
+modules:
+- name: Templates/cocoapods
+- name: Templates/xcodegen
+- name: Templates/bazel
+
+options:
+  templatesPath: TemplatesSelfGenerate

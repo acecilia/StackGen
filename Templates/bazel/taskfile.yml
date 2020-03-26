@@ -1,0 +1,40 @@
+name: "taskfile"
+mode: "root"
+content: |
+  #!/bin/zsh
+  ¶
+  #####################################################################
+  # This file contains several functions that can be run as tasks
+  #
+  # In order to run them easily, do:
+  # > source {{global.fileName}}
+  #
+  # After sourcing the script you can run each task by its name, for example:
+  # > help
+  #####################################################################
+  ¶
+  # Fail if exit code is not zero, in pipes, and also if variable is not set
+  # See: https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+  set -euo pipefail
+  ¶
+  function setup() {
+    version="{{custom.bazelVersion}}"
+    if [[ $(bazel --version 2>/dev/null) == "bazel $version" ]]; then
+      echo "✨ bazel with version '$version' is already installed"
+    else
+      echo "✨ Downloading and installing bazel '$version'"
+      install_path=/usr/local/bin/bazel
+      curl -L "https://github.com/bazelbuild/bazel/releases/download/{{custom.bazelVersion}}/bazel-{{custom.bazelVersion}}-darwin-x86_64" --output "$install_path"
+      chmod u+x "$install_path"
+    fi
+  }
+  ¶
+  function test() {
+    bazel test //Libraries/... --test_output=errors
+  }
+  ¶
+  function help() {
+    echo -n "The available tasks are: "
+    # Approach inspired by https://stackoverflow.com/a/2641911
+    grep "^function" {{global.fileName}} | sed -e 's/function //g' | sed -e 's/() {//g' | xargs | sed -e 's/ /, /g'
+  }

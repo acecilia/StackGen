@@ -1,0 +1,59 @@
+load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
+
+##########################
+# Constants
+##########################
+
+COPTS = [
+  # Enable the DEBUG flag, for using it in macros
+  "-DDEBUG",
+  # Do not make optimizations: compilation is faster
+  "-Onone",
+  # Print debug information
+  "-g",
+  # Make libraries testable
+  "-enable-testing",
+  # Look at the files as a unit instead of separately: compilation is faster
+  # See: https://www.skilled.io/u/swiftsummit/swift-with-a-hundred-engineers
+  "-whole-module-optimization",
+  "-swift-version", "5"
+]
+
+##########################
+# Main module rules
+##########################
+
+swift_library(
+  name = "SwiftModule1",
+  srcs = glob(["src/main/swift/**/*.swift"]),
+  deps = [
+    "//Libraries/SwiftModule2:SwiftModule2",
+    "//:SnapKit",
+  ],
+  module_name = "SwiftModule1",
+  copts = COPTS,
+  visibility = ["//visibility:public"],
+)
+
+##########################
+# Unit test rules
+##########################
+
+swift_library(
+  name = "SwiftModule1TestsLib",
+  srcs = glob(["src/test/swift/**/*.swift"]),
+  deps = [
+    ":SwiftModule1",
+    "//Libraries/SwiftModule3:SwiftModule3",
+  ],
+  module_name = "SwiftModule1Tests",
+  copts = COPTS,
+)
+
+ios_unit_test(
+  name = "SwiftModule1Tests",
+  deps = [":SwiftModule1TestsLib"],
+  minimum_os_version = "10.0",
+  test_host = None,
+)

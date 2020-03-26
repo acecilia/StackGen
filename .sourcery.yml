@@ -1,0 +1,5 @@
+sources: 
+  - Sources
+templates: 
+  - TemplatesSourcery
+output: Sources/BuildSystemGeneratorKit/Generated
