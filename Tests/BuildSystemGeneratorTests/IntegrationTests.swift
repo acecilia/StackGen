@@ -3,9 +3,9 @@ import BuildSystemGeneratorKit
 import Path
 import RuntimeTestCase
 
-final class _03_IntegrationTests: RuntimeTestCase {
-    static func testSpecs() -> [RuntimeTestCaseSpec<_03_IntegrationTests>] {
-        return templatesPath.ls().directories.map { templatePath in
+final class IntegrationTests: RuntimeTestCase {
+    static func testSpecs() -> [RuntimeTestCaseSpec<IntegrationTests>] {
+        return templatesPath.ls().directories.sorted().map { templatePath in
             RuntimeTestCaseSpec(templatePath.basename()) { $0.templatePath = templatePath }
         }
     }

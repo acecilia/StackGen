@@ -3,7 +3,7 @@ import BuildSystemGeneratorCLI
 import BuildSystemGeneratorKit
 import Path
 
-final class _01_Generator: XCTestCase {
+final class AAA_Generator: XCTestCase {
     func test_01_Clean() throws {
         try fixturesPath.delete()
         try testsOutputPath.delete()

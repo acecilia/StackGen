@@ -17,7 +17,7 @@ func tmp(_ testFilePath: String, _ testName: String, _ templateName: String) thr
     }
     let testOutputPath = testsOutputPath/testFileName/functionName(testName)/templateName
     try testOutputPath.mkdir(.p)
-    let testFolders = testOutputPath.ls().directories
+    let testFolders = testOutputPath.ls().directories.sorted()
     let testIndex: Int
     if let lastTestIndex = testFolders.compactMap({ Int($0.basename()) }).max() {
         testIndex = lastTestIndex + 1

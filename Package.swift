@@ -19,7 +19,8 @@ let package = Package(
         .package(url: "https://github.com/mxcl/Path.swift.git", .upToNextMajor(from: "1.0.1")),
         .package(url: "https://github.com/jakeheis/SwiftCLI.git", .upToNextMajor(from: "6.0.1")),
         .package(url: "https://github.com/mxcl/Version.git", .upToNextMajor(from: "2.0.0")),
-        .package(url: "https://github.com/acecilia/RuntimeTestCaseSwift", .revision("27a1a9c5d8c6c46f02a14cd814b071e2daf76d98")),
+        .package(url: "https://github.com/acecilia/RuntimeTestCaseSwift", .revision("1e922a3f55cf16db665e83c958a697bae665e8d9"))
+        // .package(path: "../RuntimeTestCaseSwift"),
     ],
     targets: [
         .target(

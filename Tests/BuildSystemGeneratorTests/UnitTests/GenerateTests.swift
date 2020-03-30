@@ -4,7 +4,7 @@ import XCTest
 
 final class GenerateTests: RuntimeTestCase {
     static func testSpecs() -> [RuntimeTestCaseSpec<GenerateTests>] {
-        return templatesPath.ls().directories.map { templatePath in
+        return templatesPath.ls().directories.sorted().map { templatePath in
             RuntimeTestCaseSpec(templatePath.basename()) { $0.templatePath = templatePath }
         }
     }
