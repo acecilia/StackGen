@@ -13,8 +13,8 @@ class TemplateEngine {
     }
 
     func render(templateContent: String, context: [String: Any]) throws -> String {
-        // let fixedTemplateContent = addNewLineDelimiters(templateContent)
-        let rendered = try env.renderTemplate(string: templateContent, context: context)
+        let fixedTemplateContent = addNewLineDelimiters(templateContent)
+        let rendered = try env.renderTemplate(string: fixedTemplateContent, context: context)
         return removeNewLinesDelimiters(rendered)
     }
 

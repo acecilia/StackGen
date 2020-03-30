@@ -1,17 +1,17 @@
 name: "project.yml"
 mode: "root"
-content: |  
+content: |
   name: All
-  ¶
+
   options:
     xcodeGenVersion: {{custom.xcodeGenVersion}}
-  ¶
+
   projectReferences:
   {% for module in firstPartyModules %}
     {{module.name}}:
       path: {{module.path}}/{{module.name}}.xcodeproj
   {% endfor %}
-  ¶
+
   schemes:
     All:
       build:

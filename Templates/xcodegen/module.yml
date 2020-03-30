@@ -1,21 +1,21 @@
 name: "project.yml"
 mode: "module"
-content: |  
+content: |
   name: {{module.name}}
-  ¶
+
   options:
     defaultConfig: Release
     bundleIdPrefix: {{custom.bundleIdPrefix}}
     transitivelyLinkDependencies: true
     createIntermediateGroups: true
     xcodeGenVersion: {{custom.xcodeGenVersion}}
-  ¶
+
   fileGroups: [project.yml]
-  ¶
+
   settings:
     base:
       IPHONEOS_DEPLOYMENT_TARGET: {{custom.minimumDeploymentTarget}}
-  ¶
+
   targets:
     {{module.name}}:
       {% if "App" in module.name %}
@@ -50,7 +50,7 @@ content: |
                 UISceneConfigurationName: Default Configuration
           {% endif %}
           CFBundleShortVersionString: {{custom.moduleVersion}}
-  ¶
+
     {% if "src/test/swift" in module.subpaths %}
     {{module.name}}Tests:
       type: bundle.unit-test
@@ -74,7 +74,7 @@ content: |
       info:
         path: SupportingFiles/{{module.name}}Tests/Info.plist
     {% endif %}
-  ¶
+
   schemes:
     {{module.name}}:
       build:

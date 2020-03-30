@@ -2,7 +2,7 @@ name: "taskfile"
 mode: "root"
 content: |
   #!/bin/zsh
-  ¶
+
   #####################################################################
   # This file contains several functions that can be run as tasks
   #
@@ -12,11 +12,11 @@ content: |
   # After sourcing the script you can run each task by its name, for example:
   # > help
   #####################################################################
-  ¶
+
   # Fail if exit code is not zero, in pipes, and also if variable is not set
   # See: https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
   set -euo pipefail
-  ¶
+
   function setup() {
     version="{{custom.bazelVersion}}"
     if [[ $(bazel --version 2>/dev/null) == "bazel $version" ]]; then
@@ -28,11 +28,11 @@ content: |
       chmod u+x "$install_path"
     fi
   }
-  ¶
+
   function test() {
     bazel test //Libraries/... --test_output=errors
   }
-  ¶
+
   function help() {
     echo -n "The available tasks are: "
     # Approach inspired by https://stackoverflow.com/a/2641911

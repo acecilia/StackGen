@@ -4,26 +4,26 @@ content: |
   install! 'cocoapods',
     :share_schemes_for_development_pods => true,
     :disable_input_output_paths => true # Workaround for https://github.com/CocoaPods/CocoaPods/issues/9185
-  ¶
+
   use_frameworks!
   workspace 'All'
-  ¶
+
   #################
   # Binary setup
   #################
-  ¶
+
   # Use binaries instead of source code, to speed up builds
   $useBinaries = true
-  ¶
+
   if $useBinaries
       plugin 'cocoapods-binary'
       enable_bitcode_for_prebuilt_frameworks!
   end
-  ¶
+
   #################
   # Config
   #################
-  ¶
+
   {% for module in firstPartyModules where "App" in module.name %}
   target '{{module.name}}' do
       platform :ios, '{{custom.minimumDeploymentTarget}}'

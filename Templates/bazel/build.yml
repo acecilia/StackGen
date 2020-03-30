@@ -3,11 +3,11 @@ mode: "module"
 content: |
   load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
   load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
-  ¶
+
   ##########################
   # Constants
   ##########################
-  ¶
+
   COPTS = [
     # Enable the DEBUG flag, for using it in macros
     "-DDEBUG",
@@ -22,11 +22,11 @@ content: |
     "-whole-module-optimization",
     "-swift-version", "5"
   ]
-  ¶
+
   ##########################
   # Main module rules
   ##########################
-  ¶
+
   swift_library(
     name = "{{module.name}}",
     srcs = glob(["src/main/swift/**/*.swift"]),
@@ -43,11 +43,11 @@ content: |
     copts = COPTS,
     visibility = ["//visibility:public"],
   )
-  ¶
+
   ##########################
   # Unit test rules
   ##########################
-  ¶
+
   swift_library(
     name = "{{module.name}}TestsLib",
     srcs = glob(["src/test/swift/**/*.swift"]),
@@ -64,7 +64,7 @@ content: |
     module_name = "{{module.name}}Tests",
     copts = COPTS,
   )
-  ¶
+
   ios_unit_test(
     name = "{{module.name}}Tests",
     deps = [":{{module.name}}TestsLib"],

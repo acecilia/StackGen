@@ -43,8 +43,11 @@ function setup() {
   echo "✨ Setup project"
   (cd Libraries; create_projects)
   pod install
+
+  # In order to create an All scheme, use xcodegen
   xcodegen
   rm -rf All.xcworkspace
+
   # Create All scheme
   # mkdir -p All.xcworkspace/xcshareddata/xcschemes
   # cp All.xcodeproj/xcshareddata/xcschemes/All.xcscheme All.xcworkspace/xcshareddata/xcschemes/All.xcscheme

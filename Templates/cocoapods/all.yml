@@ -2,10 +2,10 @@ name: "project.yml"
 mode: "root"
 content: |
   name: All
-  ¶
+
   options:
     xcodeGenVersion: {{custom.xcodeGenVersion}}
-  ¶
+
   projectReferences:
     Pods:
       path: Pods/Pods.xcodeproj
@@ -13,7 +13,7 @@ content: |
     {{module.name}}:
       path: {{module.path}}/{{module.name}}.xcodeproj
   {% endfor %}
-  ¶
+
   schemes:
     All:
       build:
