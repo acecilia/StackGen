@@ -1,8 +1,10 @@
 import Foundation
+import Path
+import StringCodable
 
 public struct MainContext: Codable {
     public let global: Global
-    public let custom: [String: String]
+    public let custom: [String: StringCodable]
     public let firstPartyModules: [FirstPartyModule.Output]
     public let thirdPartyModules: [ThirdPartyModule.Output]
 

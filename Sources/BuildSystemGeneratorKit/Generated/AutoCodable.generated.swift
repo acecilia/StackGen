@@ -1,6 +1,9 @@
 // Generated using Sourcery 0.17.0 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
 
+import Version
+import Path
+import StringCodable
 
 extension BsgFile {
 
@@ -14,7 +17,7 @@ extension BsgFile {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        custom = (try? container.decode([String: String].self, forKey: .custom)) ?? BsgFile.defaultCustom
+        custom = (try? container.decode([String: StringCodable].self, forKey: .custom)) ?? BsgFile.defaultCustom
         modules = (try? container.decode([FirstPartyModule.Input].self, forKey: .modules)) ?? BsgFile.defaultModules
         versionSources = (try? container.decode([Path].self, forKey: .versionSources)) ?? BsgFile.defaultVersionSources
         options = try container.decode(Options.self, forKey: .options)
@@ -44,6 +47,7 @@ extension TemplateFile {
         case name
         case mode
         case subdir
+        case moduleFilter
         case content
     }
 
@@ -53,6 +57,7 @@ extension TemplateFile {
         name = try container.decode(String.self, forKey: .name)
         mode = try container.decode(Mode.self, forKey: .mode)
         subdir = (try? container.decode(String.self, forKey: .subdir)) ?? TemplateFile.defaultSubdir
+        moduleFilter = (try? container.decode(RegularExpression.self, forKey: .moduleFilter)) ?? TemplateFile.defaultModuleFilter
         content = try container.decode(String.self, forKey: .content)
     }
 

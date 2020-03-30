@@ -1,4 +1,5 @@
 import Foundation
+import Path
 
 public struct Global: Codable {
     public let rootPath: Path

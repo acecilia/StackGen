@@ -1,0 +1,65 @@
+name: App
+
+options:
+  defaultConfig: Release
+  bundleIdPrefix: com.acecilia
+  transitivelyLinkDependencies: true
+  createIntermediateGroups: true
+  xcodeGenVersion: 2.14.0
+
+fileGroups: [project.yml]
+
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: 13.0
+
+targets:
+  App:
+    type: application
+    platform: iOS
+    sources:
+    - src/main/swift
+    dependencies:
+    - framework: SwiftModule1.framework
+      implicit: true
+    - framework: SwiftModule2.framework
+      implicit: true
+    - framework: SwiftModule3.framework
+      implicit: true
+    - framework: ../../Carthage/Build/iOS/SnapKit.framework
+    info:
+      path: SupportingFiles/App/Info.plist
+      properties:
+        UILaunchStoryboardName: ''
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: YES
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+            - UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
+              UISceneConfigurationName: Default Configuration
+        CFBundleShortVersionString: 0.0.1
+
+  AppTests:
+    type: bundle.unit-test
+    platform: iOS
+    settings:
+      base:
+        # Needed for getting proper test coverage percentages when using static frameworks
+        OTHER_LDFLAGS: -all_load
+    sources:
+    - src/test/swift
+    dependencies:
+    - target: App
+    info:
+      path: SupportingFiles/AppTests/Info.plist
+
+schemes:
+  App:
+    build:
+      targets:
+        App: all
+    test:
+      gatherCoverageData: true
+      targets:
+        - name: AppTests
+          randomExecutionOrder: true

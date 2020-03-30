@@ -2,15 +2,6 @@
   "object": {
     "pins": [
       {
-        "package": "AnyCodable",
-        "repositoryURL": "https://github.com/Flight-School/AnyCodable.git",
-        "state": {
-          "branch": null,
-          "revision": "6e9610258e9f1044b5e0d88545052846448b43c3",
-          "version": "0.2.3"
-        }
-      },
-      {
         "package": "Path.swift",
         "repositoryURL": "https://github.com/mxcl/Path.swift.git",
         "state": {
@@ -29,6 +20,15 @@
         }
       },
       {
+        "package": "RuntimeTestCase",
+        "repositoryURL": "https://github.com/acecilia/RuntimeTestCaseSwift",
+        "state": {
+          "branch": null,
+          "revision": "1e922a3f55cf16db665e83c958a697bae665e8d9",
+          "version": null
+        }
+      },
+      {
         "package": "Spectre",
         "repositoryURL": "https://github.com/kylef/Spectre.git",
         "state": {
@@ -43,6 +43,15 @@
         "state": {
           "branch": null,
           "revision": "b43f9dd5151f92625c51c901193549e5d0030244",
+          "version": null
+        }
+      },
+      {
+        "package": "StringCodable",
+        "repositoryURL": "https://github.com/acecilia/StringCodable.git",
+        "state": {
+          "branch": null,
+          "revision": "b7d46cd32791753df1fe13b0b6ecdd9a19fbabcc",
           "version": null
         }
       },

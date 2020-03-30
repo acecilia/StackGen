@@ -19,5 +19,9 @@ function install_mint() {
   fi
 }
 
+brew install mint # Install mint with brew, to speed up CI build
 install_mint
-(cd Examples/swift; carthage bootstrap --no-use-binaries --platform iOS --cache-builds)
+
+cd Examples/swift
+# rm -rf Carthage
+carthage bootstrap --no-use-binaries --platform iOS --cache-builds

@@ -3,11 +3,14 @@ mode: "module"
 content: |
   load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
   load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
-  ¶
+  {% if "App" in module.name %}
+  load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application")
+  {% endif %}
+
   ##########################
   # Constants
   ##########################
-  ¶
+
   COPTS = [
     # Enable the DEBUG flag, for using it in macros
     "-DDEBUG",
@@ -22,11 +25,11 @@ content: |
     "-whole-module-optimization",
     "-swift-version", "5"
   ]
-  ¶
+
   ##########################
   # Main module rules
   ##########################
-  ¶
+
   swift_library(
     name = "{{module.name}}",
     srcs = glob(["src/main/swift/**/*.swift"]),
@@ -43,11 +46,23 @@ content: |
     copts = COPTS,
     visibility = ["//visibility:public"],
   )
-  ¶
+  {% if "App" in module.name %}
+
+  ios_application(
+      name = "{{module.name}}Bundle",
+      bundle_id = "{{custom.bundleIdPrefix}}.{{module.name}}",
+      families = ["iphone", "ipad",],
+      infoplists = ["SupportingFiles/Info.plist"],
+      minimum_os_version = "{{custom.minimumDeploymentTarget}}",
+      deps = ["{{module.name}}"],
+      visibility = ["//visibility:public"],
+  )
+  {% endif %}
+
   ##########################
   # Unit test rules
   ##########################
-  ¶
+
   swift_library(
     name = "{{module.name}}TestsLib",
     srcs = glob(["src/test/swift/**/*.swift"]),
@@ -64,10 +79,14 @@ content: |
     module_name = "{{module.name}}Tests",
     copts = COPTS,
   )
-  ¶
+
   ios_unit_test(
     name = "{{module.name}}Tests",
     deps = [":{{module.name}}TestsLib"],
     minimum_os_version = "{{custom.minimumDeploymentTarget}}",
+    {% if "App" in module.name %}
+    test_host = ":{{module.name}}Bundle",
+    {% else %}
     test_host = None,
+    {% endif %}
   )

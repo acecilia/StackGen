@@ -5,7 +5,7 @@ content: |
   mode: "root"
   content: |
     #!/bin/zsh
-    ¶
+
     #####################################################################
     # This file contains several functions that can be run as tasks
     #
@@ -15,11 +15,11 @@ content: |
     # After sourcing the script you can run each task by its name, for example:
     # > help
     #####################################################################
-    ¶
+
     # Fail if exit code is not zero, in pipes, and also if variable is not set
     # See: https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
     set -euo pipefail
-    ¶
+
   {% if module.name == "bazel" %}
     function setup() {
       version="{{'{{'}}custom.bazelVersion}}"
@@ -32,15 +32,21 @@ content: |
         chmod u+x "$install_path"
       fi
     }
-    ¶
+
     function test() {
       bazel test //Libraries/... --test_output=errors
     }
-  {% elif module.name == "xcodegen" %}
+
+    function run() {
+      # An example command to show how to run an app using the simulator
+      bazel run --ios_simulator_device="iPhone 8" --ios_simulator_version="13.4" //Libraries/App:AppBundle
+    }
+  {% endif %}
+  {% if module.name == "xcodegen" or module.name == "cocoapods" %}
     function create_projects() {
       total_count=0
       generated_count=0
-    ¶
+
       for f in $(find . -name 'project.yml' | sort -n); do
         # Only create the project if it is not there already
         directory=$(dirname "$f")
@@ -51,40 +57,50 @@ content: |
         fi
         ((++total_count))
       done
-    ¶
+
       echo "✨ Done"
       echo "✨ Number of 'project.yml' files detected: ${total_count}"
       echo "✨ Number of projects generated: ${generated_count}"
     }
-    ¶
+
+    function test() {
+      xcodebuild test -project All.xcodeproj -scheme All -destination 'platform=iOS Simulator,name=iPhone 8,OS=latest' | xcpretty
+    }
+
+  {% endif %}
+  {% if module.name == "xcodegen" %}
     function setup() {
       echo "✨ Install project dependencies"
       mint install yonaskolb/XcodeGen@{{'{{'}}custom.xcodeGenVersion}}
-    ¶
+      gem install xcpretty -v {{'{{'}}custom.xcprettyVersion}}
+
       echo "✨ Setup project"
       create_projects
     }
-    ¶
-    function test() {
-      xcodebuild test -project All.xcodeproj -scheme All -destination 'platform=iOS Simulator,name=iPhone 8,OS=latest'
-    }
-  {% elif module.name == "cocoapods" %}
+  {% endif %}
+  {% if module.name == "cocoapods" %}
     function setup() {
       echo "✨ Install project dependencies"
       mint install yonaskolb/XcodeGen@{{'{{'}}custom.xcodeGenVersion}}
       gem install cocoapods -v {{'{{'}}custom.cocoapodsVersion}}
+      gem install xcpretty -v {{'{{'}}custom.xcprettyVersion}}
       gem install cocoapods-binary -v {{'{{'}}custom.cocoapodsBinaryVersion}}
-    ¶
+
       echo "✨ Setup project"
+      (cd Libraries; create_projects)
       pod install
+
+      # In order to create an All scheme, use xcodegen
       xcodegen
-    }
-    ¶
-    function test() {
-      xcodebuild test -project All.xcodeproj -scheme All -destination 'platform=iOS Simulator,name=iPhone 8,OS=latest'
+      rm -rf All.xcworkspace
+
+      # Create All scheme
+      # mkdir -p All.xcworkspace/xcshareddata/xcschemes
+      # cp All.xcodeproj/xcshareddata/xcschemes/All.xcscheme All.xcworkspace/xcshareddata/xcschemes/All.xcscheme
+      # rm -rf All.xcodeproj
     }
   {% endif %}
-    ¶
+
     function help() {
       echo -n "The available tasks are: "
       # Approach inspired by https://stackoverflow.com/a/2641911

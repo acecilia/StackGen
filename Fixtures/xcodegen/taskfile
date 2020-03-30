@@ -34,16 +34,17 @@ function create_projects() {
   echo "✨ Number of projects generated: ${generated_count}"
 }
 
+function test() {
+  xcodebuild test -project All.xcodeproj -scheme All -destination 'platform=iOS Simulator,name=iPhone 8,OS=latest' | xcpretty
+}
+
 function setup() {
   echo "✨ Install project dependencies"
   mint install yonaskolb/XcodeGen@2.14.0
+  gem install xcpretty -v 0.3.0
 
   echo "✨ Setup project"
   create_projects
-}
-
-function test() {
-  xcodebuild test -project All.xcodeproj -scheme All -destination 'platform=iOS Simulator,name=iPhone 8,OS=latest'
 }
 
 function help() {

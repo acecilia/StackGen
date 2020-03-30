@@ -1,9 +1,12 @@
+/*
+// This tests are used to regenerate the fixtures and other files
+
 import XCTest
 import BuildSystemGeneratorCLI
 import BuildSystemGeneratorKit
 import Path
 
-final class _01_Generator: XCTestCase {
+final class AAA_Generator: XCTestCase {
     func test_01_Clean() throws {
         try fixturesPath.delete()
         try testsOutputPath.delete()
@@ -22,8 +25,13 @@ final class _01_Generator: XCTestCase {
         try fixturesPath.delete()
 
         Snapshot.recording = true
-        let tests = _02_UnitTests()
-        try tests.testGenerate()
+        for testSpec in GenerateTests.testSpecs() {
+            let test = GenerateTests()
+            testSpec.setup(test)
+            try test.runtimeTest()
+        }
         Snapshot.recording = false
     }
 }
+
+// */

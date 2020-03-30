@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
   s.name                   = 'SwiftModule1'
   s.version                = '0.0.1'
   s.swift_version          = '5.0'
-  s.ios.deployment_target  = '10.0'
+  s.ios.deployment_target  = '13.0'
   s.source_files           = 'Libraries/SwiftModule1/src/main/swift/*.swift'
 
   s.dependency 'SwiftModule2', '0.0.1'

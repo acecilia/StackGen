@@ -7,7 +7,7 @@ extension NSRegularExpression {
         do {
             try self.init(pattern: pattern)
         } catch {
-            preconditionFailure("Illegal regular expression: \(pattern).")
+            preconditionFailure("Illegal regular expression: \(pattern)")
         }
     }
 
@@ -19,5 +19,31 @@ extension NSRegularExpression {
     func matches(in string: String) -> [String] {
         let results = matches(in: string, range: NSRange(location: 0, length: string.count))
         return results.map { String(string[Range($0.range, in: string)!]) }
+    }
+}
+
+@propertyWrapper
+public struct RegularExpression: Codable, ExpressibleByStringLiteral {
+    public let wrappedValue: NSRegularExpression
+
+    public init(stringLiteral value: String) {
+        self.wrappedValue = NSRegularExpression(value.addingRegexDelimiters)
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let decodedValue = try container.decode(String.self)
+        self.wrappedValue = try NSRegularExpression(pattern: decodedValue.addingRegexDelimiters)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(wrappedValue.pattern)
+    }
+}
+
+private extension String {
+    var addingRegexDelimiters: String {
+        return "^\(self)$"
     }
 }

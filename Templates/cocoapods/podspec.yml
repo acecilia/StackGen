@@ -1,5 +1,6 @@
 name: "{{module.name}}.podspec"
 mode: "moduleToRoot"
+moduleFilter: "((?!App).)*"
 content: |
   Pod::Spec.new do |s|
     s.name                   = '{{module.name}}'
@@ -8,7 +9,7 @@ content: |
     s.ios.deployment_target  = '{{custom.minimumDeploymentTarget}}'
     s.source_files           = '{{module.path}}/src/main/swift/*.swift'
     {% if module.dependencies.main|default:"" %}
-  ¶
+
     {% endif %}
     {% for dependency in module.dependencies.main|default:"" %}
     {% if dependency.type == "firstParty" %}
@@ -17,11 +18,11 @@ content: |
     s.dependency '{{dependency.name}}', '{{dependency.version}}'
     {% endif %}
     {% endfor %}
-  ¶
+
     s.test_spec 'Tests' do |test_spec|
       test_spec.source_files = '{{module.path}}/src/test/swift/*.swift'
       {% if module.dependencies.test|default:"" %}
-  ¶
+
       {% endif %}
       {% for dependency in module.dependencies.test|default:"" %}
       {% if dependency.type == "firstParty" %}
@@ -31,7 +32,7 @@ content: |
       {% endif %}
       {% endfor %}
     end
-  ¶
+
     # Dummy data required by cocoapods
     s.authors                = 'dummy'
     s.summary                = 'dummy'

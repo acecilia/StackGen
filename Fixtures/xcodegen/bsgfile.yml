@@ -2,6 +2,7 @@ custom:
   # Tools
   xcodeGenVersion: 2.14.0
   bazelVersion: 2.2.0
+  xcprettyVersion: 0.3.0
   cocoapodsVersion: 1.9.1
   cocoapodsBinaryVersion: 0.4.4
 
@@ -9,9 +10,12 @@ custom:
   moduleVersion: 0.0.1
   swiftVersion: 5.0
   bundleIdPrefix: com.acecilia
-  minimumDeploymentTarget: 10.0
+  minimumDeploymentTarget: 13.0
 
 modules:
+- name: App
+  dependencies:
+    main: [SwiftModule1, SwiftModule2, SwiftModule3, SnapKit]
 - name: SwiftModule1
   dependencies:
     main: [SwiftModule2, SnapKit]
@@ -23,4 +27,4 @@ versionSources:
 - 'Cartfile'
 
 options:
-  templatesPath: '../../../../../../../Templates/xcodegen'
+  templatesPath: '../../../../../../Templates/xcodegen'

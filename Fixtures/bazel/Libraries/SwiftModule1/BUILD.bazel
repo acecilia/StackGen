@@ -54,6 +54,6 @@ swift_library(
 ios_unit_test(
   name = "SwiftModule1Tests",
   deps = [":SwiftModule1TestsLib"],
-  minimum_os_version = "10.0",
+  minimum_os_version = "13.0",
   test_host = None,
 )
