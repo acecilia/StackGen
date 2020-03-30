@@ -37,10 +37,15 @@ content: |
     echo "✨ Number of projects generated: ${generated_count}"
   }
 
+  function test() {
+    xcodebuild test -project All.xcodeproj -scheme All -destination 'platform=iOS Simulator,name=iPhone 8,OS=latest' | xcpretty
+  }
+
   function setup() {
     echo "✨ Install project dependencies"
     mint install yonaskolb/XcodeGen@{{custom.xcodeGenVersion}}
     gem install cocoapods -v {{custom.cocoapodsVersion}}
+    gem install xcpretty -v {{custom.xcprettyVersion}}
     gem install cocoapods-binary -v {{custom.cocoapodsBinaryVersion}}
 
     echo "✨ Setup project"
@@ -55,10 +60,6 @@ content: |
     # mkdir -p All.xcworkspace/xcshareddata/xcschemes
     # cp All.xcodeproj/xcshareddata/xcschemes/All.xcscheme All.xcworkspace/xcshareddata/xcschemes/All.xcscheme
     # rm -rf All.xcodeproj
-  }
-
-  function test() {
-    xcodebuild test -project All.xcodeproj -scheme All -destination 'platform=iOS Simulator,name=iPhone 8,OS=latest'
   }
 
   function help() {

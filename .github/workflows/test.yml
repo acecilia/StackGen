@@ -36,4 +36,4 @@ jobs:
     
     # Tests
     - name: Tests
-      run: swift test --filter 'Unit|Integration'
+      run: swift test

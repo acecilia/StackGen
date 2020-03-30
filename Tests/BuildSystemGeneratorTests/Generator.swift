@@ -3,6 +3,8 @@ import BuildSystemGeneratorCLI
 import BuildSystemGeneratorKit
 import Path
 
+// /*
+
 final class AAA_Generator: XCTestCase {
     func test_01_Clean() throws {
         try fixturesPath.delete()
@@ -30,3 +32,5 @@ final class AAA_Generator: XCTestCase {
         Snapshot.recording = false
     }
 }
+
+// */
