@@ -18,8 +18,8 @@ let package = Package(
         .package(url: "https://github.com/jpsim/Yams.git", .upToNextMajor(from: "2.0.0")),
         .package(url: "https://github.com/mxcl/Path.swift.git", .upToNextMajor(from: "1.0.1")),
         .package(url: "https://github.com/jakeheis/SwiftCLI.git", .upToNextMajor(from: "6.0.1")),
-        .package(url: "https://github.com/Flight-School/AnyCodable.git", .upToNextMajor(from: "0.2.3")),
         .package(url: "https://github.com/mxcl/Version.git", .upToNextMajor(from: "2.0.0")),
+        .package(url: "https://github.com/acecilia/RuntimeTestCaseSwift", .revision("27a1a9c5d8c6c46f02a14cd814b071e2daf76d98")),
     ],
     targets: [
         .target(
@@ -39,7 +39,6 @@ let package = Package(
                 "Stencil",
                 "Yams",
                 "Path",
-                "AnyCodable",
                 "Version",
             ]
         ),
@@ -47,6 +46,7 @@ let package = Package(
             name: "BuildSystemGeneratorTests",
             dependencies: [
                 "BuildSystemGeneratorCLI",
+                "RuntimeTestCase",
             ]
         )
     ]

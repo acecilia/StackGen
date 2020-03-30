@@ -1,7 +1,9 @@
-install! 'cocoapods', :integrate_targets => false, :share_schemes_for_development_pods => true
+install! 'cocoapods',
+  :share_schemes_for_development_pods => true,
+  :disable_input_output_paths => true # Workaround for https://github.com/CocoaPods/CocoaPods/issues/9185
 
 use_frameworks!
-platform :ios, '10.0'
+workspace 'All'
 
 #################
 # Binary setup
@@ -16,15 +18,14 @@ if $useBinaries
 end
 
 #################
-# Third party modules
+# Config
 #################
 
-pod 'SnapKit', '5.0.1', :binary => $useBinaries
-
-#################
-# First party modules
-#################
-
-pod 'SwiftModule1', :path => '.', :testspecs => ['Tests']
-pod 'SwiftModule2', :path => '.', :testspecs => ['Tests']
-pod 'SwiftModule3', :path => '.', :testspecs => ['Tests']
+target 'App' do
+    platform :ios, '13.0'
+    project 'Libraries/App/App.xcodeproj'
+    pod 'SwiftModule1', :path => '.', :testspecs => ['Tests']
+    pod 'SwiftModule2', :path => '.', :testspecs => ['Tests']
+    pod 'SwiftModule3', :path => '.', :testspecs => ['Tests']
+    pod 'SnapKit', '5.0.1', :binary => $useBinaries
+end

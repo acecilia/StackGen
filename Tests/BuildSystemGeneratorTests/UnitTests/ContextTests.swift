@@ -3,15 +3,7 @@ import Yams
 import BuildSystemGeneratorKit
 import Path
 
-final class _02_UnitTests: XCTestCase {
-    func testGenerate() throws {
-        for templatesPath in templatesPath.ls().directories {
-            let result = try generate(using: templatesPath)
-            XCTAssertEqual(result.exitCode, 0)
-            assert(fixture: fixturesPath/templatesPath.basename(), equals: result.destination)
-        }
-    }
-
+final class ContextTests: XCTestCase {
     func testContext() throws {
         let contextString = """
         custom:

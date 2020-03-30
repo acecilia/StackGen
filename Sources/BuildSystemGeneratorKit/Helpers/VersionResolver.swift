@@ -1,5 +1,6 @@
 import Foundation
 import Path
+import Version
 
 class VersionResolver {
     private static let versionRegex = NSRegularExpression(#"\d\.\d\.\d"#)

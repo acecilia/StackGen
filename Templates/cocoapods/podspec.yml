@@ -1,5 +1,6 @@
 name: "{{module.name}}.podspec"
 mode: "moduleToRoot"
+moduleFilter: "((?!App).)*"
 content: |
   Pod::Spec.new do |s|
     s.name                   = '{{module.name}}'

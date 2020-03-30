@@ -1,19 +1,27 @@
 import XCTest
 import BuildSystemGeneratorKit
 import Path
+import RuntimeTestCase
 
-final class _03_IntegrationTests: XCTestCase {
-    func testAll() throws {
-        for templatesPath in templatesPath.ls().directories {
-            try assertGenerate(templatesPath)
-            assertSetup()
-            assertTest()
+final class _03_IntegrationTests: RuntimeTestCase {
+    static func testSpecs() -> [RuntimeTestCaseSpec<_03_IntegrationTests>] {
+        return templatesPath.ls().directories.map { templatePath in
+            RuntimeTestCaseSpec(templatePath.basename()) { $0.templatePath = templatePath }
         }
     }
 
-    private func assertGenerate(_ templatesPath: Path, function: String = #function) throws {
-        let r = try generate(using: templatesPath, function: function)
-        XCTAssertEqual(r.exitCode, 0, "Generation failed using templates '\(templatesPath)' at '\(r.destination)'")
+    private var templatePath: Path!
+
+    func runtimeTest() throws {
+        try assertGenerate(templatePath)
+        assertSetup()
+        assertTest()
+    }
+
+    private func assertGenerate(_ templatePath: Path, function: String = #function) throws {
+        let r = try generate(using: templatePath, function: function)
+        // runCommand("open \(r.destination)")
+        XCTAssertEqual(r.exitCode, 0, "Generation failed using templates '\(templatePath)' at '\(r.destination)'")
     }
 
     private func assertSetup() {

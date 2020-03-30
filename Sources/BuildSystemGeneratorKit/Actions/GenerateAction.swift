@@ -45,6 +45,10 @@ public class GenerateAction: Action {
 
 private extension TemplateEngine {
     func write(_ templateFile: TemplateFile, mainContext: MainContext, basePath: Path, module: FirstPartyModule.Output?) throws {
+        if let module = module, templateFile.moduleFilter.wrappedValue.matches(module.name) == false {
+            return
+        }
+
         let basePath = basePath/templateFile.subdir
         let context = try mainContext.render(basePath, for: module)
 

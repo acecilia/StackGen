@@ -22,8 +22,11 @@ final class _01_Generator: XCTestCase {
         try fixturesPath.delete()
 
         Snapshot.recording = true
-        let tests = _02_UnitTests()
-        try tests.testGenerate()
+        for testSpec in GenerateTests.testSpecs() {
+            let test = GenerateTests()
+            testSpec.setup(test)
+            try test.runtimeTest()
+        }
         Snapshot.recording = false
     }
 }

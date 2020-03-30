@@ -1,4 +1,5 @@
 import Foundation
+import Path
 
 public struct BsgFile: AutoCodable {
     public static let fileName = "bsgfile"

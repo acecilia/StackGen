@@ -9,20 +9,33 @@ content: |
   projectReferences:
     Pods:
       path: Pods/Pods.xcodeproj
+  {% for module in firstPartyModules where "App" in module.name %}
+    {{module.name}}:
+      path: {{module.path}}/{{module.name}}.xcodeproj
+  {% endfor %}
   ¶
   schemes:
     All:
       build:
         targets:
           {% for module in firstPartyModules %}
+          {% if "App" in module.name %}
+          {{module.name}}/{{module.name}}Tests: all
+          {% else %}
           Pods/{{module.name}}-Unit-Tests: all
+          {% endif %}
           {% endfor %}
       test:
         gatherCoverageData: true
         targets:
         {% for module in firstPartyModules %}
-          - name: Pods/{{module.name}}-Unit-Tests
-            randomExecutionOrder: true
+        {% if "App" in module.name %}
+        - name: {{module.name}}/{{module.name}}Tests
+          randomExecutionOrder: true
+        {% else %}
+        - name: Pods/{{module.name}}-Unit-Tests
+          randomExecutionOrder: true
+        {% endif %}
         {% endfor %}
 
 

@@ -1,4 +1,5 @@
 import Foundation
+import Path
 
 public enum FirstPartyModule {
     public struct Input: AutoCodable {

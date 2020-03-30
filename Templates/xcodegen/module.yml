@@ -12,9 +12,17 @@ content: |
   ¶
   fileGroups: [project.yml]
   ¶
+  settings:
+    base:
+      IPHONEOS_DEPLOYMENT_TARGET: {{custom.minimumDeploymentTarget}}
+  ¶
   targets:
     {{module.name}}:
+      {% if "App" in module.name %}
+      type: application
+      {% else %}
       type: framework.static
+      {% endif %}
       platform: iOS
       sources:
       - src/main/swift
@@ -32,6 +40,15 @@ content: |
       info:
         path: SupportingFiles/{{module.name}}/Info.plist
         properties:
+          {% if "App" in module.name %}
+          UILaunchStoryboardName: ''
+          UIApplicationSceneManifest:
+            UIApplicationSupportsMultipleScenes: YES
+            UISceneConfigurations:
+              UIWindowSceneSessionRoleApplication:
+              - UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
+                UISceneConfigurationName: Default Configuration
+          {% endif %}
           CFBundleShortVersionString: {{custom.moduleVersion}}
   ¶
     {% if "src/test/swift" in module.subpaths %}

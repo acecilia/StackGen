@@ -9,6 +9,10 @@ options:
 
 fileGroups: [project.yml]
 
+settings:
+  base:
+    IPHONEOS_DEPLOYMENT_TARGET: 13.0
+
 targets:
   SwiftModule2:
     type: framework.static

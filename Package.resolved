@@ -2,15 +2,6 @@
   "object": {
     "pins": [
       {
-        "package": "AnyCodable",
-        "repositoryURL": "https://github.com/Flight-School/AnyCodable.git",
-        "state": {
-          "branch": null,
-          "revision": "6e9610258e9f1044b5e0d88545052846448b43c3",
-          "version": "0.2.3"
-        }
-      },
-      {
         "package": "Path.swift",
         "repositoryURL": "https://github.com/mxcl/Path.swift.git",
         "state": {
@@ -26,6 +17,15 @@
           "branch": null,
           "revision": "73f8e9dca9b7a3078cb79128217dc8f2e585a511",
           "version": "1.0.0"
+        }
+      },
+      {
+        "package": "RuntimeTestCase",
+        "repositoryURL": "https://github.com/acecilia/RuntimeTestCaseSwift",
+        "state": {
+          "branch": null,
+          "revision": "27a1a9c5d8c6c46f02a14cd814b071e2daf76d98",
+          "version": null
         }
       },
       {

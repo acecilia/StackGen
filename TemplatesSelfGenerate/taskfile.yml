@@ -36,7 +36,8 @@ content: |
     function test() {
       bazel test //Libraries/... --test_output=errors
     }
-  {% elif module.name == "xcodegen" %}
+  {% endif %}
+  {% if module.name == "xcodegen" or module.name == "cocoapods" %}
     function create_projects() {
       total_count=0
       generated_count=0
@@ -57,6 +58,8 @@ content: |
       echo "✨ Number of projects generated: ${generated_count}"
     }
     ¶
+  {% endif %}
+  {% if module.name == "xcodegen" %}
     function setup() {
       echo "✨ Install project dependencies"
       mint install yonaskolb/XcodeGen@{{'{{'}}custom.xcodeGenVersion}}
@@ -68,7 +71,8 @@ content: |
     function test() {
       xcodebuild test -project All.xcodeproj -scheme All -destination 'platform=iOS Simulator,name=iPhone 8,OS=latest'
     }
-  {% elif module.name == "cocoapods" %}
+  {% endif %}
+  {% if module.name == "cocoapods" %}
     function setup() {
       echo "✨ Install project dependencies"
       mint install yonaskolb/XcodeGen@{{'{{'}}custom.xcodeGenVersion}}
@@ -76,8 +80,15 @@ content: |
       gem install cocoapods-binary -v {{'{{'}}custom.cocoapodsBinaryVersion}}
     ¶
       echo "✨ Setup project"
+      (cd Libraries; create_projects)
       pod install
       xcodegen
+      rm -rf All.xcworkspace
+
+      # Create All scheme
+      # mkdir -p All.xcworkspace/xcshareddata/xcschemes
+      # cp All.xcodeproj/xcshareddata/xcschemes/All.xcscheme All.xcworkspace/xcshareddata/xcschemes/All.xcscheme
+      # rm -rf All.xcodeproj
     }
     ¶
     function test() {

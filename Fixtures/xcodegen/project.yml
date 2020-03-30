@@ -4,6 +4,8 @@ options:
   xcodeGenVersion: 2.14.0
 
 projectReferences:
+  App:
+    path: Libraries/App/App.xcodeproj
   SwiftModule1:
     path: Libraries/SwiftModule1/SwiftModule1.xcodeproj
   SwiftModule2:
@@ -15,12 +17,15 @@ schemes:
   All:
     build:
       targets:
+        App/AppTests: all
         SwiftModule1/SwiftModule1Tests: all
         SwiftModule2/SwiftModule2Tests: all
         SwiftModule3/SwiftModule3Tests: all
     test:
       gatherCoverageData: true
       targets:
+        - name: App/AppTests
+          randomExecutionOrder: true
         - name: SwiftModule1/SwiftModule1Tests
           randomExecutionOrder: true
         - name: SwiftModule2/SwiftModule2Tests

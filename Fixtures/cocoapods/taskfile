@@ -14,6 +14,26 @@
 # See: https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
 set -euo pipefail
 
+function create_projects() {
+  total_count=0
+  generated_count=0
+
+  for f in $(find . -name 'project.yml' | sort -n); do
+    # Only create the project if it is not there already
+    directory=$(dirname "$f")
+    xcodeproj_files=$(find "$directory" -maxdepth 1 -name "*.xcodeproj")
+    if [ -z "$xcodeproj_files" ]; then
+      xcodegen --spec "$f"
+      ((++generated_count))
+    fi
+    ((++total_count))
+  done
+
+  echo "✨ Done"
+  echo "✨ Number of 'project.yml' files detected: ${total_count}"
+  echo "✨ Number of projects generated: ${generated_count}"
+}
+
 function setup() {
   echo "✨ Install project dependencies"
   mint install yonaskolb/XcodeGen@2.14.0
@@ -21,8 +41,14 @@ function setup() {
   gem install cocoapods-binary -v 0.4.4
 
   echo "✨ Setup project"
+  (cd Libraries; create_projects)
   pod install
   xcodegen
+  rm -rf All.xcworkspace
+  # Create All scheme
+  # mkdir -p All.xcworkspace/xcshareddata/xcschemes
+  # cp All.xcodeproj/xcshareddata/xcschemes/All.xcscheme All.xcworkspace/xcshareddata/xcschemes/All.xcscheme
+  # rm -rf All.xcodeproj
 }
 
 function test() {

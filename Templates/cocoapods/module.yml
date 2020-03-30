@@ -1,0 +1,67 @@
+name: "project.yml"
+mode: "module"
+filter: "App"
+content: |  
+  name: {{module.name}}
+  ¶
+  options:
+    defaultConfig: Release
+    bundleIdPrefix: {{custom.bundleIdPrefix}}
+    transitivelyLinkDependencies: true
+    createIntermediateGroups: true
+    xcodeGenVersion: {{custom.xcodeGenVersion}}
+  ¶
+  fileGroups: [project.yml]
+  ¶
+  settings:
+    base:
+      IPHONEOS_DEPLOYMENT_TARGET: {{custom.minimumDeploymentTarget}}
+  ¶
+  targets:
+    {{module.name}}:
+      type: application
+      platform: iOS
+      sources:
+      - src/main/swift
+      info:
+        path: SupportingFiles/{{module.name}}/Info.plist
+        properties:
+          {% if "App" in module.name %}
+          UILaunchStoryboardName: ''
+          UIApplicationSceneManifest:
+            UIApplicationSupportsMultipleScenes: YES
+            UISceneConfigurations:
+              UIWindowSceneSessionRoleApplication:
+              - UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
+                UISceneConfigurationName: Default Configuration
+          {% endif %}
+          CFBundleShortVersionString: {{custom.moduleVersion}}
+  ¶
+    {% if "src/test/swift" in module.subpaths %}
+    {{module.name}}Tests:
+      type: bundle.unit-test
+      platform: iOS
+      settings:
+        base:
+          # Needed for getting proper test coverage percentages when using static frameworks
+          OTHER_LDFLAGS: -all_load
+      sources:
+      - src/test/swift
+      dependencies:
+      - target: {{module.name}}
+      info:
+        path: SupportingFiles/{{module.name}}Tests/Info.plist
+    {% endif %}
+  ¶
+  schemes:
+    {{module.name}}:
+      build:
+        targets:
+          {{module.name}}: all
+      {% if "src/test/swift" in module.subpaths %}
+      test:
+        gatherCoverageData: true
+        targets:
+          - name: {{module.name}}Tests
+            randomExecutionOrder: true
+      {% endif %}
