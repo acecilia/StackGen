@@ -11,13 +11,13 @@ jobs:
     - uses: actions/cache@v1
       with:
         path: Examples/swift/Carthage
-        key: ${{ runner.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}
+        key: ${{ runner.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}-${{ hashFiles('Examples/swift/Carthage/**') }}
         restore-keys: |
           ${{ runner.os }}-carthage-
     - uses: actions/cache@v1
       with:
         path: .build
-        key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+        key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}-${{ hashFiles('.build/**') }}
         restore-keys: |
           ${{ runner.os }}-spm-
     

@@ -3,6 +3,9 @@ mode: "module"
 content: |
   load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
   load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
+  {% if "App" in module.name %}
+  load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application")
+  {% endif %}
 
   ##########################
   # Constants
@@ -43,6 +46,18 @@ content: |
     copts = COPTS,
     visibility = ["//visibility:public"],
   )
+  {% if "App" in module.name %}
+
+  ios_application(
+      name = "{{module.name}}Bundle",
+      bundle_id = "{{custom.bundleIdPrefix}}.{{module.name}}",
+      families = ["iphone", "ipad",],
+      infoplists = ["SupportingFiles/Info.plist"],
+      minimum_os_version = "{{custom.minimumDeploymentTarget}}",
+      deps = ["{{module.name}}"],
+      visibility = ["//visibility:public"],
+  )
+  {% endif %}
 
   ##########################
   # Unit test rules
@@ -69,5 +84,9 @@ content: |
     name = "{{module.name}}Tests",
     deps = [":{{module.name}}TestsLib"],
     minimum_os_version = "{{custom.minimumDeploymentTarget}}",
+    {% if "App" in module.name %}
+    test_host = ":{{module.name}}Bundle",
+    {% else %}
     test_host = None,
+    {% endif %}
   )

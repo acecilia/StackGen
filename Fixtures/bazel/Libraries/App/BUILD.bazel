@@ -1,5 +1,6 @@
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application")
 
 ##########################
 # Constants
@@ -38,6 +39,16 @@ swift_library(
   visibility = ["//visibility:public"],
 )
 
+ios_application(
+    name = "AppBundle",
+    bundle_id = "com.acecilia.App",
+    families = ["iphone", "ipad",],
+    infoplists = ["SupportingFiles/Info.plist"],
+    minimum_os_version = "13.0",
+    deps = ["App"],
+    visibility = ["//visibility:public"],
+)
+
 ##########################
 # Unit test rules
 ##########################
@@ -56,5 +67,5 @@ ios_unit_test(
   name = "AppTests",
   deps = [":AppTestsLib"],
   minimum_os_version = "13.0",
-  test_host = None,
+  test_host = ":AppBundle",
 )

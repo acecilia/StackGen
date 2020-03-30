@@ -36,6 +36,11 @@ content: |
     function test() {
       bazel test //Libraries/... --test_output=errors
     }
+
+    function run() {
+      # An example command to show how to run an app using the simulator
+      bazel run --ios_simulator_device="iPhone 8" --ios_simulator_version="13.4" //Libraries/App:AppBundle
+    }
   {% endif %}
   {% if module.name == "xcodegen" or module.name == "cocoapods" %}
     function create_projects() {

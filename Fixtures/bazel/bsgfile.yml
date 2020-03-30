@@ -27,4 +27,4 @@ versionSources:
 - 'Cartfile'
 
 options:
-  templatesPath: '../../../../../../../Templates/bazel'
+  templatesPath: '../../../../../../Templates/bazel'

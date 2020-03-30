@@ -1,9 +1,10 @@
+/*
+// This tests are used to regenerate the fixtures and other files
+
 import XCTest
 import BuildSystemGeneratorCLI
 import BuildSystemGeneratorKit
 import Path
-
-// /*
 
 final class AAA_Generator: XCTestCase {
     func test_01_Clean() throws {

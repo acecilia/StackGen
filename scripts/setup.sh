@@ -22,5 +22,5 @@ function install_mint() {
 install_mint
 
 cd Examples/swift
-rm -rf Carthage
+# rm -rf Carthage
 carthage bootstrap --no-use-binaries --platform iOS --cache-builds

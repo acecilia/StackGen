@@ -1,6 +1,6 @@
 name: "project.yml"
 mode: "module"
-filter: "App"
+moduleFilter: ".*App.*"
 content: |
   name: {{module.name}}
 

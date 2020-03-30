@@ -27,4 +27,4 @@ versionSources:
 - 'Cartfile'
 
 options:
-  templatesPath: '../../../../../../../Templates/cocoapods'
+  templatesPath: '../../../../../../Templates/cocoapods'

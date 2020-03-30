@@ -4,7 +4,7 @@ import BuildSystemGeneratorKit
 import Path
 
 let rootPath = Path(#file)!/".."/".."/".."/".."
-let testsOutputPath = rootPath/".build"/"TestsOutput"
+let testsOutputPath = rootPath/"TestsOutput"
 let templatesPath = rootPath/"Templates"
 let carthagePath = examplesPath/"Carthage"/"Build"/"iOS"
 
