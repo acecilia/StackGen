@@ -4,12 +4,12 @@ import BuildSystemGeneratorKit
 import Path
 
 let rootPath = Path(#file)!/".."/".."/".."/".."
-let testsOutputPath = rootPath/"TestsOutput"
+let testsOutputPath = rootPath/".testsOutput"
 let templatesPath = rootPath/"Templates"
 let carthagePath = examplesPath/"Carthage"/"Build"/"iOS"
 
 let examplesPath = rootPath/"Examples"/"swift"
-let fixturesPath = rootPath/"Fixtures"
+let fixturesPath = rootPath/".fixtures"
 
 func tmp(_ testFilePath: String, _ testName: String, _ templateName: String) throws -> Path {
     guard let testFileName = Path(testFilePath)?.basename(dropExtension: true) else {
