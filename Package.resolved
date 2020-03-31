@@ -47,6 +47,15 @@
         }
       },
       {
+        "package": "StringCodable",
+        "repositoryURL": "https://github.com/acecilia/StringCodable.git",
+        "state": {
+          "branch": null,
+          "revision": "b7d46cd32791753df1fe13b0b6ecdd9a19fbabcc",
+          "version": null
+        }
+      },
+      {
         "package": "SwiftCLI",
         "repositoryURL": "https://github.com/jakeheis/SwiftCLI.git",
         "state": {
