@@ -28,6 +28,12 @@ jobs:
         key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}-${{ hashFiles('.build/**') }}
         restore-keys: |
           ${{ runner.os }}-spm-
+    - uses: actions/cache@v1
+      with:
+        path: /usr/local/bin/mint
+        key: ${{ runner.os }}-mint-${{ hashFiles('/usr/local/bin/mint') }}
+        restore-keys: |
+          ${{ runner.os }}-mint-
 
     # Setup
     - name: Setup
