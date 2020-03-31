@@ -1,6 +1,7 @@
 import Path
 import RuntimeTestCase
 import XCTest
+import BuildSystemGeneratorKit
 
 final class GenerateTests: RuntimeTestCase {
     static func testSpecs() -> [RuntimeTestCaseSpec<GenerateTests>] {
@@ -12,8 +13,14 @@ final class GenerateTests: RuntimeTestCase {
     private var templatePath: Path!
 
     func runtimeTest() throws {
-        let result = try generate(using: templatePath)
-        XCTAssertEqual(result.exitCode, 0)
-        assert(fixture: fixturesPath/templatePath.basename(), equals: result.destination)
+        // Generate
+        let (testPath, generateExitCode) = try generate(using: templatePath)
+        XCTAssertEqual(generateExitCode, 0)
+        assert(fixure: fixturesPath/templatePath.basename(), equals: testPath)
+
+        // Clean
+        let cleanExitCode = clean()
+        XCTAssertEqual(cleanExitCode, 0)
+        assert(reference: examplesPath, equals: testPath, exclude: [BsgFile.fileName])
     }
 }

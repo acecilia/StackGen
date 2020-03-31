@@ -3,7 +3,7 @@ import Path
 import StringCodable
 
 public struct BsgFile: AutoCodable {
-    public static let fileName = "bsgfile"
+    public static let fileName = "bsgfile.yml"
     public static let defaultCustom: [String: StringCodable] = [:]
     public static let defaultModules: [FirstPartyModule.Input] = []
     public static let defaultVersionSources: [Path] = []

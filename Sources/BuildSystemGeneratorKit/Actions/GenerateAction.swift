@@ -3,11 +3,15 @@ import Yams
 import Path
 
 public class GenerateAction: Action {
-    public init() { }
+    private let writer: Writer
+
+    public init(_ writer: Writer = Writer()) {
+        self.writer = writer
+    }
 
     public func execute() throws {
         // Resolve modules
-        let bsgFileContent = try String(contentsOf: cwd/"\(BsgFile.fileName).yml")
+        let bsgFileContent = try String(contentsOf: cwd/BsgFile.fileName)
         let bsgFile: BsgFile = try YAMLDecoder().decode(from: bsgFileContent, userInfo: [.relativePath: cwd])
         let resolver = try Resolver(bsgFile)
 
@@ -25,46 +29,44 @@ public class GenerateAction: Action {
                 thirdPartyModules: resolver.thirdPartyModules
             )
 
+            func write(basePath: Path, module: FirstPartyModule.Output?) throws {
+                if let module = module, templateFile.moduleFilter.wrappedValue.matches(module.name) == false {
+                    return
+                }
+
+                let basePath = basePath/templateFile.subdir
+                let context = try mainContext.render(basePath, for: module)
+
+                let fileName = try templateEngine.render(
+                    templateContent: templateFile.name,
+                    context: context
+                )
+
+                let rendered = try templateEngine.render(
+                    templateContent: templateFile.content,
+                    context: context
+                )
+
+                let outputPath = basePath/fileName
+                try outputPath.delete()
+                try outputPath.parent.mkdir()
+                try writer.write(rendered, to: outputPath)
+            }
+
             switch templateFile.mode {
             case .module:
                 for module in mainContext.firstPartyModules {
-                    try templateEngine.write(templateFile, mainContext: mainContext, basePath: module.path, module: module)
+                    try write(basePath: module.path, module: module)
                 }
 
             case .moduleToRoot:
                 for module in mainContext.firstPartyModules {
-                    try templateEngine.write(templateFile, mainContext: mainContext, basePath: cwd, module: module)
+                    try write(basePath: cwd, module: module)
                 }
 
             case .root:
-                try templateEngine.write(templateFile, mainContext: mainContext, basePath: cwd, module: nil)
+                try write(basePath: cwd, module: nil)
             }
         }
-    }
-}
-
-private extension TemplateEngine {
-    func write(_ templateFile: TemplateFile, mainContext: MainContext, basePath: Path, module: FirstPartyModule.Output?) throws {
-        if let module = module, templateFile.moduleFilter.wrappedValue.matches(module.name) == false {
-            return
-        }
-
-        let basePath = basePath/templateFile.subdir
-        let context = try mainContext.render(basePath, for: module)
-
-        let fileName = try self.render(
-            templateContent: templateFile.name,
-            context: context
-        )
-
-        let rendered = try self.render(
-            templateContent: templateFile.content,
-            context: context
-        )
-
-        let outputPath = basePath/fileName
-        try outputPath.delete()
-        try outputPath.parent.mkdir()
-        try rendered.write(to: outputPath)
     }
 }

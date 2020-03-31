@@ -1,7 +1,6 @@
 import Foundation
 import SwiftCLI
 import BuildSystemGeneratorKit
-import Path
 
 public class GenerateCommand: Command {
     public static let name: String = "generate"

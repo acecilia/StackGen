@@ -34,7 +34,7 @@ func functionName(_ methodSignature: String) -> String {
 }
 
 func patchBsgFile(_ path: Path, using templatesPath: Path) throws {
-    let bsgFilePath = path/"\(BsgFile.fileName).yml"
+    let bsgFilePath = path/BsgFile.fileName
     let content = try String(contentsOf: bsgFilePath)
         // Below line is not needed for now, as the Carthage directory gets also copied over when running tests
         // .replacingOccurrences(of: "Cartfile", with: "\((examplesPath/"Cartfile").relative(to: cwd))")
@@ -53,3 +53,9 @@ func generate(using templatesPath: Path, testFilePath: String = #file, function:
 
     return (destination: destination, exitCode: exitCode)
 }
+
+func clean() -> Int32 {
+    let cli = BuildSystemGeneratorCLI()
+    return cli.execute(with: [CleanCommand.name])
+}
+
