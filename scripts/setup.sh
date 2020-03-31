@@ -19,6 +19,7 @@ function install_mint() {
   fi
 }
 
+brew install mint # Install mint with brew, to speed up CI build
 install_mint
 
 cd Examples/swift

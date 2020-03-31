@@ -16,24 +16,20 @@ jobs:
         ruby-version: '2.7'
 
     # Caches
-    - uses: actions/cache@v1
+    - name: Carthage cache
+      uses: actions/cache@v1
       with:
         path: Examples/swift/Carthage
         key: ${{ runner.os }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}-${{ hashFiles('Examples/swift/Carthage/**') }}
         restore-keys: |
           ${{ runner.os }}-carthage-
-    - uses: actions/cache@v1
+    - name: SPM cache
+      uses: actions/cache@v1
       with:
         path: .build
         key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}-${{ hashFiles('.build/**') }}
         restore-keys: |
           ${{ runner.os }}-spm-
-    - uses: actions/cache@v1
-      with:
-        path: /usr/local/bin/mint
-        key: ${{ runner.os }}-mint-${{ hashFiles('/usr/local/bin/mint') }}
-        restore-keys: |
-          ${{ runner.os }}-mint-
 
     # Setup
     - name: Setup
