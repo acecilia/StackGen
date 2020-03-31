@@ -21,21 +21,37 @@ jobs:
     - uses: actions/cache@v1
       with:
         path: Examples/swift/Carthage
-        key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-carthage-${{ hashFiles('**/Cartfile.resolved') }}-${{ hashFiles('Examples/swift/Carthage/**') }}
+        # Force to create a new cache every build: https://github.com/actions/cache/issues/109#issuecomment-558771281
+        key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-carthage-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-carthage-
     - uses: actions/cache@v1
       with:
         path: .build
-        key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-spm-${{ hashFiles('**/Package.resolved') }}-${{ hashFiles('.build/**') }}
+        key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-spm-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-spm-
     - uses: actions/cache@v1
       with:
         path: /private/var/tmp/_bazel_runner
-        key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-bazel-${{ hashFiles('/private/var/tmp/_bazel_runner/**') }}
+        key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-bazel-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-bazel-
+    - name: Limit cache
+      run: |
+        cache_paths="Examples/swift/Carthage .build /private/var/tmp/_bazel_runner"
+        echo "Cache sizes:"
+        echo "$(du -sch $cache_paths)"
+        total_cache_size=$(du -smc $cache_paths | grep total | cut -f1)
+        # Github cache limit is 5GB at the time of writing (31/03/2020)
+        # The cache limit should be divided by the number of matrices
+        if [ "$total_cache_size" -gt 2500 ]; then 
+          echo "Cache size is over the limit: reseting it..."
+          rm -rf $cache_paths
+          echo "Done"
+        else
+          echo "Cache size is under the limit: nothing to be done"
+        fi
 
     - name: Select Xcode version
       run: sudo xcode-select -s "$DEVELOPER_DIR"
