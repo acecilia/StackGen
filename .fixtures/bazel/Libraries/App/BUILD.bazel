@@ -30,9 +30,7 @@ swift_library(
   srcs = glob(["src/main/swift/**/*.swift"]),
   deps = [
     "//Libraries/SwiftModule1:SwiftModule1",
-    "//Libraries/SwiftModule2:SwiftModule2",
     "//Libraries/SwiftModule3:SwiftModule3",
-    "//:SnapKit",
   ],
   module_name = "App",
   copts = COPTS,

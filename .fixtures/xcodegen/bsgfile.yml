@@ -15,7 +15,7 @@ custom:
 modules:
 - name: App
   dependencies:
-    main: [SwiftModule1, SwiftModule2, SwiftModule3, SnapKit]
+    main: [SwiftModule1, SwiftModule3]
 - name: SwiftModule1
   dependencies:
     main: [SwiftModule2, SnapKit]

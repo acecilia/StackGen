@@ -26,9 +26,9 @@ content: |
       platform: iOS
       sources:
       - src/main/swift
-      {% if module.dependencies.main|default:"" %}
+      {% if module.transitiveDependencies.main|default:"" %}
       dependencies:
-      {% for dependency in module.dependencies.main %}
+      {% for dependency in module.transitiveDependencies.main %}
       {% if dependency.type == "firstParty" %}
       - framework: {{dependency.name}}.framework
         implicit: true
@@ -63,7 +63,7 @@ content: |
       - src/test/swift
       dependencies:
       - target: {{module.name}}
-      {% for dependency in module.dependencies.test|default:"" %}
+      {% for dependency in module.transitiveDependencies.test|default:"" %}
       {% if dependency.type == "firstParty" %}
       - framework: {{dependency.name}}.framework
         implicit: true

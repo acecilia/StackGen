@@ -22,27 +22,32 @@ final class ContextTests: XCTestCase {
               path: some/path/Module2
               subpaths:
               - src/swift
+              transitiveDependencies: {}
               type: firstParty
             - dependencies: {}
               name: Module3
               path: some/path/Module3
               subpaths:
               - src/swift
+              transitiveDependencies: {}
               type: firstParty
           name: Module1
           path: some/path/Module1
           subpaths:
           - src/swift
+          transitiveDependencies: {}
         - dependencies: {}
           name: Module2
           path: some/path/Module2
           subpaths:
           - src/swift
+          transitiveDependencies: {}
         - dependencies: {}
           name: Module3
           path: some/path/Module3
           subpaths:
           - src/swift
+          transitiveDependencies: {}
         global:
           fileName: someFileName
           rootPath: ..

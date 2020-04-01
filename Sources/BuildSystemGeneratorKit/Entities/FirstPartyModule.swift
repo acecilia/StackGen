@@ -15,11 +15,12 @@ public enum FirstPartyModule {
         public let dependencies: [String: [String]]
     }
 
-    public struct Output: Codable {
+    public struct Output: Codable, Hashable {
         public let name: String
         public let path: Path
         public let subpaths: [Path]
         public let dependencies: [String: [Dependency.Output]]
+        public let transitiveDependencies: [String: [Dependency.Output]]
     }
 }
 

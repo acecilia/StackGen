@@ -16,7 +16,7 @@ public enum Dependency {
         }
     }
 
-    public enum Output: Codable {
+    public enum Output: Codable, Hashable {
         case firstParty(FirstPartyModule.Output)
         case thirdParty(ThirdPartyModule.Output)
 
@@ -24,9 +24,23 @@ public enum Dependency {
             case type
         }
 
-        public enum Kind: String, Codable {
+        public enum Kind: String, Codable, CaseIterable, Comparable {
             case firstParty
             case thirdParty
+
+            public static func < (lhs: Dependency.Output.Kind, rhs: Dependency.Output.Kind) -> Bool {
+                return allCases.firstIndex(of: lhs)! < allCases.firstIndex(of: rhs)!
+            }
+        }
+
+        public var name: String {
+            switch self {
+            case .firstParty(let module):
+                return module.name
+
+            case .thirdParty(let module):
+                return module.name
+            }
         }
 
         public var underlyingObject: Codable {
