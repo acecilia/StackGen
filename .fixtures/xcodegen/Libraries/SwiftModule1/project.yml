@@ -5,12 +5,13 @@ options:
   bundleIdPrefix: com.acecilia
   transitivelyLinkDependencies: true
   createIntermediateGroups: true
-  xcodeGenVersion: 2.14.0
+  xcodeGenVersion: 2.15.1
 
 fileGroups: [project.yml]
 
 settings:
   base:
+    DEVELOPMENT_TEAM: M7D34XPBZX
     IPHONEOS_DEPLOYMENT_TARGET: 13.0
 
 targets:
@@ -22,6 +23,7 @@ targets:
     dependencies:
     - framework: SwiftModule2.framework
       implicit: true
+      # embed: false # Bring this back when https://github.com/yonaskolb/XcodeGen/pull/820 is merged and released
     - framework: ../../Carthage/Build/iOS/SnapKit.framework
     info:
       path: SupportingFiles/SwiftModule1/Info.plist
@@ -41,6 +43,7 @@ targets:
     - target: SwiftModule1
     - framework: SwiftModule3.framework
       implicit: true
+      # embed: false # Bring this back when https://github.com/yonaskolb/XcodeGen/pull/820 is merged and released
     info:
       path: SupportingFiles/SwiftModule1Tests/Info.plist
 

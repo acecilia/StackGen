@@ -1,6 +1,6 @@
 custom:
   # Tools
-  xcodeGenVersion: 2.14.0
+  xcodeGenVersion: 2.15.1
   bazelVersion: 2.2.0
   xcprettyVersion: 0.3.0
   cocoapodsVersion: 1.9.1
@@ -11,6 +11,7 @@ custom:
   swiftVersion: 5.0
   bundleIdPrefix: com.acecilia
   minimumDeploymentTarget: 13.0
+  developmentTeam: M7D34XPBZX
 
 modules:
 - name: App

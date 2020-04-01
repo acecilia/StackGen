@@ -8,25 +8,6 @@ content: |
   {% endif %}
 
   ##########################
-  # Constants
-  ##########################
-
-  COPTS = [
-    # Enable the DEBUG flag, for using it in macros
-    "-DDEBUG",
-    # Do not make optimizations: compilation is faster
-    "-Onone",
-    # Print debug information
-    "-g",
-    # Make libraries testable
-    "-enable-testing",
-    # Look at the files as a unit instead of separately: compilation is faster
-    # See: https://www.skilled.io/u/swiftsummit/swift-with-a-hundred-engineers
-    "-whole-module-optimization",
-    "-swift-version", "5"
-  ]
-
-  ##########################
   # Main module rules
   ##########################
 
@@ -43,7 +24,6 @@ content: |
       {% endfor %}
     ],
     module_name = "{{module.name}}",
-    copts = COPTS,
     visibility = ["//visibility:public"],
   )
   {% if "App" in module.name %}
@@ -77,7 +57,6 @@ content: |
       {% endfor %}
     ],
     module_name = "{{module.name}}Tests",
-    copts = COPTS,
   )
 
   ios_unit_test(

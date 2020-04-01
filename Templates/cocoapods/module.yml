@@ -15,6 +15,7 @@ content: |
 
   settings:
     base:
+      DEVELOPMENT_TEAM: {{custom.developmentTeam}}
       IPHONEOS_DEPLOYMENT_TARGET: {{custom.minimumDeploymentTarget}}
 
   targets:
@@ -27,6 +28,8 @@ content: |
         path: SupportingFiles/{{module.name}}/Info.plist
         properties:
           {% if "App" in module.name %}
+          UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait # At least one value here is required to avoid https://stackoverflow.com/questions/20369290/xcode-is-creating-generic-xcode-archive-instead-of-ios-app-archive
           UILaunchStoryboardName: ''
           UIApplicationSceneManifest:
             UIApplicationSupportsMultipleScenes: YES

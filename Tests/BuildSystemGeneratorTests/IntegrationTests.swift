@@ -16,6 +16,7 @@ final class IntegrationTests: RuntimeTestCase {
         try assertGenerate(templatePath)
         assertSetup()
         assertTest()
+        assertArchive()
     }
 
     private func assertGenerate(_ templatePath: Path, function: String = #function) throws {
@@ -32,5 +33,10 @@ final class IntegrationTests: RuntimeTestCase {
     private func assertTest() {
         let r = runCommand("source taskfile; test")
         XCTAssertEqual(r.exitCode, 0, "Test failed: '\((r.output + r.error).joined(separator: "\n"))'")
+    }
+
+    private func assertArchive() {
+        let r = runCommand("source taskfile; archive")
+        XCTAssertEqual(r.exitCode, 0, "Archive failed: '\((r.output + r.error).joined(separator: "\n"))'")
     }
 }

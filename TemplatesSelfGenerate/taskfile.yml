@@ -34,12 +34,16 @@ content: |
     }
 
     function test() {
-      bazel test //Libraries/... --test_output=errors
+      bazel test --config ios-debug //...
+    }
+
+    function archive() {
+      bazel query '//... except filter(.*Tests, //...)' | xargs bazel build --config ios-release
     }
 
     function run() {
       # An example command to show how to run an app using the simulator
-      bazel run --ios_simulator_device="iPhone 8" --ios_simulator_version="13.4" //Libraries/App:AppBundle
+      bazel run --config ios-debug //Libraries/App:AppBundle
     }
   {% endif %}
   {% if module.name == "xcodegen" or module.name == "cocoapods" %}
@@ -65,6 +69,10 @@ content: |
 
     function test() {
       xcodebuild test -project All.xcodeproj -scheme All -destination 'platform=iOS Simulator,name=iPhone 8,OS=latest' | xcpretty
+    }
+
+    function archive() {
+      xcodebuild clean archive -project All.xcodeproj -scheme App | xcpretty
     }
 
   {% endif %}

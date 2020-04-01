@@ -5,12 +5,13 @@ options:
   bundleIdPrefix: com.acecilia
   transitivelyLinkDependencies: true
   createIntermediateGroups: true
-  xcodeGenVersion: 2.14.0
+  xcodeGenVersion: 2.15.1
 
 fileGroups: [project.yml]
 
 settings:
   base:
+    DEVELOPMENT_TEAM: M7D34XPBZX
     IPHONEOS_DEPLOYMENT_TARGET: 13.0
 
 targets:
@@ -22,14 +23,19 @@ targets:
     dependencies:
     - framework: SwiftModule1.framework
       implicit: true
+      # embed: false # Bring this back when https://github.com/yonaskolb/XcodeGen/pull/820 is merged and released
     - framework: SwiftModule2.framework
       implicit: true
+      # embed: false # Bring this back when https://github.com/yonaskolb/XcodeGen/pull/820 is merged and released
     - framework: SwiftModule3.framework
       implicit: true
+      # embed: false # Bring this back when https://github.com/yonaskolb/XcodeGen/pull/820 is merged and released
     - framework: ../../Carthage/Build/iOS/SnapKit.framework
     info:
       path: SupportingFiles/App/Info.plist
       properties:
+        UISupportedInterfaceOrientations:
+        - UIInterfaceOrientationPortrait # At least one value here is required to avoid https://stackoverflow.com/questions/20369290/xcode-is-creating-generic-xcode-archive-instead-of-ios-app-archive
         UILaunchStoryboardName: ''
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: YES

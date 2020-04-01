@@ -14,6 +14,7 @@ content: |
 
   settings:
     base:
+      DEVELOPMENT_TEAM: {{custom.developmentTeam}}
       IPHONEOS_DEPLOYMENT_TARGET: {{custom.minimumDeploymentTarget}}
 
   targets:
@@ -32,6 +33,7 @@ content: |
       {% if dependency.type == "firstParty" %}
       - framework: {{dependency.name}}.framework
         implicit: true
+        # embed: false # Bring this back when https://github.com/yonaskolb/XcodeGen/pull/820 is merged and released
       {% elif (dependency.type == "thirdParty") and ("Cartfile" in dependency.source) %}
       - framework: {{dependency.sourceParent}}/Carthage/Build/iOS/{{dependency.name}}.framework
       {% endif %}
@@ -41,6 +43,8 @@ content: |
         path: SupportingFiles/{{module.name}}/Info.plist
         properties:
           {% if "App" in module.name %}
+          UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait # At least one value here is required to avoid https://stackoverflow.com/questions/20369290/xcode-is-creating-generic-xcode-archive-instead-of-ios-app-archive
           UILaunchStoryboardName: ''
           UIApplicationSceneManifest:
             UIApplicationSupportsMultipleScenes: YES
@@ -67,6 +71,7 @@ content: |
       {% if dependency.type == "firstParty" %}
       - framework: {{dependency.name}}.framework
         implicit: true
+        # embed: false # Bring this back when https://github.com/yonaskolb/XcodeGen/pull/820 is merged and released
       {% elif (dependency.type == "thirdParty") and ("Cartfile" in dependency.source) %}
       - framework: {{dependency.sourceParent}}/Carthage/Build/iOS/{{dependency.name}}.framework
       {% endif %}

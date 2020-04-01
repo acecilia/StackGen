@@ -4,6 +4,7 @@ Pod::Spec.new do |s|
   s.swift_version          = '5.0'
   s.ios.deployment_target  = '13.0'
   s.source_files           = 'Libraries/SwiftModule2/src/main/swift/*.swift'
+  s.static_framework       = true
 
   s.test_spec 'Tests' do |test_spec|
     test_spec.source_files = 'Libraries/SwiftModule2/src/test/swift/*.swift'

@@ -8,6 +8,7 @@ content: |
     s.swift_version          = '{{custom.swiftVersion}}'
     s.ios.deployment_target  = '{{custom.minimumDeploymentTarget}}'
     s.source_files           = '{{module.path}}/src/main/swift/*.swift'
+    s.static_framework       = true
     {% if module.dependencies.main|default:"" %}
 
     {% endif %}

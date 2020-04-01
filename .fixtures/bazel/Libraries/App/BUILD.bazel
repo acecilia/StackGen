@@ -3,25 +3,6 @@ load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
 load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application")
 
 ##########################
-# Constants
-##########################
-
-COPTS = [
-  # Enable the DEBUG flag, for using it in macros
-  "-DDEBUG",
-  # Do not make optimizations: compilation is faster
-  "-Onone",
-  # Print debug information
-  "-g",
-  # Make libraries testable
-  "-enable-testing",
-  # Look at the files as a unit instead of separately: compilation is faster
-  # See: https://www.skilled.io/u/swiftsummit/swift-with-a-hundred-engineers
-  "-whole-module-optimization",
-  "-swift-version", "5"
-]
-
-##########################
 # Main module rules
 ##########################
 
@@ -33,7 +14,6 @@ swift_library(
     "//Libraries/SwiftModule3:SwiftModule3",
   ],
   module_name = "App",
-  copts = COPTS,
   visibility = ["//visibility:public"],
 )
 
@@ -58,7 +38,6 @@ swift_library(
     ":App",
   ],
   module_name = "AppTests",
-  copts = COPTS,
 )
 
 ios_unit_test(
