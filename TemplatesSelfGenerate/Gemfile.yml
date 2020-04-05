@@ -1,0 +1,16 @@
+name: "Gemfile.yml"
+mode: "module"
+content: |
+  name: "Gemfile"
+  mode: "root"
+  content: |
+    source 'https://rubygems.org' do
+      gem 'lefthook', '{{'{{'}}custom.lefthookVersion}}'
+      {% if module.name == "xcodegen" or module.name == "cocoapods" %}
+      gem 'xcpretty', '{{'{{'}}custom.xcprettyVersion}}'
+      {% endif %}
+      {% if module.name == "cocoapods" %}
+      gem 'cocoapods', '{{'{{'}}custom.cocoapodsVersion}}'
+      gem 'cocoapods-binary', '{{'{{'}}custom.cocoapodsBinaryVersion}}'
+      {% endif %}
+    end

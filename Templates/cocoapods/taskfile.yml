@@ -47,10 +47,8 @@ content: |
 
   function setup() {
     echo "✨ Install project dependencies"
-    mint install yonaskolb/XcodeGen@{{custom.xcodeGenVersion}}
-    gem install cocoapods -v {{custom.cocoapodsVersion}}
-    gem install xcpretty -v {{custom.xcprettyVersion}}
-    gem install cocoapods-binary -v {{custom.cocoapodsBinaryVersion}}
+    mint bootstrap -l
+    bundle install --system
 
     echo "✨ Setup project"
     (cd Libraries; create_projects)

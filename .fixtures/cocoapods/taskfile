@@ -44,10 +44,8 @@ function archive() {
 
 function setup() {
   echo "✨ Install project dependencies"
-  mint install yonaskolb/XcodeGen@2.15.1
-  gem install cocoapods -v 1.9.1
-  gem install xcpretty -v 0.3.0
-  gem install cocoapods-binary -v 0.4.4
+  mint bootstrap -l
+  bundle install --system
 
   echo "✨ Setup project"
   (cd Libraries; create_projects)

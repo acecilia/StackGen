@@ -1,0 +1,6 @@
+name: "Gemfile"
+mode: "root"
+content: |
+  source 'https://rubygems.org' do
+    gem 'lefthook', '{{custom.lefthookVersion}}'
+  end

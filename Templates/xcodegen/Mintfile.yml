@@ -1,0 +1,5 @@
+name: "Mintfile"
+mode: "root"
+content: |
+  realm/SwiftLint@{{custom.swiftlintVersion}}
+  yonaskolb/XcodeGen@{{custom.xcodeGenVersion}}

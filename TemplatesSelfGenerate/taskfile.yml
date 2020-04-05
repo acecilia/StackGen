@@ -20,19 +20,7 @@ content: |
     # See: https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
     set -euo pipefail
 
-  {% if module.name == "bazel" %}
-    function setup() {
-      version="{{'{{'}}custom.bazelVersion}}"
-      if [[ $(bazel --version 2>/dev/null) == "bazel $version" ]]; then
-        echo "✨ bazel with version '$version' is already installed"
-      else
-        echo "✨ Downloading and installing bazel '$version'"
-        install_path=/usr/local/bin/bazel
-        curl -L "https://github.com/bazelbuild/bazel/releases/download/{{'{{'}}custom.bazelVersion}}/bazel-{{'{{'}}custom.bazelVersion}}-darwin-x86_64" --output "$install_path"
-        chmod u+x "$install_path"
-      fi
-    }
-
+    {% if module.name == "bazel" %}
     function test() {
       bazel test --config ios-debug //...
     }
@@ -45,8 +33,8 @@ content: |
       # An example command to show how to run an app using the simulator
       bazel run --config ios-debug //Libraries/App:AppBundle
     }
-  {% endif %}
-  {% if module.name == "xcodegen" or module.name == "cocoapods" %}
+    {% endif %}
+    {% if module.name == "xcodegen" or module.name == "cocoapods" %}
     function create_projects() {
       total_count=0
       generated_count=0
@@ -74,26 +62,30 @@ content: |
     function archive() {
       xcodebuild clean archive -project All.xcodeproj -scheme App | xcpretty
     }
+    {% endif %}
 
-  {% endif %}
-  {% if module.name == "xcodegen" %}
     function setup() {
       echo "✨ Install project dependencies"
-      mint install yonaskolb/XcodeGen@{{'{{'}}custom.xcodeGenVersion}}
-      gem install xcpretty -v {{'{{'}}custom.xcprettyVersion}}
+      mint bootstrap -l
+      bundle install --system
 
+      {% if module.name == "bazel" %}
+      echo "✨ Install bazel"
+      version="{{'{{'}}custom.bazelVersion}}"
+      if [[ $(bazel --version 2>/dev/null) == "bazel $version" ]]; then
+        echo "✨ bazel with version '$version' is already installed"
+      else
+        echo "✨ Downloading and installing bazel '$version'"
+        install_path=/usr/local/bin/bazel
+        curl -L "https://github.com/bazelbuild/bazel/releases/download/{{'{{'}}custom.bazelVersion}}/bazel-{{'{{'}}custom.bazelVersion}}-darwin-x86_64" --output "$install_path"
+        chmod u+x "$install_path"
+      fi
+      {% endif %}
+      {% if module.name == "xcodegen" %}
       echo "✨ Setup project"
       create_projects
-    }
-  {% endif %}
-  {% if module.name == "cocoapods" %}
-    function setup() {
-      echo "✨ Install project dependencies"
-      mint install yonaskolb/XcodeGen@{{'{{'}}custom.xcodeGenVersion}}
-      gem install cocoapods -v {{'{{'}}custom.cocoapodsVersion}}
-      gem install xcpretty -v {{'{{'}}custom.xcprettyVersion}}
-      gem install cocoapods-binary -v {{'{{'}}custom.cocoapodsBinaryVersion}}
-
+      {% endif %}
+      {% if module.name == "cocoapods" %}
       echo "✨ Setup project"
       (cd Libraries; create_projects)
       pod install
@@ -106,8 +98,8 @@ content: |
       # mkdir -p All.xcworkspace/xcshareddata/xcschemes
       # cp All.xcodeproj/xcshareddata/xcschemes/All.xcscheme All.xcworkspace/xcshareddata/xcschemes/All.xcscheme
       # rm -rf All.xcodeproj
+      {% endif %}
     }
-  {% endif %}
 
     function lint() {
       # Allow passing the revision to do the diff against, or default to HEAD

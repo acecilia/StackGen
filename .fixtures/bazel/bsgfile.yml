@@ -6,6 +6,7 @@ custom:
   cocoapodsVersion: 1.9.1
   cocoapodsBinaryVersion: 0.4.4
   lefthookVersion: 0.7.1
+  swiftlintVersion: 0.39.2
 
   # Code
   moduleVersion: 0.0.1

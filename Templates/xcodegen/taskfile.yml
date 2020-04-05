@@ -47,8 +47,8 @@ content: |
 
   function setup() {
     echo "✨ Install project dependencies"
-    mint install yonaskolb/XcodeGen@{{custom.xcodeGenVersion}}
-    gem install xcpretty -v {{custom.xcprettyVersion}}
+    mint bootstrap -l
+    bundle install --system
 
     echo "✨ Setup project"
     create_projects
