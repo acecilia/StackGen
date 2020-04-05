@@ -1,4 +1,4 @@
-/*
+// /*
 // This tests are used to regenerate the fixtures and other files
 
 import XCTest

@@ -5,6 +5,7 @@ custom:
   xcprettyVersion: 0.3.0
   cocoapodsVersion: 1.9.1
   cocoapodsBinaryVersion: 0.4.4
+  lefthookVersion: 0.7.1
 
   # Code
   moduleVersion: 0.0.1

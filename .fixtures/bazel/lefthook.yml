@@ -1,0 +1,7 @@
+min_version: 0.7.1
+
+pre-commit:
+  parallel: true
+  skip_empty: false # Run even if no files are detected by lefthook
+  commands:
+    swiftlint: { run: . ./taskfile; lint }
