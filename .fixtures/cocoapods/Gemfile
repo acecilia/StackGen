@@ -1,6 +1,5 @@
 source 'https://rubygems.org' do
   gem 'lefthook', '0.7.1'
-  gem 'xcpretty', '0.3.0'
   gem 'cocoapods', '1.9.1'
   gem 'cocoapods-binary', '0.4.4'
 end

@@ -35,17 +35,17 @@ function create_projects() {
 }
 
 function test() {
-  xcodebuild test -project All.xcodeproj -scheme All -destination 'platform=iOS Simulator,name=iPhone 8,OS=latest' | xcpretty
+  xcodebuild test -project All.xcodeproj -scheme All -destination 'platform=iOS Simulator,name=iPhone 8,OS=latest' | xcbeautify
 }
 
 function archive() {
-  xcodebuild clean archive -project All.xcodeproj -scheme App | xcpretty
+  xcodebuild clean archive -project All.xcodeproj -scheme App | xcbeautify
 }
 
 function setup() {
   echo "✨ Install project dependencies"
   mint bootstrap -l
-  bundle install --system
+  bundle install
 
   echo "✨ Setup project"
   (cd Libraries; create_projects)

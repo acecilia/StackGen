@@ -3,5 +3,4 @@ mode: "root"
 content: |
   source 'https://rubygems.org' do
     gem 'lefthook', '{{custom.lefthookVersion}}'
-    gem 'xcpretty', '{{custom.xcprettyVersion}}'
   end

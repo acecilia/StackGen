@@ -30,7 +30,7 @@ function run() {
 function setup() {
   echo "✨ Install project dependencies"
   mint bootstrap -l
-  bundle install --system
+  bundle install
 
   echo "✨ Install bazel"
   version="2.2.0"
