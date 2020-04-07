@@ -1,7 +1,8 @@
 modules:
-- name: Templates/cocoapods
-- name: Templates/xcodegen
-- name: Templates/bazel
+- name: Templates/Swift_BuildSystem_Bazel
+- name: Templates/Swift_BuildSystem_Cocoapods
+- name: Templates/Swift_BuildSystem_Xcodegen
+#- name: Templates/file_generator
 
 options:
   templatesPath: TemplatesSelfGenerate

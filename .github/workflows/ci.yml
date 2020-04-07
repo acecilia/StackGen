@@ -27,16 +27,20 @@ jobs:
           ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-carthage-
     - uses: actions/cache@v1
       with:
-        path: .build
-        key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-spm-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-spm-
-    - uses: actions/cache@v1
-      with:
         path: /private/var/tmp/_bazel_runner
         key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-bazel-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-bazel-
+    ###########################################
+    # The following caching steps are disabled because they can lead to random build errors, for example:
+    # * In swift: https://stackoverflow.com/questions/15463179/how-to-fix-pch-error
+    ###########################################
+    # - uses: actions/cache@v1
+    #   with:
+    #     path: .build
+    #     key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-spm-${{ github.sha }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-spm-
     - name: Limit cache
       run: |
         cache_paths="Examples/swift/Carthage .build /private/var/tmp/_bazel_runner"

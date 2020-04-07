@@ -5,25 +5,26 @@ import RuntimeTestCase
 
 final class IntegrationTests: RuntimeTestCase {
     static func testSpecs() -> [RuntimeTestCaseSpec<IntegrationTests>] {
-        return templatesPath.ls().directories.sorted().map { templatePath in
-            RuntimeTestCaseSpec(templatePath.basename()) { $0.templatePath = templatePath }
+        return Template.Swift_BuildSystem.map { template in
+            RuntimeTestCaseSpec(template.rawValue) { $0.template = template }
         }
     }
 
-    private var templatePath: Path!
+    private var template: Template!
 
     func runtimeTest() throws {
-        try assertGenerate(templatePath)
+        try assertGenerate(template)
         assertSetup()
         assertTest()
-        assertArchive()
+        // Archiving requires a provisioning profile on CI, which is not setup yet
+        // assertArchive()
         assertLefthook()
     }
 
-    private func assertGenerate(_ templatePath: Path, function: String = #function) throws {
-        let r = try generate(using: templatePath, function: function)
+    private func assertGenerate(_ template: Template, function: String = #function) throws {
+        let r = try generate(using: template, function: function)
         // runCommand("open \(r.destination)")
-        XCTAssertEqual(r.exitCode, 0, "Generation failed using templates '\(templatePath)' at '\(r.destination)'")
+        XCTAssertEqual(r.exitCode, 0, "Generation failed using templates '\(template.path)' at '\(r.destination)'")
     }
 
     private func assertSetup() {

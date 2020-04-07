@@ -30,4 +30,4 @@ versionSources:
 - 'Cartfile'
 
 options:
-  templatesPath: '../../../../../../Templates/xcodegen'
+  templatesPath: '../../../../../Templates/Swift_BuildSystem_Bazel'

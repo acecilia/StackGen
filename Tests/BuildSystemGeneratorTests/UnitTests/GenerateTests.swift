@@ -5,18 +5,18 @@ import BuildSystemGeneratorKit
 
 final class GenerateTests: RuntimeTestCase {
     static func testSpecs() -> [RuntimeTestCaseSpec<GenerateTests>] {
-        return templatesPath.ls().directories.sorted().map { templatePath in
-            RuntimeTestCaseSpec(templatePath.basename()) { $0.templatePath = templatePath }
+        return Template.allCases.map { template in
+            RuntimeTestCaseSpec(template.rawValue) { $0.template = template }
         }
     }
 
-    private var templatePath: Path!
+    private var template: Template!
 
     func runtimeTest() throws {
         // Generate
-        let (testPath, generateExitCode) = try generate(using: templatePath)
+        let (testPath, generateExitCode) = try generate(using: template)
         XCTAssertEqual(generateExitCode, 0)
-        assert(fixure: fixturesPath/templatePath.basename(), equals: testPath)
+        assert(fixure: fixturesPath/template.rawValue, equals: testPath)
 
         // Clean
         let cleanExitCode = clean()

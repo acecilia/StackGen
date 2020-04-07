@@ -30,4 +30,4 @@ versionSources:
 - 'Cartfile'
 
 options:
-  templatesPath: '../../templates/xcodegen'
+  templatesPath: '../YourTemplateFolder'

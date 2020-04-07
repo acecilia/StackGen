@@ -5,7 +5,7 @@ content: |
   mode: "root"
   content: |
     realm/SwiftLint@{{'{{'}}custom.swiftlintVersion}}
-    {% if module.name == "xcodegen" or module.name == "cocoapods" %}
+    {% if module.name == "Swift_BuildSystem_Xcodegen" or module.name == "Swift_BuildSystem_Cocoapods" %}
     yonaskolb/XcodeGen@{{'{{'}}custom.xcodeGenVersion}}
     thii/xcbeautify@{{'{{'}}custom.xcbeautifyVersion}}
     {% endif %}

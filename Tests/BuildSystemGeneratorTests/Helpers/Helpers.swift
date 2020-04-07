@@ -6,6 +6,7 @@ import Path
 let rootPath = Path(#file)!/".."/".."/".."/".."
 let testsOutputPath = rootPath/".testsOutput"
 let templatesPath = rootPath/"Templates"
+
 let carthagePath = examplesPath/"Carthage"/"Build"/"iOS"
 
 let examplesPath = rootPath/"Examples"/"swift"
@@ -24,7 +25,10 @@ func tmp(_ testFilePath: String, _ testName: String, _ templateName: String) thr
     } else {
         testIndex = 0
     }
-    return testOutputPath/"\(testIndex)"
+
+    let finaltestOutputPath = testOutputPath/"\(testIndex)"
+    try finaltestOutputPath.mkdir(.p)
+    return finaltestOutputPath
 }
 
 func functionName(_ methodSignature: String) -> String {
@@ -33,20 +37,24 @@ func functionName(_ methodSignature: String) -> String {
         .replacingOccurrences(of: ")", with: "")
 }
 
-func patchBsgFile(_ path: Path, using templatesPath: Path) throws {
+func patchBsgFile(at path: Path, using templatesPath: Path) throws {
     let bsgFilePath = path/BsgFile.fileName
     let content = try String(contentsOf: bsgFilePath)
-        // Below line is not needed for now, as the Carthage directory gets also copied over when running tests
-        // .replacingOccurrences(of: "Cartfile", with: "\((examplesPath/"Cartfile").relative(to: cwd))")
-        .replacingOccurrences(of: "../../templates/xcodegen", with: templatesPath.relative(to: cwd))
+        .replacingOccurrences(of: "../YourTemplateFolder", with: templatesPath.relative(to: path))
     try bsgFilePath.delete()
     try content.write(to: bsgFilePath)
 }
 
-func generate(using templatesPath: Path, testFilePath: String = #file, function: String = #function) throws -> (destination: Path, exitCode: Int32) {
-    let destination = try examplesPath.copy(into: try tmp(testFilePath, function, templatesPath.basename()))
+func generate(using template: Template, testFilePath: String = #file, function: String = #function) throws -> (destination: Path, exitCode: Int32) {
+    let destination = try tmp(testFilePath, function, template.rawValue)
+
+    if let prefillingPath = template.prefillPath {
+        try destination.delete()
+        try prefillingPath.copy(to: destination)
+        try patchBsgFile(at: destination, using: template.path)
+    }
+
     FileManager.default.changeCurrentDirectoryPath(destination.string)
-    try patchBsgFile(destination, using: templatesPath)
 
     let cli = BuildSystemGeneratorCLI()
     let exitCode = cli.execute(with: [GenerateCommand.name])
