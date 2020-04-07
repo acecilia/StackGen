@@ -15,11 +15,11 @@
 set -euo pipefail
 
 function test() {
-  bazel test --config ios-debug //...
+  bazel test --config ios-debug //Libraries/...
 }
 
 function archive() {
-  bazel query '//... except filter(.*Tests, //...)' | xargs bazel build --config ios-release
+  bazel query '//Libraries/... except filter(.*Tests, //Libraries/...)' | xargs bazel build --config ios-release
 }
 
 function run() {

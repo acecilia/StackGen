@@ -15,8 +15,9 @@ content: |
   build:ios --copt=-swift-version --copt={{custom.swiftVersion}}
   build:ios --copt=-whole-module-optimization # faster compilation (see https://www.skilled.io/u/swiftsummit/swift-with-a-hundred-engineers)
 
-  build:ios --ios_simulator_device="iPhone 8"
-  build:ios --ios_simulator_version="13.4"
+  # For having a more reproducible build, uncomment following lines:
+  # build:ios --ios_simulator_device="iPhone 8"
+  # build:ios --ios_simulator_version="13.4"
 
   ###################################
   # iOS release build flavour
