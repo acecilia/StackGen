@@ -2,8 +2,7 @@ import Foundation
 import SwiftCLI
 import BuildSystemGeneratorKit
 
-public class CleanCommand: Command {
-    public static let name: String = "clean"
+public class Clean: Command {
     public let shortDescription: String = "Remove all previously generated files"
 
     public init() { }

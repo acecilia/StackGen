@@ -11,9 +11,11 @@ public struct MainContext: Codable {
     public func render(_ basePath: Path, for module: FirstPartyModule.Output? = nil) throws -> [String: Any] {
         var context = try _render(basePath, for: module)
         if basePath != cwd {
+            // Relative to root
             context["rr"] = try _render(cwd, for: module)
         }
         if let modulePath = module?.path, basePath != modulePath {
+            // Relative to module
             context["rm"] = try _render(cwd, for: module)
         }
         return context

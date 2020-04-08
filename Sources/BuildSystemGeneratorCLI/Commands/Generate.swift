@@ -2,8 +2,7 @@ import Foundation
 import SwiftCLI
 import BuildSystemGeneratorKit
 
-public class GenerateCommand: Command {
-    public static let name: String = "generate"
+public class Generate: Command {
     public let shortDescription: String = "Generates build system configurations for swift projects"
 
     public init() { }

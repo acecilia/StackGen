@@ -56,14 +56,14 @@ func generate(using template: Template, testFilePath: String = #file, function: 
 
     FileManager.default.changeCurrentDirectoryPath(destination.string)
 
-    let cli = BuildSystemGeneratorCLI()
-    let exitCode = cli.execute(with: [GenerateCommand.name])
+    let cli = CLI()
+    let exitCode = cli.execute(with: [Generate.name])
 
     return (destination: destination, exitCode: exitCode)
 }
 
 func clean() -> Int32 {
-    let cli = BuildSystemGeneratorCLI()
-    return cli.execute(with: [CleanCommand.name])
+    let cli = CLI()
+    return cli.execute(with: [Clean.name])
 }
 
