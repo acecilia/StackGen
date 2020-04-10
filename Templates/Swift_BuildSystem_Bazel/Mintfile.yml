@@ -1,4 +1,5 @@
-name: "Mintfile"
-mode: "root"
-content: |
-  realm/SwiftLint@{{custom.swiftlintVersion}}
+mode: root
+template:
+  outputPath: Mintfile
+  content: |
+    realm/SwiftLint@{{custom.swiftlintVersion}}

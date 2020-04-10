@@ -41,55 +41,49 @@ extension FirstPartyModule.Input {
 
 }
 
-extension TemplateFile {
-
-    enum CodingKeys: String, CodingKey {
-        case name
-        case mode
-        case subdir
-        case moduleFilter
-        case content
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        name = try container.decode(String.self, forKey: .name)
-        mode = try container.decode(Mode.self, forKey: .mode)
-        subdir = (try? container.decode(String.self, forKey: .subdir)) ?? TemplateFile.defaultSubdir
-        moduleFilter = (try? container.decode(RegularExpression.self, forKey: .moduleFilter)) ?? TemplateFile.defaultModuleFilter
-        content = try container.decode(String.self, forKey: .content)
-    }
-
-}
-
-extension TemplateFile.Mode {
+extension TemplateSpec.Mode.FullValue {
 
     enum CodingKeys: String, CodingKey {
         case module
         case moduleToRoot
         case root
+        case filter
     }
 
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
+     init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        let enumCase = try container.decode(String.self)
-        switch enumCase {
-        case CodingKeys.module.rawValue: self = .module
-        case CodingKeys.moduleToRoot.rawValue: self = .moduleToRoot
-        case CodingKeys.root.rawValue: self = .root
-        default: throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "Unknown enum case '\(enumCase)'"))
+        if container.allKeys.contains(.module), try container.decodeNil(forKey: .module) == false {
+            let associatedValues = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .module)
+            let filter = try associatedValues.decode(RegularExpression?.self, forKey: .filter)
+            self = .module(filter: filter)
+            return
         }
+        if container.allKeys.contains(.moduleToRoot), try container.decodeNil(forKey: .moduleToRoot) == false {
+            let associatedValues = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .moduleToRoot)
+            let filter = try associatedValues.decode(RegularExpression?.self, forKey: .filter)
+            self = .moduleToRoot(filter: filter)
+            return
+        }
+        if container.allKeys.contains(.root), try container.decodeNil(forKey: .root) == false {
+            self = .root
+            return
+        }
+        throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "Unknown enum case"))
     }
 
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
+     func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
 
         switch self {
-        case .module: try container.encode(CodingKeys.module.rawValue)
-        case .moduleToRoot: try container.encode(CodingKeys.moduleToRoot.rawValue)
-        case .root: try container.encode(CodingKeys.root.rawValue)
+        case let .module(filter):
+            var associatedValues = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .module)
+            try associatedValues.encode(filter, forKey: .filter)
+        case let .moduleToRoot(filter):
+            var associatedValues = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .moduleToRoot)
+            try associatedValues.encode(filter, forKey: .filter)
+        case .root:
+            _ = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .root)
         }
     }
 

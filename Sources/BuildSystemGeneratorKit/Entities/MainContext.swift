@@ -3,27 +3,22 @@ import Path
 import StringCodable
 
 public struct MainContext: Codable {
-    public let global: Global
     public let custom: [String: StringCodable]
     public let firstPartyModules: [FirstPartyModule.Output]
     public let thirdPartyModules: [ThirdPartyModule.Output]
+    public let global: Global
+    public let module: FirstPartyModule.Output?
 
-    public func render(_ basePath: Path, for module: FirstPartyModule.Output? = nil) throws -> [String: Any] {
-        var context = try _render(basePath, for: module)
+    public func render(_ basePath: Path) throws -> [String: Any] {
+        var context = try asDictionary(basePath)
         if basePath != cwd {
             // Relative to root
-            context["rr"] = try _render(cwd, for: module)
+            context["rr"] = try asDictionary(cwd)
         }
         if let modulePath = module?.path, basePath != modulePath {
             // Relative to module
-            context["rm"] = try _render(cwd, for: module)
+            context["rm"] = try asDictionary(cwd)
         }
-        return context
-    }
-
-    private func _render(_ basePath: Path, for module: FirstPartyModule.Output? = nil) throws -> [String: Any] {
-        var context = try self.asDictionary(basePath)
-        context["module"] = try module?.asDictionary(basePath)
         return context
     }
 }
@@ -41,4 +36,3 @@ private extension Encodable {
         return dictionary
     }
 }
-

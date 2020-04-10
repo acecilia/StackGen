@@ -1,71 +1,72 @@
-name: "BUILD.bazel"
-mode: "module"
-content: |
-  load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
-  load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
-  {% if "App" in module.name %}
-  load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application")
-  {% endif %}
-
-  ##########################
-  # Main module rules
-  ##########################
-
-  swift_library(
-    name = "{{module.name}}",
-    srcs = glob(["src/main/swift/**/*.swift"]),
-    deps = [
-      {% for dependency in rr.module.dependencies.main|default:"" %}
-      {% if dependency.type == "firstParty" %}
-      "//{{dependency.path}}:{{dependency.name}}",
-      {% elif (dependency.type == "thirdParty") and ("Cartfile" in dependency.source) %}
-      "//:{{dependency.name}}",
-      {% endif %}
-      {% endfor %}
-    ],
-    module_name = "{{module.name}}",
-    visibility = ["//visibility:public"],
-  )
-  {% if "App" in module.name %}
-
-  ios_application(
-      name = "{{module.name}}Bundle",
-      bundle_id = "{{custom.bundleIdPrefix}}.{{module.name}}",
-      families = ["iphone", "ipad",],
-      infoplists = ["SupportingFiles/Info.plist"],
-      minimum_os_version = "{{custom.minimumDeploymentTarget}}",
-      deps = ["{{module.name}}"],
-      visibility = ["//visibility:public"],
-  )
-  {% endif %}
-
-  ##########################
-  # Unit test rules
-  ##########################
-
-  swift_library(
-    name = "{{module.name}}TestsLib",
-    srcs = glob(["src/test/swift/**/*.swift"]),
-    deps = [
-      ":{{module.name}}",
-      {% for dependency in rr.module.dependencies.test|default:"" %}
-      {% if dependency.type == "firstParty" %}
-      "//{{dependency.path}}:{{dependency.name}}",
-      {% elif (dependency.type == "thirdParty") and ("Cartfile" in dependency.source) %}
-      "//:{{dependency.name}}",
-      {% endif %}
-      {% endfor %}
-    ],
-    module_name = "{{module.name}}Tests",
-  )
-
-  ios_unit_test(
-    name = "{{module.name}}Tests",
-    deps = [":{{module.name}}TestsLib"],
-    minimum_os_version = "{{custom.minimumDeploymentTarget}}",
+mode: module
+template:
+  outputPath: BUILD.bazel
+  content: |
+    load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+    load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
     {% if "App" in module.name %}
-    test_host = ":{{module.name}}Bundle",
-    {% else %}
-    test_host = None,
+    load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application")
     {% endif %}
-  )
+
+    ##########################
+    # Main module rules
+    ##########################
+
+    swift_library(
+      name = "{{module.name}}",
+      srcs = glob(["src/main/swift/**/*.swift"]),
+      deps = [
+        {% for dependency in rr.module.dependencies.main|default:"" %}
+        {% if dependency.type == "firstParty" %}
+        "//{{dependency.path}}:{{dependency.name}}",
+        {% elif (dependency.type == "thirdParty") and ("Cartfile" in dependency.source) %}
+        "//:{{dependency.name}}",
+        {% endif %}
+        {% endfor %}
+      ],
+      module_name = "{{module.name}}",
+      visibility = ["//visibility:public"],
+    )
+    {% if "App" in module.name %}
+
+    ios_application(
+        name = "{{module.name}}Bundle",
+        bundle_id = "{{custom.bundleIdPrefix}}.{{module.name}}",
+        families = ["iphone", "ipad",],
+        infoplists = ["SupportingFiles/Info.plist"],
+        minimum_os_version = "{{custom.minimumDeploymentTarget}}",
+        deps = ["{{module.name}}"],
+        visibility = ["//visibility:public"],
+    )
+    {% endif %}
+
+    ##########################
+    # Unit test rules
+    ##########################
+
+    swift_library(
+      name = "{{module.name}}TestsLib",
+      srcs = glob(["src/test/swift/**/*.swift"]),
+      deps = [
+        ":{{module.name}}",
+        {% for dependency in rr.module.dependencies.test|default:"" %}
+        {% if dependency.type == "firstParty" %}
+        "//{{dependency.path}}:{{dependency.name}}",
+        {% elif (dependency.type == "thirdParty") and ("Cartfile" in dependency.source) %}
+        "//:{{dependency.name}}",
+        {% endif %}
+        {% endfor %}
+      ],
+      module_name = "{{module.name}}Tests",
+    )
+
+    ios_unit_test(
+      name = "{{module.name}}Tests",
+      deps = [":{{module.name}}TestsLib"],
+      minimum_os_version = "{{custom.minimumDeploymentTarget}}",
+      {% if "App" in module.name %}
+      test_host = ":{{module.name}}Bundle",
+      {% else %}
+      test_host = None,
+      {% endif %}
+    )

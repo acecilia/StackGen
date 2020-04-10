@@ -1,6 +1,6 @@
 import Foundation
 
-class Resolver {
+class ModuleResolver {
     let firstPartyModules: [FirstPartyModule.Output]
     let thirdPartyModules: [ThirdPartyModule.Output]
 
@@ -100,7 +100,7 @@ class Resolver {
         return FirstPartyModule.Output(
             name: middlewareTarget.name,
             path: middlewareTarget.path,
-            subpaths: middlewareTarget.path.find().type(.directory).map { $0.self },
+            subpaths: middlewareTarget.path.find().map { $0 },
             dependencies: dependencies,
             transitiveDependencies: transitiveDependencies
         )

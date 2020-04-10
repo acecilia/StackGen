@@ -1,11 +1,13 @@
-name: "Mintfile.yml"
-mode: "module"
-content: |
-  name: "Mintfile"
-  mode: "root"
+mode: module
+template:
+  outputPath: Mintfile.yml
   content: |
-    realm/SwiftLint@{{'{{'}}custom.swiftlintVersion}}
-    {% if module.name == "Swift_BuildSystem_Xcodegen" or module.name == "Swift_BuildSystem_Cocoapods" %}
-    yonaskolb/XcodeGen@{{'{{'}}custom.xcodeGenVersion}}
-    thii/xcbeautify@{{'{{'}}custom.xcbeautifyVersion}}
-    {% endif %}
+    mode: root
+    template:
+      outputPath: Mintfile
+      content: |
+        realm/SwiftLint@{{'{{'}}custom.swiftlintVersion}}
+        {% if module.name == "Swift_BuildSystem_Xcodegen" or module.name == "Swift_BuildSystem_Cocoapods" %}
+        yonaskolb/XcodeGen@{{'{{'}}custom.xcodeGenVersion}}
+        thii/xcbeautify@{{'{{'}}custom.xcbeautifyVersion}}
+        {% endif %}

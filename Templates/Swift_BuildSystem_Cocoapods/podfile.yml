@@ -1,39 +1,40 @@
-name: "Podfile"
-mode: "root"
-content: |
-  install! 'cocoapods',
-    :share_schemes_for_development_pods => true,
-    :disable_input_output_paths => true # Workaround for https://github.com/CocoaPods/CocoaPods/issues/9185
+mode: root
+template:
+  outputPath: Podfile
+  content: |
+    install! 'cocoapods',
+      :share_schemes_for_development_pods => true,
+      :disable_input_output_paths => true # Workaround for https://github.com/CocoaPods/CocoaPods/issues/9185
 
-  use_frameworks!
-  workspace 'All'
+    use_frameworks!
+    workspace 'All'
 
-  #################
-  # Binary setup
-  #################
+    #################
+    # Binary setup
+    #################
 
-  # Use binaries instead of source code, to speed up builds
-  $useBinaries = true
+    # Use binaries instead of source code, to speed up builds
+    $useBinaries = true
 
-  if $useBinaries
-      plugin 'cocoapods-binary'
-      enable_bitcode_for_prebuilt_frameworks!
-  end
+    if $useBinaries
+        plugin 'cocoapods-binary'
+        enable_bitcode_for_prebuilt_frameworks!
+    end
 
-  #################
-  # Config
-  #################
+    #################
+    # Config
+    #################
 
-  {% for module in firstPartyModules where "App" in module.name %}
-  target '{{module.name}}' do
-      platform :ios, '{{custom.minimumDeploymentTarget}}'
-      project '{{module.path}}/{{module.name}}.xcodeproj'
-      {% for dependency in module.transitiveDependencies.main|default:"" %}
-      {% if dependency.type == "firstParty" %}
-      pod '{{dependency.name}}', :path => '.', :testspecs => ['Tests']
-      {% elif (dependency.type == "thirdParty") %}
-      pod '{{dependency.name}}', '{{dependency.version}}', :binary => $useBinaries
-      {% endif %}
-      {% endfor %}
-  end
-  {% endfor %}
+    {% for module in firstPartyModules where "App" in module.name %}
+    target '{{module.name}}' do
+        platform :ios, '{{custom.minimumDeploymentTarget}}'
+        project '{{module.path}}/{{module.name}}.xcodeproj'
+        {% for dependency in module.transitiveDependencies.main|default:"" %}
+        {% if dependency.type == "firstParty" %}
+        pod '{{dependency.name}}', :path => '.', :testspecs => ['Tests']
+        {% elif (dependency.type == "thirdParty") %}
+        pod '{{dependency.name}}', '{{dependency.version}}', :binary => $useBinaries
+        {% endif %}
+        {% endfor %}
+    end
+    {% endfor %}

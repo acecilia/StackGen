@@ -1,22 +1,23 @@
-name: "WORKSPACE"
-mode: "root"
-content: |
-  load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+mode: root
+template:
+  outputPath: WORKSPACE
+  content: |
+    load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
-  git_repository(
-      name = "build_bazel_rules_apple",
-      remote = "https://github.com/bazelbuild/rules_apple.git",
-      commit = "8a86023a2d66382e5f481eb177ddf58e6295bfd1", # Latest on master at the time of writing (31-03-2020)
-  )
+    git_repository(
+        name = "build_bazel_rules_apple",
+        remote = "https://github.com/bazelbuild/rules_apple.git",
+        commit = "8a86023a2d66382e5f481eb177ddf58e6295bfd1", # Latest on master at the time of writing (31-03-2020)
+    )
 
-  load("@build_bazel_rules_apple//apple:repositories.bzl", "apple_rules_dependencies")
-  apple_rules_dependencies()
+    load("@build_bazel_rules_apple//apple:repositories.bzl", "apple_rules_dependencies")
+    apple_rules_dependencies()
 
-  load("@build_bazel_rules_swift//swift:repositories.bzl", "swift_rules_dependencies")
-  swift_rules_dependencies()
+    load("@build_bazel_rules_swift//swift:repositories.bzl", "swift_rules_dependencies")
+    swift_rules_dependencies()
 
-  load("@build_bazel_apple_support//lib:repositories.bzl", "apple_support_dependencies")
-  apple_support_dependencies()
+    load("@build_bazel_apple_support//lib:repositories.bzl", "apple_support_dependencies")
+    apple_support_dependencies()
 
-  load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
-  protobuf_deps()
+    load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+    protobuf_deps()

@@ -13,59 +13,39 @@ public class GenerateAction: Action {
         // Resolve modules
         let bsgFileContent = try String(contentsOf: cwd/BsgFile.fileName)
         let bsgFile: BsgFile = try YAMLDecoder().decode(from: bsgFileContent, userInfo: [.relativePath: cwd])
-        let resolver = try Resolver(bsgFile)
-
-        let templateEngine = TemplateEngine(bsgFile.options.templatesPath)
+        let moduleResolver = try ModuleResolver(bsgFile)
 
         // Resolve templates
+        let constants = TemplateResolver.Constants(
+            custom: bsgFile.custom,
+            firstPartyModules: moduleResolver.firstPartyModules,
+            thirdPartyModules: moduleResolver.thirdPartyModules,
+            rootPath: cwd,
+            templatesPath: bsgFile.options.templatesPath
+        )
+        let templateResolver = TemplateResolver(writer: writer, constants: constants)
+
+        // Generate
         for template in bsgFile.options.templatesPath.ls() where template.isFile {
-            let templateFileContent = try String(contentsOf: template)
-            let templateFile: TemplateFile = try YAMLDecoder().decode(from: templateFileContent)
+            let templateSpec: TemplateSpec = try YAMLDecoder().decode(from: try String(contentsOf: template))
 
-            let mainContext = MainContext(
-                global: Global(rootPath: cwd, templatesPath: bsgFile.options.templatesPath, fileName: templateFile.name),
-                custom: bsgFile.custom,
-                firstPartyModules: resolver.firstPartyModules,
-                thirdPartyModules: resolver.thirdPartyModules
-            )
-
-            func write(basePath: Path, module: FirstPartyModule.Output?) throws {
-                if let module = module, templateFile.moduleFilter.wrappedValue.matches(module.name) == false {
-                    return
-                }
-
-                let basePath = basePath/templateFile.subdir
-                let context = try mainContext.render(basePath, for: module)
-
-                let fileName = try templateEngine.render(
-                    templateContent: templateFile.name,
-                    context: context
+            if let inlineTemplate = templateSpec.template {
+                try templateResolver.render(
+                    template: inlineTemplate.content,
+                    relativePath: inlineTemplate.outputPath,
+                    firstPartyModules: moduleResolver.firstPartyModules,
+                    mode: templateSpec.mode
                 )
-
-                let rendered = try templateEngine.render(
-                    templateContent: templateFile.content,
-                    context: context
-                )
-
-                let outputPath = basePath/fileName
-                try outputPath.delete()
-                try outputPath.parent.mkdir()
-                try writer.write(rendered, to: outputPath)
-            }
-
-            switch templateFile.mode {
-            case .module:
-                for module in mainContext.firstPartyModules {
-                    try write(basePath: module.path, module: module)
+            } else {
+                let directoryPath = template.parent/template.basename(dropExtension: true)
+                for template in directoryPath.find().type(.file) {
+                    try templateResolver.render(
+                        template: try String(contentsOf: template),
+                        relativePath: template.relative(to: directoryPath),
+                        firstPartyModules: moduleResolver.firstPartyModules,
+                        mode: templateSpec.mode
+                    )
                 }
-
-            case .moduleToRoot:
-                for module in mainContext.firstPartyModules {
-                    try write(basePath: cwd, module: module)
-                }
-
-            case .root:
-                try write(basePath: cwd, module: nil)
             }
         }
     }
