@@ -1,7 +1,0 @@
-mode: root
-template:
-  outputPath: Gemfile
-  content: |
-    source 'https://rubygems.org' do
-      gem 'lefthook', '{{custom.lefthookVersion}}'
-    end

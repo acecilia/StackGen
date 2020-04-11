@@ -1,0 +1,7 @@
+source 'https://rubygems.org' do
+  gem 'lefthook', '{{'{{'}}custom.lefthookVersion}}'
+  {% if module.name == "Swift_BuildSystem_Cocoapods" %}
+  gem 'cocoapods', '{{'{{'}}custom.cocoapodsVersion}}'
+  gem 'cocoapods-binary', '{{'{{'}}custom.cocoapodsBinaryVersion}}'
+  {% endif %}
+end

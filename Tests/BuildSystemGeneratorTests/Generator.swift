@@ -16,8 +16,8 @@ final class AAA_Generator: XCTestCase {
         let path = rootPath
         FileManager.default.changeCurrentDirectoryPath(path.string)
 
-        let cli = BuildSystemGeneratorCLI()
-        let exitCode = cli.execute(with: [GenerateCommand.name])
+        let cli = CLI()
+        let exitCode = cli.execute(with: [Generate.name])
         XCTAssertEqual(exitCode, 0)
     }
 

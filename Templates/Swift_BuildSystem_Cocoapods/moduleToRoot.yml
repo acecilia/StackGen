@@ -1,0 +1,3 @@
+mode: 
+  moduleToRoot:
+    filter: ((?!App).)*

@@ -1,5 +1,0 @@
-mode: root
-template:
-  outputPath: Mintfile
-  content: |
-    realm/SwiftLint@{{custom.swiftlintVersion}}

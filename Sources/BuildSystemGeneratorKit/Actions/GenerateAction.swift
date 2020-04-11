@@ -48,7 +48,7 @@ public class GenerateAction: Action {
                 )
             } else {
                 let directoryPath = template.parent/template.basename(dropExtension: true)
-                for template in directoryPath.find().type(.file) where !template.basename().hasPrefix(".") {
+                for template in directoryPath.find().type(.file) where template.basename() != ".DS_Store" {
                     try templateResolver.render(
                         template: try String(contentsOf: template),
                         relativePath: template.relative(to: directoryPath),

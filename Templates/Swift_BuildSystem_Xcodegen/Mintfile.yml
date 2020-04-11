@@ -1,7 +1,0 @@
-mode: root
-template:
-  outputPath: Mintfile
-  content: |
-    realm/SwiftLint@{{custom.swiftlintVersion}}
-    yonaskolb/XcodeGen@{{custom.xcodeGenVersion}}
-    thii/xcbeautify@{{custom.xcbeautifyVersion}}
