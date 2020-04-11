@@ -31,27 +31,31 @@ public class GenerateAction: Action {
             firstPartyModules: moduleResolver.firstPartyModules,
             thirdPartyModules: moduleResolver.thirdPartyModules,
             root: cwd,
-            templatesPath: resolvedOptions.templatesPath
+            templatesFile: resolvedOptions.templatesFile
         )
         let templateResolver = TemplateResolver(writer: writer, constants: constants)
 
         // Generate
-        for template in resolvedOptions.templatesPath.ls() where template.isFile {
-            let templateSpec: TemplateSpec = try YAMLDecoder().decode(from: try String(contentsOf: template))
+        let templatesFileContent = try String(contentsOf: resolvedOptions.templatesFile)
+        let templatesFileRaw: TemplatesFileRaw = try YAMLDecoder().decode(from: templatesFileContent)
+        let templatesFile: TemplatesFile = templatesFileRaw.reduce(into: [:]) { (result, pair) in
+            let key = Path(pair.key) ?? resolvedOptions.templatesFile.parent/pair.key
+            result[key] = pair.value
+        }
 
-            if let inlineTemplate = templateSpec.template {
+        for (path, templateSpec) in templatesFile {
+            if path.isFile {
                 try templateResolver.render(
-                    template: inlineTemplate.content,
-                    relativePath: inlineTemplate.outputPath,
+                    template: try String(contentsOf: path),
+                    relativePath: path.basename(),
                     firstPartyModules: moduleResolver.firstPartyModules,
                     mode: templateSpec.mode
                 )
-            } else {
-                let directoryPath = template.parent/template.basename(dropExtension: true)
-                for template in directoryPath.find().type(.file) where template.basename() != ".DS_Store" {
+            } else if path.isDirectory {
+                for template in path.find().type(.file) where template.basename() != ".DS_Store" {
                     try templateResolver.render(
                         template: try String(contentsOf: template),
-                        relativePath: template.relative(to: directoryPath),
+                        relativePath: template.relative(to: path),
                         firstPartyModules: moduleResolver.firstPartyModules,
                         mode: templateSpec.mode
                     )

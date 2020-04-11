@@ -15,6 +15,10 @@ enum Template: String, CaseIterable {
         return templatesPath/rawValue
     }
 
+    var templatesFilePath: Path {
+        return path/"templates.yml"
+    }
+
     var prefillPath: Path? {
         switch self {
         case .Swift_BuildSystem_Bazel, .Swift_BuildSystem_Xcodegen, .Swift_BuildSystem_Cocoapods:

@@ -30,7 +30,7 @@ func functionName(_ methodSignature: String) -> String {
 
 func patchBsgFile(at bsgFilePath: Path, using templatesPath: Path) throws {
     let content = try String(contentsOf: bsgFilePath)
-        .replacingOccurrences(of: "../../Swift_BuildSystem_Xcodegen", with: templatesPath.relative(to: bsgFilePath.parent))
+        .replacingOccurrences(of: "../../Swift_BuildSystem_Xcodegen/templates.yml", with: templatesPath.relative(to: bsgFilePath.parent))
     try bsgFilePath.delete()
     try content.write(to: bsgFilePath)
 }
@@ -47,10 +47,10 @@ func generate(using template: Template, testFilePath: String = #file, function: 
 
     let bsgFilePath = destination/BsgFile.fileName
     if bsgFilePath.exists {
-        try patchBsgFile(at: bsgFilePath, using: template.path)
+        try patchBsgFile(at: bsgFilePath, using: template.templatesFilePath)
         generateCmd = [Generate.name]
     } else {
-        generateCmd = [Generate.name, "-t", template.path.string]
+        generateCmd = [Generate.name, "-t", template.templatesFilePath.string]
     }
 
     FileManager.default.changeCurrentDirectoryPath(destination.string)

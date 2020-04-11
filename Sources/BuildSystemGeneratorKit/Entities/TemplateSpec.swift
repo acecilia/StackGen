@@ -3,14 +3,6 @@ import Path
 
 public struct TemplateSpec: Decodable {
     public let mode: Mode
-    public let template: Inline?
-}
-
-public extension TemplateSpec {
-    struct Inline: Codable {
-        public let outputPath: String
-        public let content: String
-    }
 }
 
 public extension TemplateSpec {

@@ -1,10 +1,43 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
+
+###########################
+# Specify main dependency
+###########################
 
 git_repository(
     name = "build_bazel_rules_apple",
     remote = "https://github.com/bazelbuild/rules_apple.git",
-    commit = "8a86023a2d66382e5f481eb177ddf58e6295bfd1", # Latest on master at the time of writing (31-03-2020)
+    commit = "5131f3d46794bf227d296c82f30c2499c9de3c5b", # Latest on master at the time of writing (11-04-2020)
 )
+
+###########################
+# Specify versions of the dependencies, because at the time of writting (11-04-2020),
+# the rules_apple repository using the latest of master for all of them
+###########################
+
+git_repository(
+    name = "build_bazel_rules_swift",
+    remote = "https://github.com/bazelbuild/rules_swift.git",
+    commit = "111892c77efa489f56f4141d77dd817212cc31fd", # Latest on master at the time of writing (11-04-2020)
+)
+
+git_repository(
+    name = "build_bazel_apple_support",
+    remote = "https://github.com/bazelbuild/apple_support.git",
+    commit = "501b4afb27745c4813a88ffa28acd901408014e4", # Latest on master at the time of writing (11-04-2020)
+)
+
+http_file(
+    name = "xctestrunner",
+    executable = 1,
+    sha256 = "9e46d5782a9dc7d40bc93c99377c091886c180b8c4ffb9f79a19a58e234cdb09",
+    urls = ["https://github.com/google/xctestrunner/releases/download/0.2.11/ios_test_runner.par"]
+)
+
+###########################
+# Load the rest of the dependencies
+###########################
 
 load("@build_bazel_rules_apple//apple:repositories.bzl", "apple_rules_dependencies")
 apple_rules_dependencies()

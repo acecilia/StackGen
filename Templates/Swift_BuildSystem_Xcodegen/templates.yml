@@ -1,0 +1,8 @@
+module:
+  mode: module
+
+root:
+  mode: root
+
+root_tools:
+  mode: root

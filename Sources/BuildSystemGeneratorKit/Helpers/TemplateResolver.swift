@@ -8,7 +8,7 @@ struct TemplateResolver {
         public let firstPartyModules: [FirstPartyModule.Output]
         public let thirdPartyModules: [ThirdPartyModule.Output]
         public let root: Path
-        public let templatesPath: Path
+        public let templatesFile: Path
     }
 
     struct Variables {
@@ -22,7 +22,7 @@ struct TemplateResolver {
     let constants: Constants
 
     init(writer: Writer, constants: Constants) {
-        self.templateEngine = TemplateEngine(constants.templatesPath)
+        self.templateEngine = TemplateEngine(constants.templatesFile)
         self.writer = writer
         self.constants = constants
     }
@@ -35,7 +35,7 @@ struct TemplateResolver {
             global: Global(
                 root: constants.root,
                 rootBasename: constants.root.basename(),
-                templatesPath: constants.templatesPath,
+                templatesPath: constants.templatesFile,
                 parent: variables.path.parent,
                 fileName: variables.path.basename()
             ),

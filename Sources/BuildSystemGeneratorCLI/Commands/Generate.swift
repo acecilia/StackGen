@@ -6,14 +6,14 @@ import Path
 public class Generate: Command {
     public let shortDescription: String = "Generates build system configurations for swift projects"
 
-    @Key("-t", "--templatesPath", description: "The path containing the templates to use")
-    var templatesPath: Path?
+    @Key("-t", "--templatesFile", description: "The path pointing to the templates file to use")
+    var templatesFile: Path?
 
     public init() { }
 
     public func execute() throws {
         let options = Options.Input(
-            templatesPath: templatesPath
+            templatesFile: templatesFile
         )
         try GenerateAction(options).execute()
     }

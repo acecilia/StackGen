@@ -27,7 +27,7 @@ modules:
 - name: SwiftModule3
 
 versionSources:
-- 'Cartfile'
+- Cartfile
 
 options:
-  templatesPath: '../../Swift_BuildSystem_Xcodegen'
+  templatesFile: ../../Swift_BuildSystem_Xcodegen/templates.yml
