@@ -1,16 +1,19 @@
-/*
-// This tests are only used during development
-
 import XCTest
 import BuildSystemGeneratorCLI
 import BuildSystemGeneratorKit
 import Path
 import Foundation
 
-final class DevelopmentTests: XCTestCase {
+// These tests are only used during development. Control if they are enabled with the macro below
+#if false
+typealias DevelomentTestCase = XCTestCase
+#else
+typealias DevelomentTestCase = NSObject
+#endif
+
+final class DevelopmentTests: DevelomentTestCase {
     func testRun() throws {
-        let path = templatesPath/"bazel"
-        let result = try generate(using: path)
+        let result = try generate(using: .Swift_BuildSystem_Bazel)
         runCommand("""
         osascript -e 'tell application "Terminal" to do script "cd \(result.destination); lefthook run pre-commit"'
         osascript -e 'tell application "Terminal"' -e 'activate' -e 'end tell'
@@ -18,5 +21,3 @@ final class DevelopmentTests: XCTestCase {
         XCTAssertEqual(0, 1)
     }
 }
-
-// */

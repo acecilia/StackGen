@@ -30,7 +30,7 @@ func functionName(_ methodSignature: String) -> String {
 
 func patchBsgFile(at bsgFilePath: Path, using templatesPath: Path) throws {
     let content = try String(contentsOf: bsgFilePath)
-        .replacingOccurrences(of: "../YourTemplateFolder", with: templatesPath.relative(to: bsgFilePath.parent))
+        .replacingOccurrences(of: "../../Swift_BuildSystem_Xcodegen", with: templatesPath.relative(to: bsgFilePath.parent))
     try bsgFilePath.delete()
     try content.write(to: bsgFilePath)
 }

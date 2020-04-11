@@ -1,12 +1,16 @@
-/*
-// This tests are used to regenerate the fixtures and other files
-
 import XCTest
 import BuildSystemGeneratorCLI
 import BuildSystemGeneratorKit
 import Path
 
-final class AAA_Generator: XCTestCase {
+// This tests are used to regenerate the fixtures and other files. They are enabled by default, but disabled on CI
+#if DISABLE_GENERATOR
+typealias GeneratorTestCase = NSObject
+#else
+typealias GeneratorTestCase = XCTestCase
+#endif
+
+final class AAA_Generator: GeneratorTestCase {
     func test_01_Clean() throws {
         try fixturesPath.delete()
         try testsOutputPath.delete()
@@ -33,5 +37,3 @@ final class AAA_Generator: XCTestCase {
         Snapshot.recording = false
     }
 }
-
-// */

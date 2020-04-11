@@ -43,7 +43,7 @@ jobs:
     #       ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-spm-
     - name: Limit cache
       run: |
-        cache_paths="Examples/swift/Carthage .build /private/var/tmp/_bazel_runner"
+        cache_paths="Examples/swift/Carthage /private/var/tmp/_bazel_runner"
         echo "Cache sizes:"
         echo "$(du -sch $cache_paths)"
         total_cache_size=$(du -smc $cache_paths | grep total | cut -f1)
@@ -64,4 +64,4 @@ jobs:
       run: sh scripts/setup.sh
     
     - name: Tests
-      run: swift test
+      run: swift test -Xswiftc -D -Xswiftc DISABLE_GENERATOR
