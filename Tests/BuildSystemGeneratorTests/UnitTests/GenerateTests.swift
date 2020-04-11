@@ -18,9 +18,11 @@ final class GenerateTests: RuntimeTestCase {
         XCTAssertEqual(generateExitCode, 0)
         assert(fixure: fixturesPath/template.rawValue, equals: testPath)
 
-        // Clean
-        let cleanExitCode = clean()
-        XCTAssertEqual(cleanExitCode, 0)
-        assert(reference: examplesPath, equals: testPath, exclude: [BsgFile.fileName])
+        if let prefillPath = template.prefillPath {
+            // Clean
+            let cleanExitCode = clean()
+            XCTAssertEqual(cleanExitCode, 0)
+            assert(reference: prefillPath, equals: testPath, exclude: [BsgFile.fileName])
+        }
     }
 }

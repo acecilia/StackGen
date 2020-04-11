@@ -17,18 +17,9 @@ func tmp(_ testFilePath: String, _ testName: String, _ templateName: String) thr
         fatalError("The path to the test file is malformed")
     }
     let testOutputPath = testsOutputPath/testFileName/functionName(testName)/templateName
+    try testOutputPath.delete()
     try testOutputPath.mkdir(.p)
-    let testFolders = testOutputPath.ls().directories.sorted()
-    let testIndex: Int
-    if let lastTestIndex = testFolders.compactMap({ Int($0.basename()) }).max() {
-        testIndex = lastTestIndex + 1
-    } else {
-        testIndex = 0
-    }
-
-    let finaltestOutputPath = testOutputPath/"\(testIndex)"
-    try finaltestOutputPath.mkdir(.p)
-    return finaltestOutputPath
+    return testOutputPath
 }
 
 func functionName(_ methodSignature: String) -> String {
@@ -37,10 +28,9 @@ func functionName(_ methodSignature: String) -> String {
         .replacingOccurrences(of: ")", with: "")
 }
 
-func patchBsgFile(at path: Path, using templatesPath: Path) throws {
-    let bsgFilePath = path/BsgFile.fileName
+func patchBsgFile(at bsgFilePath: Path, using templatesPath: Path) throws {
     let content = try String(contentsOf: bsgFilePath)
-        .replacingOccurrences(of: "../YourTemplateFolder", with: templatesPath.relative(to: path))
+        .replacingOccurrences(of: "../YourTemplateFolder", with: templatesPath.relative(to: bsgFilePath.parent))
     try bsgFilePath.delete()
     try content.write(to: bsgFilePath)
 }
@@ -51,13 +41,22 @@ func generate(using template: Template, testFilePath: String = #file, function: 
     if let prefillingPath = template.prefillPath {
         try destination.delete()
         try prefillingPath.copy(to: destination)
-        try patchBsgFile(at: destination, using: template.path)
+    }
+
+    let generateCmd: [String]
+
+    let bsgFilePath = destination/BsgFile.fileName
+    if bsgFilePath.exists {
+        try patchBsgFile(at: bsgFilePath, using: template.path)
+        generateCmd = [Generate.name]
+    } else {
+        generateCmd = [Generate.name, "-t", template.path.string]
     }
 
     FileManager.default.changeCurrentDirectoryPath(destination.string)
 
     let cli = CLI()
-    let exitCode = cli.execute(with: [Generate.name])
+    let exitCode = cli.execute(with: generateCmd)
 
     return (destination: destination, exitCode: exitCode)
 }

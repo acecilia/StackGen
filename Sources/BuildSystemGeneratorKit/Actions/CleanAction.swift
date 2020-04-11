@@ -7,7 +7,7 @@ public class CleanAction: Action {
         let writer = Writer()
         writer.shouldWrite = false
 
-        let generateAction = GenerateAction(writer)
+        let generateAction = GenerateAction(Options.Input(), writer)
         try generateAction.execute()
 
         for path in writer.writtenFiles {

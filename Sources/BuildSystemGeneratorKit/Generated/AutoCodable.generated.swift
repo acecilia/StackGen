@@ -20,7 +20,7 @@ extension BsgFile {
         custom = (try? container.decode([String: StringCodable].self, forKey: .custom)) ?? BsgFile.defaultCustom
         modules = (try? container.decode([FirstPartyModule.Input].self, forKey: .modules)) ?? BsgFile.defaultModules
         versionSources = (try? container.decode([Path].self, forKey: .versionSources)) ?? BsgFile.defaultVersionSources
-        options = try container.decode(Options.self, forKey: .options)
+        options = (try? container.decode(Options.Input.self, forKey: .options)) ?? BsgFile.defaultOptions
     }
 
 }

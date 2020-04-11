@@ -7,7 +7,7 @@ struct TemplateResolver {
         public let custom: [String: StringCodable]
         public let firstPartyModules: [FirstPartyModule.Output]
         public let thirdPartyModules: [ThirdPartyModule.Output]
-        public let rootPath: Path
+        public let root: Path
         public let templatesPath: Path
     }
 
@@ -33,9 +33,10 @@ struct TemplateResolver {
             firstPartyModules: constants.firstPartyModules,
             thirdPartyModules: constants.thirdPartyModules,
             global: Global(
-                rootPath: constants.rootPath,
+                root: constants.root,
+                rootBasename: constants.root.basename(),
                 templatesPath: constants.templatesPath,
-                parentPath: variables.path.parent,
+                parent: variables.path.parent,
                 fileName: variables.path.basename()
             ),
             module: variables.module
@@ -64,7 +65,7 @@ struct TemplateResolver {
         }()
 
         try outputPath.delete()
-        try outputPath.parent.mkdir()
+        try outputPath.parent.mkdir(.p)
         try writer.write(rendered, to: outputPath)
     }
 

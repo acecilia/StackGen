@@ -27,7 +27,10 @@ public extension CustomError {
 
         // Dependency lookup
         case multipleModulesWithSameNameFoundAmongDetectedModules(_ moduleName: String, _ detectedModules: [String])
-        
+
+        // Paramenters
+        case requiredParameterNotFound(name: String)
+    
         public var description: String {
             switch self {
             case .moduleCouldNotBeFoundInSources(let moduleName, let sources):
@@ -48,6 +51,9 @@ public extension CustomError {
 
             case .multipleModulesWithSameNameFoundAmongDetectedModules(let moduleName, let detectedModules):
                 return "Multiple modules with the same name ('\(moduleName)') were found among the detected modules: '\(detectedModules)'"
+
+            case let .requiredParameterNotFound(name):
+                return "Required parameter not found. Parameter: '\(name)'"
             }
         }
     }

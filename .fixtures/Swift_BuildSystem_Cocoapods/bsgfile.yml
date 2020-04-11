@@ -30,4 +30,4 @@ versionSources:
 - 'Cartfile'
 
 options:
-  templatesPath: '../../../../../Templates/Swift_BuildSystem_Cocoapods'
+  templatesPath: '../../../../Templates/Swift_BuildSystem_Cocoapods'

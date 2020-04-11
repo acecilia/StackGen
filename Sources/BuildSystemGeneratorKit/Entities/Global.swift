@@ -3,10 +3,11 @@ import Path
 
 public struct Global: Codable {
     // Constants
-    public let rootPath: Path
+    public let root: Path
+    public let rootBasename: String
     public let templatesPath: Path
 
     // Variables
-    public let parentPath: Path
+    public let parent: Path
     public let fileName: String
 }

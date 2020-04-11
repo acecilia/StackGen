@@ -9,6 +9,7 @@ enum Template: String, CaseIterable {
     case Swift_BuildSystem_Bazel
     case Swift_BuildSystem_Cocoapods
     case Swift_BuildSystem_Xcodegen
+    case Swift_Starter_CommandLine
 
     var path: Path {
         return templatesPath/rawValue
@@ -18,6 +19,9 @@ enum Template: String, CaseIterable {
         switch self {
         case .Swift_BuildSystem_Bazel, .Swift_BuildSystem_Xcodegen, .Swift_BuildSystem_Cocoapods:
             return examplesPath
+
+        case .Swift_Starter_CommandLine:
+            return nil
         }
     }
 }

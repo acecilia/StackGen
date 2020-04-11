@@ -50,8 +50,9 @@ final class ContextTests: XCTestCase {
           transitiveDependencies: {}
         global:
           fileName: someFileName
-          parentPath: somePath
-          rootPath: ..
+          parent: somePath
+          root: ..
+          rootBasename: something
           templatesPath: ../Templates
         thirdPartyModules:
         - name: FileKit
