@@ -30,6 +30,9 @@ public extension CustomError {
 
         // Paramenters
         case requiredParameterNotFound(name: String)
+
+        // Templates
+        case templateNotFound(relativePath: String)
     
         public var description: String {
             switch self {
@@ -53,7 +56,10 @@ public extension CustomError {
                 return "Multiple modules with the same name ('\(moduleName)') were found among the detected modules: '\(detectedModules)'"
 
             case let .requiredParameterNotFound(name):
-                return "Required parameter not found. Parameter: '\(name)'"
+                return "Required parameter not passed as command line argument neither found in the '\(BsgFile.fileName)' file. Parameter: '\(name)'"
+
+            case let .templateNotFound(relativePath):
+                return "Templates folder not found for path '\(relativePath)'"
             }
         }
     }

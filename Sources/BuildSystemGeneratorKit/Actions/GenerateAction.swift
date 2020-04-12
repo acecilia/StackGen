@@ -3,11 +3,11 @@ import Yams
 import Path
 
 public class GenerateAction: Action {
-    private let options: Options.Input
+    private let cliOptions: Options.Input
     private let writer: Writer
 
-    public init(_ options: Options.Input, _ writer: Writer = Writer()) {
-        self.options = options
+    public init(_ cliOptions: Options.Input, _ writer: Writer = Writer()) {
+        self.cliOptions = cliOptions
         self.writer = writer
     }
 
@@ -23,7 +23,8 @@ public class GenerateAction: Action {
         }
         let moduleResolver = try ModuleResolver(bsgFile)
 
-        let resolvedOptions = try bsgFile.options.resolve(using: options)
+        let resolvedOptions = try bsgFile.options.resolve(using: cliOptions)
+        let templateFilePath = try TemplateSpec.selectTemplate(resolvedOptions.templatesPath)
 
         // Resolve templates
         let constants = TemplateResolver.Constants(
@@ -31,15 +32,15 @@ public class GenerateAction: Action {
             firstPartyModules: moduleResolver.firstPartyModules,
             thirdPartyModules: moduleResolver.thirdPartyModules,
             root: cwd,
-            templatesFile: resolvedOptions.templatesFile
+            templatesFile: templateFilePath
         )
         let templateResolver = TemplateResolver(writer: writer, constants: constants)
 
         // Generate
-        let templatesFileContent = try String(contentsOf: resolvedOptions.templatesFile)
+        let templatesFileContent = try String(contentsOf: templateFilePath)
         let templatesFileRaw: TemplatesFileRaw = try YAMLDecoder().decode(from: templatesFileContent)
         let templatesFile: TemplatesFile = templatesFileRaw.reduce(into: [:]) { (result, pair) in
-            let key = Path(pair.key) ?? resolvedOptions.templatesFile.parent/pair.key
+            let key = Path(pair.key) ?? templateFilePath.parent/pair.key
             result[key] = pair.value
         }
 

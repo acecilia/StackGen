@@ -3,21 +3,21 @@ import Path
 
 public enum Options {
     public struct Input: Codable {
-        public let templatesFile: Path?
+        public let templatesPath: String?
 
-        public init(templatesFile: Path? = nil) {
-            self.templatesFile = templatesFile
+        public init(templatesPath: String? = nil) {
+            self.templatesPath = templatesPath
         }
 
         public func resolve(using cliOptions: Options.Input) throws -> Resolved {
             return Resolved(
-                templatesFile: try (cliOptions.templatesFile ?? self.templatesFile).require(parameter: "templatesFile")
+                templatesPath: try (cliOptions.templatesPath ?? self.templatesPath).require(parameter: "templatesPath")
             )
         }
     }
 
     public struct Resolved {
-        public let templatesFile: Path
+        public let templatesPath: String
     }
 }
 

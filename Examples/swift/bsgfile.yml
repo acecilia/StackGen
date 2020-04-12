@@ -30,4 +30,4 @@ versionSources:
 - Cartfile
 
 options:
-  templatesFile: ../../Swift_BuildSystem_Xcodegen/templates.yml
+  templatesPath: Swift_BuildSystem_Xcodegen

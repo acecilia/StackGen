@@ -5,4 +5,4 @@ modules:
 # - name: Templates/Swift_Starter_CommandLine
 
 options:
-  templatesFile: TemplatesSelfGenerate/templates.yml
+  templatesPath: TemplatesSelfGenerate

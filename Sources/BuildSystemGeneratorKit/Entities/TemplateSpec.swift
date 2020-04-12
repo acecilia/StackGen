@@ -2,7 +2,38 @@ import Foundation
 import Path
 
 public struct TemplateSpec: Decodable {
+    public static let fileName = "templates.yml"
+    public static let defaultFolderName = "Templates"
+
     public let mode: Mode
+
+    public static func selectTemplate(_ relativePath: String) throws -> Path {
+        let paths: [Path?] = [
+            // First: treat as absolut path
+            Path(relativePath),
+            // Second: check relative to the current location
+            cwd/relativePath,
+            // Third: check the bundled templates. They should be located next to the binary (follow symlinks if needed)
+            try? Bundle.main.executable?.readlink().parent.join(TemplateSpec.defaultFolderName).join(relativePath),
+            // Fourth: check the path relative to this file (to be used during development)
+            Path(#file)?.parent.parent.parent.parent.join(TemplateSpec.defaultFolderName).join(relativePath)
+            ]
+
+        return try paths
+            .compactMap { $0 }
+            .map { $0/TemplateSpec.fileName }
+            .first { $0.exists }
+            .require(relativePath)
+    }
+}
+
+private extension Optional {
+    func require(_ relativePath: String) throws -> Wrapped {
+        guard let unwrapped = self else {
+            throw CustomError(.templateNotFound(relativePath: relativePath))
+        }
+        return unwrapped
+    }
 }
 
 public extension TemplateSpec {
