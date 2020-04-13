@@ -19,9 +19,9 @@ public class CLI {
     }
 
     public func execute(with arguments: [String] = []) -> Int32 {
-        Reporter.start(arguments)
+        reporter.start(arguments)
         let status = cli.go(with: arguments)
-        Reporter.end(status)
+        reporter.end(status)
         return status
     }
 }

@@ -24,7 +24,7 @@ public class MessageGenerator: HelpMessageGenerator {
     }
 
     public func writeErrorLine(for errorMessage: String, to out: WritableStream) {
-        let message = Reporter.formatAsError(errorMessage)
+        let message = reporter.formatAsError(errorMessage)
         out.print(message)
     }
 }

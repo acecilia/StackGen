@@ -1,1 +1,1 @@
-public var Reporter: ReporterInterface = DefaultReporter()
+public var reporter: ReporterInterface = DefaultReporter()

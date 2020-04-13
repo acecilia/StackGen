@@ -1,5 +1,7 @@
 import Foundation
 
+public var reporter: ReporterInterface = DefaultReporter()
+
 public protocol ReporterInterface {
     func start(_ arguments: [String])
     func info(_ string: String)

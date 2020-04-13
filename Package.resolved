@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "ObjectiveKit",
+        "repositoryURL": "https://github.com/acecilia/ObjectiveKit",
+        "state": {
+          "branch": null,
+          "revision": "ee3121f040da27e892ccddc05b76fb3c328a0337",
+          "version": null
+        }
+      },
+      {
         "package": "Path.swift",
         "repositoryURL": "https://github.com/mxcl/Path.swift.git",
         "state": {
@@ -24,7 +33,7 @@
         "repositoryURL": "https://github.com/acecilia/RuntimeTestCaseSwift",
         "state": {
           "branch": null,
-          "revision": "1e922a3f55cf16db665e83c958a697bae665e8d9",
+          "revision": "e2c6ed3fc47279c85c5e5750a600e5e9ab86a0c9",
           "version": null
         }
       },

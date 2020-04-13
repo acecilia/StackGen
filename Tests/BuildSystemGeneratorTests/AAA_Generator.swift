@@ -31,8 +31,7 @@ final class AAA_Generator: GeneratorTestCase {
         Snapshot.recording = true
         for testSpec in GenerateTests.testSpecs() {
             let test = GenerateTests()
-            testSpec.setup(test)
-            try test.runtimeTest()
+            try testSpec.implementation(test)
         }
         Snapshot.recording = false
     }

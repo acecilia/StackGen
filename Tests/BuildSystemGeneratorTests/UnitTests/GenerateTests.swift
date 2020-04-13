@@ -6,13 +6,13 @@ import BuildSystemGeneratorKit
 final class GenerateTests: RuntimeTestCase {
     static func testSpecs() -> [RuntimeTestCaseSpec<GenerateTests>] {
         return Template.allCases.map { template in
-            RuntimeTestCaseSpec(template.rawValue) { $0.template = template }
+            RuntimeTestCaseSpec(template.rawValue) { testCase in
+                try testCase.generateTest(template)
+            }
         }
     }
 
-    private var template: Template!
-
-    func runtimeTest() throws {
+    func generateTest(_ template: Template) throws {
         // Generate
         let (testPath, generateExitCode) = try generate(using: template)
         XCTAssertEqual(generateExitCode, 0)

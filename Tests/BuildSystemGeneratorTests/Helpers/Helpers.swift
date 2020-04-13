@@ -23,9 +23,7 @@ func tmp(_ testFilePath: String, _ testName: String, _ templateName: String) thr
 }
 
 func functionName(_ methodSignature: String) -> String {
-    return methodSignature
-        .replacingOccurrences(of: "(", with: "")
-        .replacingOccurrences(of: ")", with: "")
+    methodSignature.components(separatedBy: "(")[0]
 }
 
 func patchBsgFile(at bsgFilePath: Path, using template: Template) throws {
