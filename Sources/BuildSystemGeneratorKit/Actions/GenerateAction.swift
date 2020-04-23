@@ -21,7 +21,7 @@ public class GenerateAction: Action {
         } else {
             bsgFile = try YAMLDecoder().decode(from: "{}", userInfo: [.relativePath: cwd])
         }
-        let moduleResolver = try ModuleResolver(bsgFile)
+        let (firstPartyModules, thirdPartyModules) = try ModuleResolver(bsgFile).resolve()
 
         let resolvedOptions = try bsgFile.options.resolve(using: cliOptions)
         let templateFilePath = try TemplateSpec.selectTemplate(resolvedOptions.templatesPath)
@@ -29,8 +29,8 @@ public class GenerateAction: Action {
         // Resolve templates
         let constants = TemplateResolver.Constants(
             custom: bsgFile.custom,
-            firstPartyModules: moduleResolver.firstPartyModules,
-            thirdPartyModules: moduleResolver.thirdPartyModules,
+            firstPartyModules: firstPartyModules,
+            thirdPartyModules: thirdPartyModules,
             root: cwd,
             templatesFile: templateFilePath
         )
@@ -49,7 +49,7 @@ public class GenerateAction: Action {
                 try templateResolver.render(
                     template: try String(contentsOf: path),
                     relativePath: path.basename(),
-                    firstPartyModules: moduleResolver.firstPartyModules,
+                    firstPartyModules: firstPartyModules,
                     mode: templateSpec.mode
                 )
             } else if path.isDirectory {
@@ -57,7 +57,7 @@ public class GenerateAction: Action {
                     try templateResolver.render(
                         template: try String(contentsOf: template),
                         relativePath: template.relative(to: path),
-                        firstPartyModules: moduleResolver.firstPartyModules,
+                        firstPartyModules: firstPartyModules,
                         mode: templateSpec.mode
                     )
                 }

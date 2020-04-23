@@ -43,6 +43,7 @@ let package = Package(
                 "Path",
                 "Version",
                 "StringCodable",
+                "SwiftCLI"
             ]
         ),
         .testTarget(
