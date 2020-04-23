@@ -1,17 +1,26 @@
 import Foundation
+import Path
 
 class ModuleResolver {
-    let firstPartyModules: [FirstPartyModule.Output]
-    let thirdPartyModules: [ThirdPartyModule.Output]
+    private let bsgFile: BsgFile
+    private let subpaths: [Path]
+    private let versionResolver: VersionResolver
+    private var modulesCache: [String: FirstPartyModule.Output] = [:]
 
     init(_ bsgFile: BsgFile) throws {
-        let middlewareModules = try bsgFile.modules.map { try Self.resolve($0) }
-        let versionResolver = try VersionResolver(bsgFile.versionSources)
-        self.firstPartyModules = try Self.resolve(middlewareModules, using: versionResolver)
-        self.thirdPartyModules = Self.extractThirdPartyModules(firstPartyModules)
+        self.bsgFile = bsgFile
+        self.subpaths = try cwd.fastFindDirectories()
+        self.versionResolver = try VersionResolver(bsgFile.versionSources)
     }
 
-    private static func extractThirdPartyModules(_ modules: [FirstPartyModule.Output]) -> [ThirdPartyModule.Output] {
+    func resolve() throws -> (firstPartyModules: [FirstPartyModule.Output], thirdPartyModules: [ThirdPartyModule.Output]) {
+        let middlewareModules = try bsgFile.modules.map { try resolve($0) }
+        let firstPartyModules = try resolve(middlewareModules)
+        let thirdPartyModules = extractThirdPartyModules(firstPartyModules)
+        return (firstPartyModules, thirdPartyModules)
+    }
+
+    private func extractThirdPartyModules(_ modules: [FirstPartyModule.Output]) -> [ThirdPartyModule.Output] {
         var thirdPartyModules: Set<ThirdPartyModule.Output> = []
         for module in modules {
             for (_, targetDependencies) in module.dependencies {
@@ -25,9 +34,8 @@ class ModuleResolver {
         return Array(thirdPartyModules).sorted { $0.name < $1.name }
     }
 
-    private static func resolve(_ module: FirstPartyModule.Input) throws -> FirstPartyModule.Middleware {
-        let directories = cwd.find().type(.directory).map { $0 }
-        let pathCandidates = directories.filter { $0.string.hasSuffix(module.name) }
+    private func resolve(_ module: FirstPartyModule.Input) throws -> FirstPartyModule.Middleware {
+        let pathCandidates = subpaths.filter { $0.string.hasSuffix(module.name) }
         switch pathCandidates.count {
         case 0:
             throw CustomError(.moduleNotFoundInFilesystem(module.name))
@@ -46,7 +54,7 @@ class ModuleResolver {
         }
     }
 
-    private static func resolve(dependencyName: String, using modules: [FirstPartyModule.Middleware], _ versionResolver: VersionResolver) throws -> Dependency.Output {
+    private func resolve(dependencyName: String, using modules: [FirstPartyModule.Middleware], _ versionResolver: VersionResolver) throws -> Dependency.Output {
         let moduleCandidates = modules.filter { $0.name == dependencyName }
 
         switch moduleCandidates.count {
@@ -55,7 +63,7 @@ class ModuleResolver {
 
         case 1:
             let moduleCandidate = moduleCandidates[0]
-            let target = try resolve(moduleCandidate, using: modules, versionResolver)
+            let target = try resolve(moduleCandidate, using: modules)
             return .firstParty(target)
 
         default:
@@ -63,7 +71,7 @@ class ModuleResolver {
         }
     }
 
-    private static func getTransitiveDependencies(from flavourDepDict: [String: [Dependency.Output]]) -> [String: [Dependency.Output]] {
+    private func getTransitiveDependencies(from flavourDepDict: [String: [Dependency.Output]]) -> [String: [Dependency.Output]] {
         var transitiveFlavourDepDict: [String: [Dependency.Output]] = [:]
 
         for (flavour, dependencies) in flavourDepDict {
@@ -89,7 +97,11 @@ class ModuleResolver {
         return transitiveFlavourDepDict
     }
 
-    private static func resolve(_ middlewareTarget: FirstPartyModule.Middleware, using modules: [FirstPartyModule.Middleware], _ versionResolver: VersionResolver) throws -> FirstPartyModule.Output {
+    private func resolve(_ middlewareTarget: FirstPartyModule.Middleware, using modules: [FirstPartyModule.Middleware]) throws -> FirstPartyModule.Output {
+        if let module = modulesCache[middlewareTarget.name] {
+            return module
+        }
+
         let dependencies: [String: [Dependency.Output]] = try middlewareTarget.dependencies.mapValues {
             try $0
                 .map { try resolve(dependencyName: $0, using: modules, versionResolver) }
@@ -97,18 +109,19 @@ class ModuleResolver {
         }
         let transitiveDependencies = getTransitiveDependencies(from: dependencies)
 
-        return FirstPartyModule.Output(
+        let module = FirstPartyModule.Output(
             name: middlewareTarget.name,
             path: middlewareTarget.path,
-            subpaths: middlewareTarget.path.find().map { $0 },
             dependencies: dependencies,
             transitiveDependencies: transitiveDependencies
         )
+        modulesCache[module.name] = module
+        return module
     }
 
-    private static func resolve(_ middlewareTargets: [FirstPartyModule.Middleware], using versionResolver: VersionResolver) throws -> [FirstPartyModule.Output] {
+    private func resolve(_ middlewareTargets: [FirstPartyModule.Middleware]) throws -> [FirstPartyModule.Output] {
         try middlewareTargets.map {
-            try resolve($0, using: middlewareTargets, versionResolver)
+            try resolve($0, using: middlewareTargets)
         }
     }
 }
@@ -121,7 +134,7 @@ private extension Array where Element == Dependency.Output {
                 if case .thirdParty(let left) = $0, case .thirdParty(let right) = $1 {
                     return left.source < right.source
                 } else {
-                    return $0.type < $1.type
+                    return $0.kind < $1.kind
                 }
         }
     }

@@ -12,8 +12,8 @@ typealias GeneratorTestCase = XCTestCase
 
 final class AAA_Generator: GeneratorTestCase {
     func test_01_Clean() throws {
-        try fixturesPath.delete()
-        try testsOutputPath.delete()
+        _ = runCommand("rm -rf \(fixturesPath.string)")
+        _ = runCommand("rm -rf \(testsOutputPath.string)")
     }
 
     func test_02_SelfGenerate() throws {
@@ -26,8 +26,6 @@ final class AAA_Generator: GeneratorTestCase {
     }
 
     func test_03_GenerateFixtures() throws {
-        try fixturesPath.delete()
-
         Snapshot.recording = true
         for testSpec in GenerateTests.testSpecs() {
             let test = GenerateTests()

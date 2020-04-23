@@ -8,5 +8,6 @@ public struct ThirdPartyModule {
         public let sourceParent: Path
         public let name: String
         public let version: Version
+        public let kind: Dependency.Output.Kind = .thirdParty
     }
 }

@@ -12,50 +12,43 @@ final class ContextTests: XCTestCase {
         firstPartyModules:
         - dependencies:
             main:
-            - name: FileKit
+            - kind: thirdParty
+              name: FileKit
               source: ../Cartfile
               sourceParent: ..
-              type: thirdParty
               version: 0.0.1
             - dependencies: {}
+              kind: firstParty
               name: Module2
               path: some/path/Module2
-              subpaths:
-              - src/swift
               transitiveDependencies: {}
-              type: firstParty
             - dependencies: {}
+              kind: firstParty
               name: Module3
               path: some/path/Module3
-              subpaths:
-              - src/swift
               transitiveDependencies: {}
-              type: firstParty
+          kind: firstParty
           name: Module1
           path: some/path/Module1
-          subpaths:
-          - src/swift
           transitiveDependencies: {}
         - dependencies: {}
+          kind: firstParty
           name: Module2
           path: some/path/Module2
-          subpaths:
-          - src/swift
           transitiveDependencies: {}
         - dependencies: {}
+          kind: firstParty
           name: Module3
           path: some/path/Module3
-          subpaths:
-          - src/swift
           transitiveDependencies: {}
         global:
           fileName: someFileName
           parent: somePath
           root: ..
           rootBasename: something
-          templatesPath: ../Templates
         thirdPartyModules:
-        - name: FileKit
+        - kind: thirdParty
+          name: FileKit
           source: ../Cartfile
           sourceParent: ..
           version: 0.0.1

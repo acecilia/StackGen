@@ -5,12 +5,12 @@ public class DefaultReporter: ReporterInterface {
     public init() { }
 
     public func start(_ arguments: [String]) {
-        Swift.print("🌱 Arguments: '\(arguments.joined(separator: " "))'")
         Swift.print("🌱 Working directory: \(cwd)")
+        Swift.print("🌱 Arguments: '\(arguments.joined(separator: " "))'")
     }
 
     public func info(_ string: String) {
-        Swift.print("✨ Info: \(string)")
+        Swift.print("✨ \(string.capitalizingFirstLetter())")
     }
 
     public func warning(_ string: String) {
