@@ -12,7 +12,8 @@ public class GenerateAction: Action {
     }
 
     public func execute() throws {
-        // Resolve modules
+        reporter.info("resolving modules")
+
         let bsgFile: BsgFile
         let bsgFilePath = cwd/BsgFile.fileName
         if bsgFilePath.exists {
@@ -28,8 +29,11 @@ public class GenerateAction: Action {
 
         // Resolve templates
         let constants = TemplateResolver.Constants(
-            .init(custom: bsgFile.custom, firstPartyModules: firstPartyModules, thirdPartyModules: thirdPartyModules),
-            .init(root: cwd, templatesFile: templateFilePath)
+            custom: bsgFile.custom,
+            firstPartyModules: firstPartyModules,
+            thirdPartyModules: thirdPartyModules,
+            root: cwd,
+            templatesFilePath: templateFilePath
         )
         let templateResolver = TemplateResolver(writer: writer, constants: constants)
 

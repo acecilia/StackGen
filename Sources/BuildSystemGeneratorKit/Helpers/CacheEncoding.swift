@@ -4,7 +4,7 @@ import Path
 extension Encodable {
     func parseAsAny(_ basePath: Path) throws -> Any {
         let encoder = JSONEncoder()
-        // encoder.userInfo[.relativePath] = basePath
+        encoder.userInfo[.relativePath] = basePath
 
         let data = try encoder.encode(self)
         return  try JSONSerialization.jsonObject(with: data)

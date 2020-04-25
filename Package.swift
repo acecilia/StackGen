@@ -22,7 +22,6 @@ let package = Package(
         .package(url: "https://github.com/acecilia/StringCodable.git", .revision("b7d46cd32791753df1fe13b0b6ecdd9a19fbabcc")),
         .package(url: "https://github.com/acecilia/RuntimeTestCaseSwift", .revision("e2c6ed3fc47279c85c5e5750a600e5e9ab86a0c9")),
         // .package(path: "../RuntimeTestCaseSwift"),
-        .package(url: "https://github.com/acecilia/Compose", .upToNextMajor(from: "0.0.2"))
     ],
     targets: [
         .target(
@@ -45,7 +44,6 @@ let package = Package(
                 "Version",
                 "StringCodable",
                 "SwiftCLI",
-                "Compose"
             ]
         ),
         .testTarget(

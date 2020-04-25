@@ -2,15 +2,6 @@
   "object": {
     "pins": [
       {
-        "package": "Compose",
-        "repositoryURL": "https://github.com/acecilia/Compose",
-        "state": {
-          "branch": null,
-          "revision": "20cee84475ebffb903a827fbb72cd23c1670d9b4",
-          "version": "0.0.2"
-        }
-      },
-      {
         "package": "ObjectiveKit",
         "repositoryURL": "https://github.com/acecilia/ObjectiveKit",
         "state": {

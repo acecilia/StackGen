@@ -5,9 +5,9 @@ import Foundation
 public class TemplateEngine {
     private let env: Environment
     
-    public init(_ templatesPath: Path) {
+    public init(_ templatesFilePath: Path) {
         self.env = Environment(
-            loader: FileSystemLoader(paths: [.init(templatesPath.relative(to: cwd))]),
+            loader: FileSystemLoader(paths: [.init(templatesFilePath.parent.relative(to: cwd))]),
             throwOnUnresolvedVariable: true
         )
     }
