@@ -5,6 +5,7 @@ class ModuleResolver {
     private let bsgFile: BsgFile
     private let subpaths: [Path]
     private let versionResolver: VersionResolver
+    private var modulesCache: [String: FirstPartyModule.Output] = [:]
 
     init(_ bsgFile: BsgFile) throws {
         self.bsgFile = bsgFile
@@ -97,6 +98,10 @@ class ModuleResolver {
     }
 
     private func resolve(_ middlewareTarget: FirstPartyModule.Middleware, using modules: [FirstPartyModule.Middleware]) throws -> FirstPartyModule.Output {
+        if let module = modulesCache[middlewareTarget.name] {
+            return module
+        }
+
         let dependencies: [String: [Dependency.Output]] = try middlewareTarget.dependencies.mapValues {
             try $0
                 .map { try resolve(dependencyName: $0, using: modules, versionResolver) }
@@ -104,13 +109,15 @@ class ModuleResolver {
         }
         let transitiveDependencies = getTransitiveDependencies(from: dependencies)
 
-        return FirstPartyModule.Output(
+        let module = FirstPartyModule.Output(
             name: middlewareTarget.name,
             path: middlewareTarget.path,
             subpaths: subpaths.filter { $0.string.hasPrefix(middlewareTarget.path.string) },
             dependencies: dependencies,
             transitiveDependencies: transitiveDependencies
         )
+        modulesCache[module.name] = module
+        return module
     }
 
     private func resolve(_ middlewareTargets: [FirstPartyModule.Middleware]) throws -> [FirstPartyModule.Output] {

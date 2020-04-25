@@ -2,10 +2,13 @@ import Foundation
 import Path
 import StringCodable
 
-public struct MainContext: Codable {
-    public let custom: [String: StringCodable]
-    public let firstPartyModules: [FirstPartyModule.Output]
-    public let thirdPartyModules: [ThirdPartyModule.Output]
+public struct MainContext {
+    // Constants
+    @CacheEncoding public var custom: [String: StringCodable]
+    @CacheEncoding public var firstPartyModules: [FirstPartyModule.Output]
+    @CacheEncoding public var thirdPartyModules: [ThirdPartyModule.Output]
+
+    // Variables
     public let global: Global
     public let module: FirstPartyModule.Output?
 
@@ -21,18 +24,14 @@ public struct MainContext: Codable {
         }
         return context
     }
-}
 
-/// https://stackoverflow.com/questions/45209743/how-can-i-use-swift-s-codable-to-encode-into-a-dictionary
-private extension Encodable {
     func asDictionary(_ basePath: Path) throws -> [String: Any] {
-        let encoder = JSONEncoder()
-        encoder.userInfo[.relativePath] = basePath
-
-        let data = try encoder.encode(self)
-        guard let dictionary = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] else {
-            throw UnexpectedError("Could not convert the object to a dictionary")
-        }
-        return dictionary
+        return [
+            "custom": try $custom.parseAsAny(basePath),
+            "firstPartyModules": try $firstPartyModules.parseAsAny(basePath),
+            "thirdPartyModules": try $thirdPartyModules.parseAsAny(basePath),
+            "global": try global.parseAsAny(basePath),
+            "module": try module?.parseAsAny(basePath) as Any,
+        ]
     }
 }

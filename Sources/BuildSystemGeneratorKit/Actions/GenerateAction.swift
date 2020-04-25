@@ -28,11 +28,8 @@ public class GenerateAction: Action {
 
         // Resolve templates
         let constants = TemplateResolver.Constants(
-            custom: bsgFile.custom,
-            firstPartyModules: firstPartyModules,
-            thirdPartyModules: thirdPartyModules,
-            root: cwd,
-            templatesFile: templateFilePath
+            .init(custom: bsgFile.custom, firstPartyModules: firstPartyModules, thirdPartyModules: thirdPartyModules),
+            .init(root: cwd, templatesFile: templateFilePath)
         )
         let templateResolver = TemplateResolver(writer: writer, constants: constants)
 
