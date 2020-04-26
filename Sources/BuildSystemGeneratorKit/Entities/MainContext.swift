@@ -1,16 +1,17 @@
 import Foundation
 import Path
 import StringCodable
+import DictionaryCachableEncodable
 
-public struct MainContext {
+public struct MainContext: Codable {
     // Constants
-    @CacheEncoding public var custom: [String: StringCodable]
-    @CacheEncoding public var firstPartyModules: [FirstPartyModule.Output]
-    @CacheEncoding public var thirdPartyModules: [ThirdPartyModule.Output]
+    @Cucu public var custom: [String: StringCodable]
+    @Cucu public var firstPartyModules: [FirstPartyModule.Output]
+    @Cucu public var thirdPartyModules: [ThirdPartyModule.Output]
 
     // Variables
-    public let global: Global
-    public let module: FirstPartyModule.Output?
+    @Cucu public var global: Global
+    @Cucu public var module: FirstPartyModule.Output?
 
     public func render(_ basePath: Path) throws -> [String: Any] {
         var context = try asDictionary(basePath)
@@ -26,12 +27,13 @@ public struct MainContext {
     }
 
     func asDictionary(_ basePath: Path) throws -> [String: Any] {
-        return [
-            "custom": try $custom.parseAsAny(basePath),
-            "firstPartyModules": try $firstPartyModules.parseAsAny(basePath),
-            "thirdPartyModules": try $thirdPartyModules.parseAsAny(basePath),
-            "global": try global.parseAsAny(basePath),
-            "module": try module?.parseAsAny(basePath) as Any,
-        ]
+        let object = Cucu(wrappedValue: self)
+
+        let encoder = JSONEncoder()
+        encoder.userInfo[.relativePath] = basePath
+        _ = try? encoder.encode(object)
+
+        let dict = object.lastCached?.dictionaryObject ?? [:]
+        return dict
     }
 }

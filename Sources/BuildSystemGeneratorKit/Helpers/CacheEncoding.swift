@@ -1,35 +1,13 @@
 import Foundation
 import Path
+import DictionaryCachableEncodable
 
-extension Encodable {
-    func parseAsAny(_ basePath: Path) throws -> Any {
-        let encoder = JSONEncoder()
-        encoder.userInfo[.relativePath] = basePath
+public typealias Cucu<T: Encodable> = DictionaryCachableEncodable<T, CacheKeyResolver, DefaultCache>
 
-        let data = try encoder.encode(self)
-        return  try JSONSerialization.jsonObject(with: data)
+public struct CacheKeyResolver: CacheKeyResolverProtocol {
+    public init() { }
+
+    public func getKey(_ userInfo: [CodingUserInfoKey : Any]) -> AnyHashable {
+        return userInfo[.relativePath] as? Path
     }
 }
-
-@propertyWrapper
-public class CacheEncoding<T: Codable> {
-    public let wrappedValue: T
-    private var cache: [Path: Any] = [:]
-
-    public init(_ wrappedValue: T) {
-        self.wrappedValue = wrappedValue
-    }
-
-    func parseAsAny(_ basePath: Path) throws -> Any {
-        if let cachedDict = cache[basePath] {
-            return cachedDict
-        } else {
-            let parsedAny = try wrappedValue.parseAsAny(basePath)
-            cache[basePath] = parsedAny
-            return parsedAny
-        }
-    }
-
-    public var projectedValue: CacheEncoding { self }
-}
-

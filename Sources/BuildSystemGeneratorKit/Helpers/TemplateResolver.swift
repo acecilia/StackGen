@@ -1,29 +1,14 @@
 import Foundation
 import Path
 import StringCodable
-import Compose
 
 extension TemplateResolver {
     public struct Constants {
-        @CacheEncoding public var custom: [String: StringCodable]
-        @CacheEncoding public var firstPartyModules: [FirstPartyModule.Output]
-        @CacheEncoding public var thirdPartyModules: [ThirdPartyModule.Output]
+        public var custom: [String: StringCodable]
+        public var firstPartyModules: [FirstPartyModule.Output]
+        public var thirdPartyModules: [ThirdPartyModule.Output]
         public let root: Path
         public let templatesFilePath: Path
-
-        public init(
-            custom: [String: StringCodable],
-            firstPartyModules: [FirstPartyModule.Output],
-            thirdPartyModules: [ThirdPartyModule.Output],
-            root: Path,
-            templatesFilePath: Path
-        ) {
-            self._custom = CacheEncoding(custom)
-            self._firstPartyModules = CacheEncoding(firstPartyModules)
-            self._thirdPartyModules = CacheEncoding(thirdPartyModules)
-            self.root = root
-            self.templatesFilePath = templatesFilePath
-        }
     }
 
     public struct Variables {
@@ -46,9 +31,9 @@ public class TemplateResolver {
 
     private func createContext(using variables: Variables) throws -> [String: Any] {
         let context = MainContext(
-            custom: constants.$custom,
-            firstPartyModules: constants.$firstPartyModules,
-            thirdPartyModules: constants.$thirdPartyModules,
+            custom: constants.custom,
+            firstPartyModules: constants.firstPartyModules,
+            thirdPartyModules: constants.thirdPartyModules,
             global: Global(
                 root: constants.root,
                 rootBasename: constants.root.basename(),
@@ -88,23 +73,29 @@ public class TemplateResolver {
         try writer.write(rendered, to: outputPath)
     }
 
-    public func render(template: String, relativePath: String, firstPartyModules: [FirstPartyModule.Output], mode: TemplateSpec.Mode) throws {
-        switch mode {
-        case let .module(filter):
-            for module in firstPartyModules where filter.matches(module.name) {
-                let destinationPath = module.path/relativePath
-                try _render(template: template, to: destinationPath, module: module)
-            }
+    public func render(templatePath: Path, relativePath: String, firstPartyModules: [FirstPartyModule.Output], mode: TemplateSpec.Mode) throws {
+        do {
+            let template = try String(contentsOf: templatePath)
 
-        case let .moduleToRoot(filter):
-            let destinationPath = cwd/relativePath
-            for module in firstPartyModules where filter.matches(module.name) {
-                try _render(template: template, to: destinationPath, module: module)
-            }
+            switch mode {
+            case let .module(filter):
+                for module in firstPartyModules where filter.matches(module.name) {
+                    let destinationPath = module.path/relativePath
+                    try _render(template: template, to: destinationPath, module: module)
+                }
 
-        case .root:
-            let destinationPath = cwd/relativePath
-            try _render(template: template, to: destinationPath, module: nil)
+            case let .moduleToRoot(filter):
+                let destinationPath = cwd/relativePath
+                for module in firstPartyModules where filter.matches(module.name) {
+                    try _render(template: template, to: destinationPath, module: module)
+                }
+
+            case .root:
+                let destinationPath = cwd/relativePath
+                try _render(template: template, to: destinationPath, module: nil)
+            }
+        } catch {
+            throw CustomError(.errorThrownWhileRendering(templatePath: templatePath, error: error))
         }
     }
 }

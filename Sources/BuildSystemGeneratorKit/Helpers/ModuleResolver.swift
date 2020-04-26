@@ -109,7 +109,7 @@ class ModuleResolver {
         }
         let transitiveDependencies = getTransitiveDependencies(from: dependencies)
 
-        let module = FirstPartyModule.Output(
+        let module = FirstPartyModule.Output( /* wrappedValue: .init(*/
             name: middlewareTarget.name,
             path: middlewareTarget.path,
             subpaths: subpaths.filter { $0.string.hasPrefix(middlewareTarget.path.string) },

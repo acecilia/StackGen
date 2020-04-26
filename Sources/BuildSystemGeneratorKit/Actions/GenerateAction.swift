@@ -48,16 +48,16 @@ public class GenerateAction: Action {
         for (path, templateSpec) in templatesFile {
             if path.isFile {
                 try templateResolver.render(
-                    template: try String(contentsOf: path),
+                    templatePath: path,
                     relativePath: path.basename(),
                     firstPartyModules: firstPartyModules,
                     mode: templateSpec.mode
                 )
             } else if path.isDirectory {
-                for template in path.find().type(.file) where template.basename() != ".DS_Store" {
+                for templatePath in path.find().type(.file) where templatePath.basename() != ".DS_Store" {
                     try templateResolver.render(
-                        template: try String(contentsOf: template),
-                        relativePath: template.relative(to: path),
+                        templatePath: templatePath,
+                        relativePath: templatePath.relative(to: path),
                         firstPartyModules: firstPartyModules,
                         mode: templateSpec.mode
                     )

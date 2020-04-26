@@ -22,6 +22,6 @@ public enum FirstPartyModule {
         public let dependencies: [String: [Dependency.Output]]
         public let transitiveDependencies: [String: [Dependency.Output]]
     }
+
+    // public typealias Output = Cucu<OutputStruct>
 }
-
-
