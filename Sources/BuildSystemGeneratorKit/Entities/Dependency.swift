@@ -21,7 +21,7 @@ public enum Dependency {
         case thirdParty(ThirdPartyModule.Output)
 
         private enum CodingKeys: String, CodingKey {
-            case type
+            case kind
         }
 
         public enum Kind: String, Codable, CaseIterable, Comparable {
@@ -53,25 +53,23 @@ public enum Dependency {
             }
         }
 
-        public var type: Kind {
+        public var kind: Kind {
             switch self {
-            case .firstParty:
-                return .firstParty
+            case .firstParty(let firstPartyModule):
+                return firstPartyModule.kind
 
-            case .thirdParty:
-                return .thirdParty
+            case .thirdParty(let thirdPartyModule):
+                return thirdPartyModule.kind
             }
         }
 
         public func encode(to encoder: Encoder) throws {
             try underlyingObject.encode(to: encoder)
-            var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(type, forKey: .type)
         }
 
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            let type = try container.decode(Kind.self, forKey: .type)
+            let type = try container.decode(Kind.self, forKey: .kind)
             
             switch type {
             case .firstParty:

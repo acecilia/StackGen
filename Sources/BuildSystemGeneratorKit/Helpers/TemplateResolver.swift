@@ -18,6 +18,9 @@ extension TemplateResolver {
 }
 
 public class TemplateResolver {
+    /// This property is a very hacky hack: it is used inside stencil filters to know the path of the current template
+    static var latestTemplatePath: Path?
+
     public let templateEngine: TemplateEngine
     public let writer: Writer
 
@@ -58,6 +61,7 @@ public class TemplateResolver {
         }()
 
         reporter.info("generating \(outputPath)")
+        TemplateResolver.latestTemplatePath = outputPath
 
         let rendered: String = try {
             let context = try createContext(using: Variables(module: module, path: outputPath))

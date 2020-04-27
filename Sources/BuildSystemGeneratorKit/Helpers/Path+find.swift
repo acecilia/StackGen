@@ -1,8 +1,8 @@
 import Path
 
 extension Path {
-    func fastFindAll() throws -> [Path] {
-        let output = try run(#"find "$(pwd)""#, directory: self)
+    func fastFindDirectories() throws -> [Path] {
+        let output = try run(#"find "$(pwd)" -type d"#, directory: self)
         return output.components(separatedBy: .newlines).map {
             Path(PathishWrapper(string: $0))
         }

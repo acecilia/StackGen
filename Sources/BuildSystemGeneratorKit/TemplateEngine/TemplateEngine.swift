@@ -1,6 +1,7 @@
 import Stencil
 import Path
 import Foundation
+import Path
 
 public class TemplateEngine {
     private let env: Environment
@@ -8,6 +9,7 @@ public class TemplateEngine {
     public init(_ templatesFilePath: Path) {
         self.env = Environment(
             loader: FileSystemLoader(paths: [.init(templatesFilePath.parent.relative(to: cwd))]),
+            extensions: [CustomExtensions()],
             throwOnUnresolvedVariable: true
         )
     }
@@ -37,5 +39,30 @@ extension Stencil.TemplateSyntaxError: LocalizedError {
         Template syntax error.
         \(reporter.renderError(self))
         """
+    }
+}
+
+class CustomExtensions: Extension {
+    override init() {
+        super.init()
+        self.registerFilter(PathExistsFilter.filterName, filter: PathExistsFilter.run)
+    }
+}
+
+private class PathExistsFilter {
+    static let filterName = "pathExists"
+
+    static func run(_ value: Any?) throws -> Bool {
+        guard let string = value as? String else {
+            throw CustomError(.filterFailed(filter: filterName, reason: ""))
+        }
+
+        let path = try Path(string) ??
+            TemplateResolver.latestTemplatePath
+                .unwrap(onFailure: "The path for the template required to compute the filter 'pathExists' is not available")
+                .parent
+                .join(string)
+
+        return path.exists
     }
 }

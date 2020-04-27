@@ -9,7 +9,7 @@ class ModuleResolver {
 
     init(_ bsgFile: BsgFile) throws {
         self.bsgFile = bsgFile
-        self.subpaths = try cwd.fastFindAll()
+        self.subpaths = try cwd.fastFindDirectories()
         self.versionResolver = try VersionResolver(bsgFile.versionSources)
     }
 
@@ -112,7 +112,6 @@ class ModuleResolver {
         let module = FirstPartyModule.Output(
             name: middlewareTarget.name,
             path: middlewareTarget.path,
-            subpaths: subpaths.filter { $0.string.hasPrefix(middlewareTarget.path.string) },
             dependencies: dependencies,
             transitiveDependencies: transitiveDependencies
         )
@@ -135,7 +134,7 @@ private extension Array where Element == Dependency.Output {
                 if case .thirdParty(let left) = $0, case .thirdParty(let right) = $1 {
                     return left.source < right.source
                 } else {
-                    return $0.type < $1.type
+                    return $0.kind < $1.kind
                 }
         }
     }

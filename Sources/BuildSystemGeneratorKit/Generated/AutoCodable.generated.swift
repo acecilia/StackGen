@@ -50,7 +50,7 @@ extension TemplateSpec.Mode.FullValue {
         case filter
     }
 
-     init(from decoder: Decoder) throws {
+    internal init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         if container.allKeys.contains(.module), try container.decodeNil(forKey: .module) == false {
@@ -72,7 +72,7 @@ extension TemplateSpec.Mode.FullValue {
         throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "Unknown enum case"))
     }
 
-     func encode(to encoder: Encoder) throws {
+    internal func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
         switch self {

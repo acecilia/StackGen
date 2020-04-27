@@ -34,6 +34,7 @@ public extension CustomError {
         // Templates
         case templateNotFound(relativePath: String)
         case errorThrownWhileRendering(templatePath: Path, error: Error)
+        case filterFailed(filter: String, reason: String)
     
         public var description: String {
             switch self {
@@ -67,6 +68,9 @@ public extension CustomError {
                 \(error.localizedDescription)
                 Error thrown while rendering template at path '\(templatePath)'
                 """
+
+            case let .filterFailed(filter, reason):
+                return "The stencil filter 'filter' Failed. Reason: \(reason)"
             }
         }
     }
