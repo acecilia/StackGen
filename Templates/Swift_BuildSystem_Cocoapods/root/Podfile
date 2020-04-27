@@ -26,9 +26,9 @@ target '{{module.name}}' do
     platform :ios, '{{custom.minimumDeploymentTarget}}'
     project '{{module.path}}/{{module.name}}.xcodeproj'
     {% for dependency in module.transitiveDependencies.main|default:"" %}
-    {% if dependency.type == "firstParty" %}
+    {% if dependency.kind == "firstParty" %}
     pod '{{dependency.name}}', :path => '.', :testspecs => ['Tests']
-    {% elif (dependency.type == "thirdParty") %}
+    {% elif (dependency.kind == "thirdParty") %}
     pod '{{dependency.name}}', '{{dependency.version}}', :binary => $useBinaries
     {% endif %}
     {% endfor %}

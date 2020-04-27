@@ -37,7 +37,7 @@ targets:
         {% endif %}
         CFBundleShortVersionString: {{custom.moduleVersion}}
 
-  {% if "src/test/swift" in module.subpaths %}
+  {% if "src/test/swift"|pathExists %}
   {{module.name}}Tests:
     type: bundle.unit-test
     platform: iOS
@@ -58,7 +58,7 @@ schemes:
     build:
       targets:
         {{module.name}}: all
-    {% if "src/test/swift" in module.subpaths %}
+    {% if "src/test/swift"|pathExists %}
     test:
       gatherCoverageData: true
       targets:

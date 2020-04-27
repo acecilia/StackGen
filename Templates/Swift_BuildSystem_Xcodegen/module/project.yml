@@ -28,11 +28,11 @@ targets:
     {% if module.transitiveDependencies.main|default:"" %}
     dependencies:
     {% for dependency in module.transitiveDependencies.main %}
-    {% if dependency.type == "firstParty" %}
+    {% if dependency.kind == "firstParty" %}
     - framework: {{dependency.name}}.framework
       implicit: true
       # embed: false # Bring this back when https://github.com/yonaskolb/XcodeGen/pull/820 is merged and released
-    {% elif (dependency.type == "thirdParty") and ("Cartfile" in dependency.source) %}
+    {% elif (dependency.kind == "thirdParty") and ("Cartfile" in dependency.source) %}
     - framework: {{dependency.sourceParent}}/Carthage/Build/iOS/{{dependency.name}}.framework
     {% endif %}
     {% endfor %}
@@ -53,7 +53,7 @@ targets:
         {% endif %}
         CFBundleShortVersionString: {{custom.moduleVersion}}
 
-  {% if "src/test/swift" in module.subpaths %}
+  {% if "src/test/swift"|pathExists %}
   {{module.name}}Tests:
     type: bundle.unit-test
     platform: iOS
@@ -66,11 +66,11 @@ targets:
     dependencies:
     - target: {{module.name}}
     {% for dependency in module.transitiveDependencies.test|default:"" %}
-    {% if dependency.type == "firstParty" %}
+    {% if dependency.kind == "firstParty" %}
     - framework: {{dependency.name}}.framework
       implicit: true
       # embed: false # Bring this back when https://github.com/yonaskolb/XcodeGen/pull/820 is merged and released
-    {% elif (dependency.type == "thirdParty") and ("Cartfile" in dependency.source) %}
+    {% elif (dependency.kind == "thirdParty") and ("Cartfile" in dependency.source) %}
     - framework: {{dependency.sourceParent}}/Carthage/Build/iOS/{{dependency.name}}.framework
     {% endif %}
     {% endfor %}
@@ -83,7 +83,7 @@ schemes:
     build:
       targets:
         {{module.name}}: all
-    {% if "src/test/swift" in module.subpaths %}
+    {% if "src/test/swift"|pathExists %}
     test:
       gatherCoverageData: true
       targets:

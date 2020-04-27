@@ -70,7 +70,7 @@ public extension CustomError {
                 """
 
             case let .filterFailed(filter, reason):
-                return "The stencil filter 'filter' Failed. Reason: \(reason)"
+                return "The stencil filter '\(filter)' Failed. Reason: \(reason)"
             }
         }
     }
