@@ -1,7 +1,7 @@
 custom:
   # Tools
   xcodeGenVersion: 2.15.1
-  bazelVersion: 2.2.0
+  bazelVersion: 3.0.0
   xcbeautifyVersion: 0.7.5
   cocoapodsVersion: 1.9.1
   cocoapodsBinaryVersion: 0.4.4

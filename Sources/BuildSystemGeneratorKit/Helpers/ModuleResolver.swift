@@ -5,10 +5,11 @@ class ModuleResolver {
     private let bsgFile: BsgFile
     private let subpaths: [Path]
     private let versionResolver: VersionResolver
+    private var modulesCache: [String: FirstPartyModule.Output] = [:]
 
     init(_ bsgFile: BsgFile) throws {
         self.bsgFile = bsgFile
-        self.subpaths = try cwd.fastFindAll()
+        self.subpaths = try cwd.fastFindDirectories()
         self.versionResolver = try VersionResolver(bsgFile.versionSources)
     }
 
@@ -97,6 +98,10 @@ class ModuleResolver {
     }
 
     private func resolve(_ middlewareTarget: FirstPartyModule.Middleware, using modules: [FirstPartyModule.Middleware]) throws -> FirstPartyModule.Output {
+        if let module = modulesCache[middlewareTarget.name] {
+            return module
+        }
+
         let dependencies: [String: [Dependency.Output]] = try middlewareTarget.dependencies.mapValues {
             try $0
                 .map { try resolve(dependencyName: $0, using: modules, versionResolver) }
@@ -104,13 +109,14 @@ class ModuleResolver {
         }
         let transitiveDependencies = getTransitiveDependencies(from: dependencies)
 
-        return FirstPartyModule.Output(
+        let module = FirstPartyModule.Output(
             name: middlewareTarget.name,
             path: middlewareTarget.path,
-            subpaths: subpaths.filter { $0.string.hasPrefix(middlewareTarget.path.string) },
             dependencies: dependencies,
             transitiveDependencies: transitiveDependencies
         )
+        modulesCache[module.name] = module
+        return module
     }
 
     private func resolve(_ middlewareTargets: [FirstPartyModule.Middleware]) throws -> [FirstPartyModule.Output] {
@@ -128,7 +134,7 @@ private extension Array where Element == Dependency.Output {
                 if case .thirdParty(let left) = $0, case .thirdParty(let right) = $1 {
                     return left.source < right.source
                 } else {
-                    return $0.type < $1.type
+                    return $0.kind < $1.kind
                 }
         }
     }

@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "MoreCodable",
+        "repositoryURL": "https://github.com/acecilia/MoreCodable",
+        "state": {
+          "branch": null,
+          "revision": "78fbd0d6e2d70afc966ad24339492f22c9dffab9",
+          "version": null
+        }
+      },
+      {
         "package": "ObjectiveKit",
         "repositoryURL": "https://github.com/acecilia/ObjectiveKit",
         "state": {

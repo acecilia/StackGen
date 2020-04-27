@@ -12,7 +12,8 @@ public class GenerateAction: Action {
     }
 
     public func execute() throws {
-        // Resolve modules
+        reporter.info("resolving modules")
+
         let bsgFile: BsgFile
         let bsgFilePath = cwd/BsgFile.fileName
         if bsgFilePath.exists {
@@ -32,7 +33,7 @@ public class GenerateAction: Action {
             firstPartyModules: firstPartyModules,
             thirdPartyModules: thirdPartyModules,
             root: cwd,
-            templatesFile: templateFilePath
+            templatesFilePath: templateFilePath
         )
         let templateResolver = TemplateResolver(writer: writer, constants: constants)
 
@@ -47,16 +48,16 @@ public class GenerateAction: Action {
         for (path, templateSpec) in templatesFile {
             if path.isFile {
                 try templateResolver.render(
-                    template: try String(contentsOf: path),
+                    templatePath: path,
                     relativePath: path.basename(),
                     firstPartyModules: firstPartyModules,
                     mode: templateSpec.mode
                 )
             } else if path.isDirectory {
-                for template in path.find().type(.file) where template.basename() != ".DS_Store" {
+                for templatePath in path.find().type(.file) where templatePath.basename() != ".DS_Store" {
                     try templateResolver.render(
-                        template: try String(contentsOf: template),
-                        relativePath: template.relative(to: path),
+                        templatePath: templatePath,
+                        relativePath: templatePath.relative(to: path),
                         firstPartyModules: firstPartyModules,
                         mode: templateSpec.mode
                     )
