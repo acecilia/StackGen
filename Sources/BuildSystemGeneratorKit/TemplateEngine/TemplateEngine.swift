@@ -2,17 +2,17 @@ import Stencil
 import Path
 import Foundation
 
-class TemplateEngine {
+public class TemplateEngine {
     private let env: Environment
     
-    init(_ templatesPath: Path) {
+    public init(_ templatesFilePath: Path) {
         self.env = Environment(
-            loader: FileSystemLoader(paths: [.init(templatesPath.relative(to: cwd))]),
+            loader: FileSystemLoader(paths: [.init(templatesFilePath.parent.relative(to: cwd))]),
             throwOnUnresolvedVariable: true
         )
     }
 
-    func render(templateContent: String, context: [String: Any]) throws -> String {
+    public func render(templateContent: String, context: [String: Any]) throws -> String {
         let fixedTemplateContent = addNewLineDelimiters(templateContent)
         let rendered = try env.renderTemplate(string: fixedTemplateContent, context: context)
         return removeNewLinesDelimiters(rendered)

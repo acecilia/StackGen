@@ -2,7 +2,14 @@ import Path
 
 extension Path {
     func fastFindAll() throws -> [Path] {
-        let output = try run("find .", directory: self)
-        return output.components(separatedBy: .newlines).map { self/$0 }
+        let output = try run(#"find "$(pwd)""#, directory: self)
+        return output.components(separatedBy: .newlines).map {
+            Path(PathishWrapper(string: $0))
+        }
     }
+}
+
+/// Path has two initializers: one for String and one for Pathish. The one for String performs several checks on the String that makes it slow, so below code allows to use the Pathish initializer (which is more performant because it does not perform any checks) with String
+private struct PathishWrapper: Pathish {
+    let string: String
 }
