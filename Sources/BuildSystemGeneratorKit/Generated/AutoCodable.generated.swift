@@ -28,14 +28,14 @@ extension BsgFile {
 extension FirstPartyModule.Input {
 
     enum CodingKeys: String, CodingKey {
-        case name
+        case id
         case dependencies
     }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        name = try container.decode(String.self, forKey: .name)
+        id = try container.decode(String.self, forKey: .id)
         dependencies = (try? container.decode([String: [String]].self, forKey: .dependencies)) ?? FirstPartyModule.Input.defaultDependencies
     }
 

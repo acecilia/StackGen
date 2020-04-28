@@ -13,6 +13,8 @@ build:ios --copt=-swift-version --copt={{custom.swiftVersion}}
 build:ios --copt=-whole-module-optimization # faster compilation (see https://www.skilled.io/u/swiftsummit/swift-with-a-hundred-engineers)
 
 # For having a more reproducible build, uncomment following lines:
+# You need to specify a simulator and version together: if you specify a device without a simulator
+# you may experience a python error similar to https://github.com/google/xctestrunner/issues/12 
 # build:ios --ios_simulator_device="iPhone 8"
 # build:ios --ios_simulator_version="13.4"
 

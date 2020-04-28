@@ -60,7 +60,7 @@ public class TemplateResolver {
             return Path(pathString)!
         }()
 
-        reporter.info("generating \(outputPath)")
+        reporter.info("generating \(outputPath.relative(to: cwd))")
         TemplateResolver.latestTemplatePath = outputPath
 
         let rendered: String = try {

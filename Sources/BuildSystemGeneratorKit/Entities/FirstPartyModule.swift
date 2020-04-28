@@ -5,7 +5,7 @@ public enum FirstPartyModule {
     public struct Input: AutoCodable {
         public static let defaultDependencies: [String: [String]] = [:]
 
-        public let name: String
+        public let id: String
         public let dependencies: [String: [String]]
     }
 

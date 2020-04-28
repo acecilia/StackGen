@@ -35,10 +35,10 @@ class ModuleResolver {
     }
 
     private func resolve(_ module: FirstPartyModule.Input) throws -> FirstPartyModule.Middleware {
-        let pathCandidates = subpaths.filter { $0.string.hasSuffix(module.name) }
+        let pathCandidates = subpaths.filter { $0.string.hasSuffix(module.id) }
         switch pathCandidates.count {
         case 0:
-            throw CustomError(.moduleNotFoundInFilesystem(module.name))
+            throw CustomError(.moduleNotFoundInFilesystem(module.id))
 
         case 1:
             let path = pathCandidates[0]
@@ -50,7 +50,7 @@ class ModuleResolver {
             return target
 
         default:
-            throw CustomError(.multipleModulesWithTheSameNameFoundInFilesystem(module.name, pathCandidates))
+            throw CustomError(.multipleModulesWithTheSameIdFoundInFilesystem(module.id, pathCandidates))
         }
     }
 
@@ -81,13 +81,13 @@ class ModuleResolver {
                 transitiveDependencies.insert(dependency)
 
                 switch dependency {
-                case .firstParty(let module):
+                case let .firstParty(module):
                     module.transitiveDependencies[flavour]?.forEach {
                         transitiveDependencies.insert($0)
                     }
 
-                case .thirdParty:
-                    break
+                case let .thirdParty(module):
+                    transitiveDependencies.insert(.thirdParty(module))
                 }
             }
 

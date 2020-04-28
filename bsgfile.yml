@@ -1,8 +1,8 @@
 modules:
-- name: Templates/Swift_BuildSystem_Bazel
-- name: Templates/Swift_BuildSystem_Cocoapods
-- name: Templates/Swift_BuildSystem_Xcodegen
-# - name: Templates/Swift_Starter_CommandLine
+- id: Templates/Swift_BuildSystem_Bazel
+- id: Templates/Swift_BuildSystem_Cocoapods
+- id: Templates/Swift_BuildSystem_Xcodegen
+# - id: Templates/Swift_Starter_CommandLine
 
 options:
   templatesPath: TemplatesSelfGenerate

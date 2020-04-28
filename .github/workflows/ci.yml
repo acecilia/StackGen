@@ -60,6 +60,12 @@ jobs:
     - name: Select Xcode version
       run: sudo xcode-select -s "$DEVELOPER_DIR"
 
+    - name: Remove default bazel executable, to test bazel installation
+      run: |
+        bazel_path="$(which bazel)"
+        sudo rm "$bazel_path"
+        echo "Removed bazel at path '$bazel_path'"
+
     - name: Setup
       run: sh scripts/setup.sh
     

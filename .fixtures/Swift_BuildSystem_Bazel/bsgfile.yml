@@ -16,15 +16,15 @@ custom:
   developmentTeam: M7D34XPBZX
 
 modules:
-- name: App
+- id: App
   dependencies:
     main: [SwiftModule1, SwiftModule3]
-- name: SwiftModule1
+- id: SwiftModule1
   dependencies:
     main: [SwiftModule2, SnapKit]
     test: [SwiftModule3]
-- name: SwiftModule2
-- name: SwiftModule3
+- id: SwiftModule2
+- id: SwiftModule3
 
 versionSources:
 - Cartfile

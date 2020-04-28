@@ -22,8 +22,8 @@ public extension CustomError {
         case multipleVersionsFoundForModule(_ moduleName: String, _ source: [Line])
 
         // Module filesystem lookup
-        case moduleNotFoundInFilesystem(_ moduleName: String)
-        case multipleModulesWithTheSameNameFoundInFilesystem(_ moduleName: String, _ paths: [Path])
+        case moduleNotFoundInFilesystem(_ moduleId: String)
+        case multipleModulesWithTheSameIdFoundInFilesystem(_ moduleId: String, _ paths: [Path])
 
         // Dependency lookup
         case multipleModulesWithSameNameFoundAmongDetectedModules(_ moduleName: String, _ detectedModules: [String])
@@ -48,11 +48,11 @@ public extension CustomError {
             case .multipleVersionsFoundForModule(let moduleName, let versionSpecs):
                 return "Multiple versions found for module '\(moduleName)': '\(versionSpecs)'. Make sure the version resolvers specified in the '\(BsgFile.fileName)' file are correct"
 
-            case .moduleNotFoundInFilesystem(let moduleName):
-                return "Module '\(moduleName)' was not found when looking for it in the filesystem"
+            case .moduleNotFoundInFilesystem(let moduleId):
+                return "Module with identifier '\(moduleId)' was not found when looking for it in the filesystem"
 
-            case .multipleModulesWithTheSameNameFoundInFilesystem(let moduleName, let paths):
-                return "Multiple filesystem paths were found for module '\(moduleName)': '\(paths)'"
+            case .multipleModulesWithTheSameIdFoundInFilesystem(let moduleId, let paths):
+                return "Multiple filesystem paths were found for module identifier '\(moduleId)': '\(paths)'"
 
             case .multipleModulesWithSameNameFoundAmongDetectedModules(let moduleName, let detectedModules):
                 return "Multiple modules with the same name ('\(moduleName)') were found among the detected modules: '\(detectedModules)'"
@@ -66,7 +66,7 @@ public extension CustomError {
             case let .errorThrownWhileRendering(templatePath, error):
                 return """
                 \(error.localizedDescription)
-                Error thrown while rendering template at path '\(templatePath)'
+                Error thrown while rendering template at path '\(templatePath.relative(to: cwd))'
                 """
 
             case let .filterFailed(filter, reason):
