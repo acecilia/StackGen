@@ -1,6 +1,7 @@
 import Foundation
 import Path
 import StringCodable
+import MoreCodable
 
 public struct MainContext: Codable {
     public let custom: [String: StringCodable]
@@ -10,16 +11,31 @@ public struct MainContext: Codable {
     public let module: FirstPartyModule.Output?
 
     public func render(_ basePath: Path) throws -> [String: Any] {
-        var context = try asDictionary(basePath)
-        if basePath != cwd {
-            // Relative to root
-            context["rr"] = try asDictionary(cwd)
-        }
-        if let modulePath = module?.path, basePath != modulePath {
-            // Relative to module
-            context["rm"] = try asDictionary(cwd)
-        }
-        return context
+        return try asDictionary(basePath)
     }
 }
 
+#if true // Experimental: turning this on will enable caching of the encoded elements that are hashable
+private let cache = DictionaryCachableEncoder.DefaultCache()
+
+private extension Encodable {
+    func asDictionary(_ basePath: Path) throws -> [String: Any] {
+        let encoder = DictionaryCachableEncoder()
+        encoder.cache = cache
+        encoder.userInfo[.relativePath] = basePath
+        encoder.userInfoHasher = { userInfo in
+            return userInfo[.relativePath] as? Path
+        }
+
+        return try encoder.encode(self)
+    }
+}
+#else
+private extension Encodable {
+    func asDictionary(_ basePath: Path) throws -> [String: Any] {
+        let encoder = DictionaryEncoder()
+        encoder.userInfo[.relativePath] = basePath
+        return try encoder.encode(self)
+    }
+}
+#endif

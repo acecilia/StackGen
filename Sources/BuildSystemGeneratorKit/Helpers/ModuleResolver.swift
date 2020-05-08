@@ -44,7 +44,7 @@ class ModuleResolver {
             let path = pathCandidates[0]
             let target = FirstPartyModule.Middleware(
                 name: path.basename(dropExtension: true),
-                path: path,
+                location: path,
                 dependencies: module.dependencies
             )
             return target
@@ -111,7 +111,7 @@ class ModuleResolver {
 
         let module = FirstPartyModule.Output(
             name: middlewareTarget.name,
-            path: middlewareTarget.path,
+            location: middlewareTarget.location.output,
             dependencies: dependencies,
             transitiveDependencies: transitiveDependencies
         )
@@ -132,7 +132,7 @@ private extension Array where Element == Dependency.Output {
             .sorted { $0.name < $1.name }
             .sorted {
                 if case .thirdParty(let left) = $0, case .thirdParty(let right) = $1 {
-                    return left.source < right.source
+                    return left.source.path < right.source.path
                 } else {
                     return $0.kind < $1.kind
                 }

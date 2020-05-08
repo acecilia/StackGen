@@ -12,10 +12,10 @@ swift_library(
   name = "{{module.name}}",
   srcs = glob(["src/main/swift/**/*.swift"]),
   deps = [
-    {% for dependency in rr.module.dependencies.main|default:"" %}
+    {% for dependency in module.dependencies.main|default:"" %}
     {% if dependency.kind == "firstParty" %}
-    "//{{dependency.path}}:{{dependency.name}}",
-    {% elif (dependency.kind == "thirdParty") and ("Cartfile" in dependency.source) %}
+    "//{{dependency.location.path|rr}}:{{dependency.name}}",
+    {% elif (dependency.kind == "thirdParty") and ("Cartfile" == dependency.source.basename) %}
     "//:{{dependency.name}}",
     {% endif %}
     {% endfor %}
@@ -45,10 +45,10 @@ swift_library(
   srcs = glob(["src/test/swift/**/*.swift"]),
   deps = [
     ":{{module.name}}",
-    {% for dependency in rr.module.dependencies.test|default:"" %}
+    {% for dependency in module.dependencies.test|default:"" %}
     {% if dependency.kind == "firstParty" %}
-    "//{{dependency.path}}:{{dependency.name}}",
-    {% elif (dependency.kind == "thirdParty") and ("Cartfile" in dependency.source) %}
+    "//{{dependency.location.path|rr}}:{{dependency.name}}",
+    {% elif (dependency.kind == "thirdParty") and ("Cartfile" == dependency.source.basename) %}
     "//:{{dependency.name}}",
     {% endif %}
     {% endfor %}

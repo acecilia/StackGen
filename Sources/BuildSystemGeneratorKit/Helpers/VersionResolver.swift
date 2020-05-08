@@ -34,7 +34,11 @@ class VersionResolver {
                 let versionString = detectedVersions[0]
                 let version = try Version(tolerant: versionString)
                     .unwrap(onFailure: "Version '\(versionString)' is not valid for dependency '\(dependencyName)'")
-                return ThirdPartyModule.Output(source: line.source, sourceParent: line.source.parent, name: dependencyName, version: version)
+                return ThirdPartyModule.Output(
+                    source: line.source.output,
+                    name: dependencyName,
+                    version: version
+                )
 
             default:
                 throw CustomError(.multipleVersionsFoundForModule(dependencyName, [line]))

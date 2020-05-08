@@ -6,7 +6,7 @@ options:
 projectReferences:
 {% for module in firstPartyModules %}
   {{module.name}}:
-    path: {{module.path}}/{{module.name}}.xcodeproj
+    path: {{module.location.path}}/{{module.name}}.xcodeproj
 {% endfor %}
 
 schemes:

@@ -1,6 +1,6 @@
 import Foundation
 import SwiftCLI
-import {{global.rootBasename}}Kit
+import {{global.root.basename}}Kit
 
 public class CLI {
     let cli: SwiftCLI.CLI

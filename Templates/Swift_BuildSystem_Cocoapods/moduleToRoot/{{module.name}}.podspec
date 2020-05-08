@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   s.version                = '{{custom.moduleVersion}}'
   s.swift_version          = '{{custom.swiftVersion}}'
   s.ios.deployment_target  = '{{custom.minimumDeploymentTarget}}'
-  s.source_files           = '{{module.path}}/src/main/swift/*.swift'
+  s.source_files           = '{{module.location.path}}/src/main/swift/*.swift'
   s.static_framework       = true
   {% if module.dependencies.main|default:"" %}
 
@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   {% endfor %}
 
   s.test_spec 'Tests' do |test_spec|
-    test_spec.source_files = '{{module.path}}/src/test/swift/*.swift'
+    test_spec.source_files = '{{module.location.path}}/src/test/swift/*.swift'
     {% if module.dependencies.test|default:"" %}
 
     {% endif %}

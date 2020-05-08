@@ -32,8 +32,8 @@ targets:
     - framework: {{dependency.name}}.framework
       implicit: true
       # embed: false # Bring this back when https://github.com/yonaskolb/XcodeGen/pull/820 is merged and released
-    {% elif (dependency.kind == "thirdParty") and ("Cartfile" in dependency.source) %}
-    - framework: {{dependency.sourceParent}}/Carthage/Build/iOS/{{dependency.name}}.framework
+    {% elif (dependency.kind == "thirdParty") and ("Cartfile" == dependency.source.basename) %}
+    - framework: {{dependency.source.parent}}/Carthage/Build/iOS/{{dependency.name}}.framework
     {% endif %}
     {% endfor %}
     {% endif %}
@@ -70,8 +70,8 @@ targets:
     - framework: {{dependency.name}}.framework
       implicit: true
       # embed: false # Bring this back when https://github.com/yonaskolb/XcodeGen/pull/820 is merged and released
-    {% elif (dependency.kind == "thirdParty") and ("Cartfile" in dependency.source) %}
-    - framework: {{dependency.sourceParent}}/Carthage/Build/iOS/{{dependency.name}}.framework
+    {% elif (dependency.kind == "thirdParty") and ("Cartfile" == dependency.source.basename) %}
+    - framework: {{dependency.source.parent}}/Carthage/Build/iOS/{{dependency.name}}.framework
     {% endif %}
     {% endfor %}
     info:

@@ -24,7 +24,7 @@ end
 {% for module in firstPartyModules where "App" in module.name %}
 target '{{module.name}}' do
     platform :ios, '{{custom.minimumDeploymentTarget}}'
-    project '{{module.path}}/{{module.name}}.xcodeproj'
+    project '{{module.location.path}}/{{module.name}}.xcodeproj'
     {% for dependency in module.transitiveDependencies.main|default:"" %}
     {% if dependency.kind == "firstParty" %}
     pod '{{dependency.name}}', :path => '.', :testspecs => ['Tests']

@@ -8,7 +8,7 @@ projectReferences:
     path: Pods/Pods.xcodeproj
 {% for module in firstPartyModules where "App" in module.name %}
   {{module.name}}:
-    path: {{module.path}}/{{module.name}}.xcodeproj
+    path: {{module.location.path}}/{{module.name}}.xcodeproj
 {% endfor %}
 
 schemes:

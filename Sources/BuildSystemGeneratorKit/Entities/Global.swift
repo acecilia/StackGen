@@ -1,12 +1,9 @@
 import Foundation
 import Path
 
+/// Global values to be injected in all template contexts
 public struct Global: Codable, Hashable {
-    // Constants
-    public let root: Path
-    public let rootBasename: String
-
-    // Variables
-    public let parent: Path
-    public let fileName: String
+    /// The root path from where the tool runs
+    public let root: Path.Output
+    public let output: Path.Output
 }

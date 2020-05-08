@@ -10,17 +10,9 @@ extension TemplateResolver {
         public let root: Path
         public let templatesFilePath: Path
     }
-
-    public struct Variables {
-        public let module: FirstPartyModule.Output?
-        public let path: Path
-    }
 }
 
 public class TemplateResolver {
-    /// This property is a very hacky hack: it is used inside stencil filters to know the path of the current template
-    static var latestTemplatePath: Path?
-
     public let templateEngine: TemplateEngine
     public let writer: Writer
 
@@ -32,51 +24,6 @@ public class TemplateResolver {
         self.templateEngine = TemplateEngine(constants.templatesFilePath)
     }
 
-    private func createContext(using variables: Variables) throws -> [String: Any] {
-        let context = MainContext(
-            custom: constants.custom,
-            firstPartyModules: constants.firstPartyModules,
-            thirdPartyModules: constants.thirdPartyModules,
-            global: Global(
-                root: constants.root,
-                rootBasename: constants.root.basename(),
-                parent: variables.path.parent,
-                fileName: variables.path.basename()
-            ),
-            module: variables.module
-        )
-
-        return try context.render(variables.path.parent)
-    }
-
-    private func _render(template: String, to destinationPath: Path, module: FirstPartyModule.Output?) throws {
-        let outputPath: Path = try {
-            let provisionalContext = try createContext(using: Variables(module: module, path: cwd))
-
-            let pathString = try templateEngine.render(
-                templateContent: destinationPath.string,
-                context: provisionalContext
-            )
-            return Path(pathString)!
-        }()
-
-        reporter.info("generating \(outputPath.relative(to: cwd))")
-        TemplateResolver.latestTemplatePath = outputPath
-
-        let rendered: String = try {
-            let context = try createContext(using: Variables(module: module, path: outputPath))
-
-            return try templateEngine.render(
-                templateContent: template,
-                context: context
-            )
-        }()
-
-        try outputPath.delete()
-        try outputPath.parent.mkdir(.p)
-        try writer.write(rendered, to: outputPath)
-    }
-
     public func render(templatePath: Path, relativePath: String, firstPartyModules: [FirstPartyModule.Output], mode: TemplateSpec.Mode) throws {
         do {
             let template = try String(contentsOf: templatePath)
@@ -84,7 +31,7 @@ public class TemplateResolver {
             switch mode {
             case let .module(filter):
                 for module in firstPartyModules where filter.matches(module.name) {
-                    let destinationPath = module.path/relativePath
+                    let destinationPath = module.location.path/relativePath
                     try _render(template: template, to: destinationPath, module: module)
                 }
 
@@ -101,5 +48,49 @@ public class TemplateResolver {
         } catch {
             throw CustomError(.errorThrownWhileRendering(templatePath: templatePath, error: error))
         }
+    }
+
+    private func _render(template: String, to outputPath: Path, module: FirstPartyModule.Output?) throws {
+        let outputPath = try resolve(outputPath: outputPath, module: module)
+
+        reporter.info("generating \(outputPath.relative(to: cwd))")
+
+        let rendered: String = try {
+            let context = try createContext(module: module, outputPath: outputPath)
+
+            return try templateEngine.render(
+                templateContent: template,
+                context: context
+            )
+        }()
+
+        try outputPath.delete()
+        try outputPath.parent.mkdir(.p)
+        try writer.write(rendered, to: outputPath)
+    }
+
+    private func createContext(module: FirstPartyModule.Output? = nil, outputPath: Path) throws -> MainContext {
+        let context = MainContext(
+            custom: constants.custom,
+            firstPartyModules: constants.firstPartyModules,
+            thirdPartyModules: constants.thirdPartyModules,
+            global: Global(
+                root: constants.root.output,
+                output: outputPath.output
+            ),
+            module: module
+        )
+
+        return context
+    }
+
+    private func resolve(outputPath: Path, module: FirstPartyModule.Output?) throws -> Path {
+        let context = try createContext(module: module, outputPath: outputPath)
+
+        let pathString = try templateEngine.render(
+            templateContent: outputPath.string,
+            context: context
+        )
+        return Path(pathString)!
     }
 }

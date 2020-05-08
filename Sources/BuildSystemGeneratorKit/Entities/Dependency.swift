@@ -1,6 +1,7 @@
 import Foundation
 
 public enum Dependency {
+    /// A middleware representation of a dependency
     public enum Middleware {
         case firstParty(FirstPartyModule.Middleware)
         case thirdParty(ThirdPartyModule.Output)
@@ -16,6 +17,7 @@ public enum Dependency {
         }
     }
 
+    /// A representation of a dependency used for creating the template context
     public enum Output: Codable, Hashable {
         case firstParty(FirstPartyModule.Output)
         case thirdParty(ThirdPartyModule.Output)

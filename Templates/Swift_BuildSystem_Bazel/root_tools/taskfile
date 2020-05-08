@@ -4,7 +4,7 @@
 # This file contains several functions that can be run as tasks
 #
 # In order to run them easily, do:
-# > . ./{{global.fileName}}
+# > . ./{{global.output.basename}}
 #
 # After sourcing the script you can run each task by its name, for example:
 # > help
@@ -72,7 +72,7 @@ function lint() {
 function help() {
   echo -n "The available tasks are: "
   # Approach inspired by https://stackoverflow.com/a/2641911
-  grep "^function" {{global.fileName}} | sed -e 's/function //g' | sed -e 's/() {//g' | xargs | sed -e 's/ /, /g'
+  grep "^function" {{global.output.basename}} | sed -e 's/function //g' | sed -e 's/() {//g' | xargs | sed -e 's/ /, /g'
 }
 
 "$@" # Source: https://stackoverflow.com/a/16159057/3203441
