@@ -17,14 +17,7 @@ class PathExistsFilter: Filter {
             throw CustomError(.filterFailed(filter: Self.filterName, reason: "The value passed to the filter is not a valid string"))
         }
 
-        let path = try Path(string) ??
-            context
-                .unwrap(Self.filterName)
-                .global
-                .output
-                .parent
-                .join(string)
-
+        let path = try Path(string) ?? context.unwrap(Self.filterName).global.output.path.parent.join(string)
         return path.exists
     }
 }
@@ -37,7 +30,7 @@ class RelativeToRootFilter: Filter {
     func run(_ value: Any?) throws -> Any {
         let string = try value.asString(Self.filterName)
         let context = try self.context.unwrap(Self.filterName)
-        let path = Path(string) ?? context.global.output.parent.join(string)
+        let path = Path(string) ?? context.global.output.path.parent.join(string)
         return path.relative(to: context.global.root.path)
     }
 }
@@ -50,7 +43,7 @@ class RelativeToModuleFilter: Filter {
     func run(_ value: Any?) throws -> Any {
         let string = try value.asString(Self.filterName)
         let context = try self.context.unwrap(Self.filterName)
-        let path = Path(string) ?? context.global.output.parent.join(string)
+        let path = Path(string) ?? context.global.output.path.parent.join(string)
         let module = try context.module.unwrap(Self.filterName)
         return path.relative(to: module.location.path)
     }
@@ -63,7 +56,7 @@ class AbsolutFilter: Filter {
 
     func run(_ value: Any?) throws -> Any {
         let string = try value.asString(Self.filterName)
-        let path = try Path(string) ?? context.unwrap(Self.filterName).global.output.parent.join(string)
+        let path = try Path(string) ?? context.unwrap(Self.filterName).global.output.path.parent.join(string)
         return path.relative(to: Path.root)
     }
 }

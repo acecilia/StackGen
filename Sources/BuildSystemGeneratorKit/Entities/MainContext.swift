@@ -10,6 +10,20 @@ public struct MainContext: Codable {
     public let global: Global
     public let module: FirstPartyModule.Output?
 
+    public init(
+        custom: [String: StringCodable],
+        firstPartyModules: [FirstPartyModule.Output],
+        thirdPartyModules: [ThirdPartyModule.Output],
+        global: Global,
+        module: FirstPartyModule.Output?
+    ) {
+        self.custom = custom
+        self.firstPartyModules = firstPartyModules
+        self.thirdPartyModules = thirdPartyModules
+        self.global = global
+        self.module = module
+    }
+
     public func render(_ basePath: Path) throws -> [String: Any] {
         return try asDictionary(basePath)
     }
