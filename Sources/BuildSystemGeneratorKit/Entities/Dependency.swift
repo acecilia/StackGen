@@ -19,7 +19,7 @@ public enum Dependency {
 
     /// A representation of a dependency used for creating the template context
     public enum Output: Codable, Hashable {
-        case firstParty(FirstPartyModule.Output)
+        case firstParty(FirstPartyModule.ReducedOutput)
         case thirdParty(ThirdPartyModule.Output)
 
         private enum CodingKeys: String, CodingKey {
@@ -75,7 +75,7 @@ public enum Dependency {
             
             switch type {
             case .firstParty:
-                self = .firstParty(try FirstPartyModule.Output(from: decoder))
+                self = .firstParty(try FirstPartyModule.ReducedOutput(from: decoder))
 
             case .thirdParty:
                 self = .thirdParty(try ThirdPartyModule.Output(from: decoder))

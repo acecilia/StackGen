@@ -30,6 +30,14 @@ public enum FirstPartyModule {
          ```
          */
         public let dependencies: [String: [String]]
+
+        public init(
+            id: String,
+            dependencies: [String: [String]]
+        ) {
+            self.id = id
+            self.dependencies = dependencies
+        }
     }
 
     /// A middleware representation of a first party module
@@ -40,6 +48,16 @@ public enum FirstPartyModule {
         public let location: Path
         /// The dependencies of the first party module
         public let dependencies: [String: [String]]
+
+        public init(
+            name: String,
+            location: Path,
+            dependencies: [String: [String]]
+        ) {
+            self.name = name
+            self.location = location
+            self.dependencies = dependencies
+        }
     }
 
     /// A representation of a first party module used for creating the template context
@@ -54,6 +72,43 @@ public enum FirstPartyModule {
         public let transitiveDependencies: [String: [Dependency.Output]]
         /// The kind of dependency that this module represents
         public let kind: Dependency.Output.Kind = .firstParty
+
+        public init(
+            name: String,
+            location: Path.Output,
+            dependencies: [String: [Dependency.Output]],
+            transitiveDependencies: [String: [Dependency.Output]]
+        ) {
+            self.name = name
+            self.location = location
+            self.dependencies = dependencies
+            self.transitiveDependencies = transitiveDependencies
+        }
+
+        var reduced: ReducedOutput {
+            return .init(
+                name: name,
+                location: location
+            )
+        }
+    }
+
+    /// A representation of a first party module used for creating the template context
+    public struct ReducedOutput: Codable, Hashable {
+        /// The name of the first party module
+        public let name: String
+        /// The location of the first party module
+        public let location: Path.Output
+        /// The kind of dependency that this module represents
+        public let kind: Dependency.Output.Kind = .firstParty
+
+        public init(
+            name: String,
+            location: Path.Output
+        ) {
+            self.name = name
+            self.location = location
+        }
     }
 }
 

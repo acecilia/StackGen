@@ -64,14 +64,14 @@ class ModuleResolver {
         case 1:
             let moduleCandidate = moduleCandidates[0]
             let target = try resolve(moduleCandidate, using: modules)
-            return .firstParty(target)
+            return .firstParty(target.reduced)
 
         default:
             throw CustomError(.multipleModulesWithSameNameFoundAmongDetectedModules(dependencyName, modules.map { $0.name }))
         }
     }
 
-    private func getTransitiveDependencies(from flavourDepDict: [String: [Dependency.Output]]) -> [String: [Dependency.Output]] {
+    private func getTransitiveDependencies(from flavourDepDict: [String: [Dependency.Output]]) throws -> [String: [Dependency.Output]] {
         var transitiveFlavourDepDict: [String: [Dependency.Output]] = [:]
 
         for (flavour, dependencies) in flavourDepDict {
@@ -82,7 +82,10 @@ class ModuleResolver {
 
                 switch dependency {
                 case let .firstParty(module):
-                    module.transitiveDependencies[flavour]?.forEach {
+                    let fullModule = try modulesCache[module.name].unwrap(
+                        onFailure: "Module '\(module.name)' should have been processed already"
+                    )
+                    fullModule.transitiveDependencies[flavour]?.forEach {
                         transitiveDependencies.insert($0)
                     }
 
@@ -107,7 +110,7 @@ class ModuleResolver {
                 .map { try resolve(dependencyName: $0, using: modules, versionResolver) }
                 .sorted()
         }
-        let transitiveDependencies = getTransitiveDependencies(from: dependencies)
+        let transitiveDependencies = try getTransitiveDependencies(from: dependencies)
 
         let module = FirstPartyModule.Output(
             name: middlewareTarget.name,

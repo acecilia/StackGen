@@ -85,7 +85,7 @@ public class TemplateResolver {
     }
 
     private func resolve(outputPath: Path, module: FirstPartyModule.Output?) throws -> Path {
-        let context = try createContext(module: module, outputPath: outputPath)
+        let context = try createContext(module: module, outputPath: cwd)
 
         let pathString = try templateEngine.render(
             templateContent: outputPath.string,
