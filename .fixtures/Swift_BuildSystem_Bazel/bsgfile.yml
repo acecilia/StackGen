@@ -15,7 +15,7 @@ custom:
   minimumDeploymentTarget: 13.0
   developmentTeam: M7D34XPBZX
 
-modules:
+firstPartyModules:
 - id: App
   dependencies:
     main: [SwiftModule1, SwiftModule3]
@@ -25,6 +25,9 @@ modules:
     test: [SwiftModule3]
 - id: SwiftModule2
 - id: SwiftModule3
+
+thirdPartyModules:
+- { name: SnapKit, version: 5.0.1, repo: SnapKit/SnapKit }
 
 versionSources:
 - Cartfile

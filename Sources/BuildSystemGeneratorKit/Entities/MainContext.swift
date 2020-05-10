@@ -29,7 +29,7 @@ public struct MainContext: Codable {
     }
 }
 
-#if true // Experimental: turning this on will enable caching of the encoded elements that are hashable
+#if false // Experimental: turning this on will enable caching of the encoded elements that are hashable
 private let cache = DictionaryCachableEncoder.DefaultCache()
 
 private extension Encodable {
@@ -47,9 +47,20 @@ private extension Encodable {
 #else
 private extension Encodable {
     func asDictionary(_ basePath: Path) throws -> [String: Any] {
-        let encoder = DictionaryEncoder()
+        let encoder = JSONEncoder()
         encoder.userInfo[.relativePath] = basePath
-        return try encoder.encode(self)
+
+        let data = try encoder.encode(self)
+        guard let dictionary = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] else {
+          throw NSError()
+        }
+        return dictionary
     }
+
+//    func asDictionary(_ basePath: Path) throws -> [String: Any] {
+//        let encoder = DictionaryEncoder()
+//        encoder.userInfo[.relativePath] = basePath
+//        return try encoder.encode(self)
+//    }
 }
 #endif

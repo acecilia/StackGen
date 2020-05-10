@@ -2,8 +2,17 @@
   "object": {
     "pins": [
       {
+        "package": "Compose",
+        "repositoryURL": "https://github.com/acecilia/Compose.git",
+        "state": {
+          "branch": null,
+          "revision": "fffe631873a79a0a7d6c9ce92d7217d7d0bdcd9a",
+          "version": "0.0.3"
+        }
+      },
+      {
         "package": "MoreCodable",
-        "repositoryURL": "https://github.com/tattn/MoreCodable",
+        "repositoryURL": "https://github.com/tattn/MoreCodable.git",
         "state": {
           "branch": null,
           "revision": "18ea2c09bf110681c075cc49538eda4bd5573ce8",
@@ -39,7 +48,7 @@
       },
       {
         "package": "RuntimeTestCase",
-        "repositoryURL": "https://github.com/acecilia/RuntimeTestCaseSwift",
+        "repositoryURL": "https://github.com/acecilia/RuntimeTestCaseSwift.git",
         "state": {
           "branch": null,
           "revision": "e2c6ed3fc47279c85c5e5750a600e5e9ab86a0c9",

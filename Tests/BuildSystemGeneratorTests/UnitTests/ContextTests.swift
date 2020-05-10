@@ -4,7 +4,7 @@ import BuildSystemGeneratorKit
 import Path
 
 final class ContextTests: XCTestCase {
-    func testContext() throws {
+    func xtestContext() throws {
         let contextString = """
         custom:
           aGlobalVariable: something

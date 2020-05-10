@@ -15,7 +15,7 @@ swift_library(
     {% for dependency in module.dependencies.main %}
     {% if dependency.kind == "firstParty" %}
     "//{{dependency.location.path|rr}}:{{dependency.name}}",
-    {% elif (dependency.kind == "thirdParty") and ("Cartfile" == dependency.source.basename) %}
+    {% elif dependency.kind == "thirdParty" %}
     "//:{{dependency.name}}",
     {% endif %}
     {% endfor %}
@@ -48,7 +48,7 @@ swift_library(
     {% for dependency in module.dependencies.test %}
     {% if dependency.kind == "firstParty" %}
     "//{{dependency.location.path|rr}}:{{dependency.name}}",
-    {% elif (dependency.kind == "thirdParty") and ("Cartfile" == dependency.source.basename) %}
+    {% elif dependency.kind == "thirdParty" %}
     "//:{{dependency.name}}",
     {% endif %}
     {% endfor %}

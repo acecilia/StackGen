@@ -4,25 +4,29 @@ import Path
 class ModuleResolver {
     private let bsgFile: BsgFile
     private let subpaths: [Path]
-    private let versionResolver: VersionResolver
     private var modulesCache: [String: FirstPartyModule.Output] = [:]
 
     init(_ bsgFile: BsgFile) throws {
         self.bsgFile = bsgFile
         self.subpaths = try cwd.fastFindDirectories()
-        self.versionResolver = try VersionResolver(bsgFile.versionSources)
     }
 
     func resolve() throws -> (firstPartyModules: [FirstPartyModule.Output], thirdPartyModules: [ThirdPartyModule.Output]) {
-        let inputModules = populateDependencyKeys(bsgFile.modules)
+        let thirdPartyModules = resolve(bsgFile.thirdPartyModules)
+        let inputModules = populateDependencyKeys(bsgFile.firstPartyModules)
         let middlewareModules = try inputModules.map { try resolve($0) }
-        let firstPartyModules = try resolve(middlewareModules)
-        let thirdPartyModules = extractThirdPartyModules(firstPartyModules)
+        let firstPartyModules = try resolve(middlewareModules, thirdPartyModules: thirdPartyModules)
         return (firstPartyModules, thirdPartyModules)
     }
 
+    private func resolve(_ modules: [ThirdPartyModule.Input]) -> [ThirdPartyModule.Output] {
+        return modules.map {
+            ThirdPartyModule.Output(.init(name: $0.name), $0.dictionary)
+        }
+    }
+
     /// Prefill dependency keys that do not have any dependency with empty arrays, so accessing them in the template is cleaner and safer
-    /// Instead of: `{% for dependency in module.transitiveDependencies.main|default:"" %}`
+    /// Instead of having to do: `{% for dependency in module.transitiveDependencies.main|default:"" %}`
     /// We allow to just do: `{% for dependency in module.transitiveDependencies.main %}`
     private func populateDependencyKeys(_ modules: [FirstPartyModule.Input]) -> [FirstPartyModule.Input] {
         let keys = modules
@@ -37,20 +41,6 @@ class ModuleResolver {
             let newDependenciesDict = $0.dependencies.merging(dict) { current, _ in current }
             return FirstPartyModule.Input(id: $0.id, dependencies: newDependenciesDict)
         }
-    }
-
-    private func extractThirdPartyModules(_ modules: [FirstPartyModule.Output]) -> [ThirdPartyModule.Output] {
-        var thirdPartyModules: Set<ThirdPartyModule.Output> = []
-        for module in modules {
-            for (_, targetDependencies) in module.dependencies {
-                for dependency in targetDependencies {
-                    if case .thirdParty(let module) = dependency {
-                        thirdPartyModules.insert(module)
-                    }
-                }
-            }
-        }
-        return Array(thirdPartyModules).sorted { $0.name < $1.name }
     }
 
     private func resolve(_ module: FirstPartyModule.Input) throws -> FirstPartyModule.Middleware {
@@ -73,16 +63,17 @@ class ModuleResolver {
         }
     }
 
-    private func resolve(dependencyName: String, using modules: [FirstPartyModule.Middleware], _ versionResolver: VersionResolver) throws -> Dependency.Output {
+    private func resolve(dependencyName: String, using modules: [FirstPartyModule.Middleware], _ thirdPartyModules: [ThirdPartyModule.Output]) throws -> Dependency.Output {
         let moduleCandidates = modules.filter { $0.name == dependencyName }
 
         switch moduleCandidates.count {
         case 0:
-            return .thirdParty(try versionResolver.resolve(dependencyName: dependencyName))
+            // TODO: finish this up
+            return .thirdParty(thirdPartyModules.first { $0.name == dependencyName }!)
 
         case 1:
             let moduleCandidate = moduleCandidates[0]
-            let target = try resolve(moduleCandidate, using: modules)
+            let target = try resolve(moduleCandidate, using: modules, thirdPartyModules: thirdPartyModules)
             return .firstParty(target.reduced)
 
         default:
@@ -119,14 +110,14 @@ class ModuleResolver {
         return transitiveFlavourDepDict
     }
 
-    private func resolve(_ middlewareTarget: FirstPartyModule.Middleware, using modules: [FirstPartyModule.Middleware]) throws -> FirstPartyModule.Output {
+    private func resolve(_ middlewareTarget: FirstPartyModule.Middleware, using modules: [FirstPartyModule.Middleware], thirdPartyModules: [ThirdPartyModule.Output]) throws -> FirstPartyModule.Output {
         if let module = modulesCache[middlewareTarget.name] {
             return module
         }
 
         let dependencies: [String: [Dependency.Output]] = try middlewareTarget.dependencies.mapValues {
             try $0
-                .map { try resolve(dependencyName: $0, using: modules, versionResolver) }
+                .map { try resolve(dependencyName: $0, using: modules, thirdPartyModules) }
                 .sorted()
         }
         let transitiveDependencies = try getTransitiveDependencies(from: dependencies)
@@ -141,9 +132,9 @@ class ModuleResolver {
         return module
     }
 
-    private func resolve(_ middlewareTargets: [FirstPartyModule.Middleware]) throws -> [FirstPartyModule.Output] {
+    private func resolve(_ middlewareTargets: [FirstPartyModule.Middleware], thirdPartyModules: [ThirdPartyModule.Output]) throws -> [FirstPartyModule.Output] {
         try middlewareTargets.map {
-            try resolve($0, using: middlewareTargets)
+            try resolve($0, using: middlewareTargets, thirdPartyModules: thirdPartyModules)
         }
     }
 }
@@ -152,12 +143,6 @@ private extension Array where Element == Dependency.Output {
     func sorted() -> [Dependency.Output] {
         return self
             .sorted { $0.name < $1.name }
-            .sorted {
-                if case .thirdParty(let left) = $0, case .thirdParty(let right) = $1 {
-                    return left.source.path < right.source.path
-                } else {
-                    return $0.kind < $1.kind
-                }
-        }
+            .sorted { $0.kind < $1.kind }
     }
 }
