@@ -5,7 +5,7 @@ import MoreCodable
 
 public struct MainContext: Codable {
     public let custom: [String: StringCodable]
-    public let firstPartyModules: [FirstPartyModule.ReducedOutput]
+    public let firstPartyModules: [FirstPartyModule.Output]
     public let thirdPartyModules: [ThirdPartyModule.Output]
     public let global: Global
     public let module: FirstPartyModule.Output?
@@ -18,7 +18,7 @@ public struct MainContext: Codable {
         module: FirstPartyModule.Output?
     ) {
         self.custom = custom
-        self.firstPartyModules = firstPartyModules.map { $0.reduced }
+        self.firstPartyModules = firstPartyModules
         self.thirdPartyModules = thirdPartyModules
         self.global = global
         self.module = module

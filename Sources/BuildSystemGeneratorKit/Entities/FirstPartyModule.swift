@@ -93,7 +93,8 @@ public enum FirstPartyModule {
         }
     }
 
-    /// A representation of a first party module used for creating the template context
+    /// A reduced representation of a first party module used for creating the template context
+    /// The main reason for using this type instead of the full Output type is performance
     public struct ReducedOutput: Codable, Hashable {
         /// The name of the first party module
         public let name: String
