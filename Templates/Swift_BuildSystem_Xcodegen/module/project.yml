@@ -25,7 +25,7 @@ targets:
     platform: iOS
     sources:
     - src/main/swift
-    {% if module.transitiveDependencies.main|default:"" %}
+    {% if module.transitiveDependencies.main %}
     dependencies:
     {% for dependency in module.transitiveDependencies.main %}
     {% if dependency.kind == "firstParty" %}
@@ -65,7 +65,7 @@ targets:
     - src/test/swift
     dependencies:
     - target: {{module.name}}
-    {% for dependency in module.transitiveDependencies.test|default:"" %}
+    {% for dependency in module.transitiveDependencies.test %}
     {% if dependency.kind == "firstParty" %}
     - framework: {{dependency.name}}.framework
       implicit: true

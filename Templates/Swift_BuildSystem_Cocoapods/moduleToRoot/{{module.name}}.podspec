@@ -5,10 +5,10 @@ Pod::Spec.new do |s|
   s.ios.deployment_target  = '{{custom.minimumDeploymentTarget}}'
   s.source_files           = '{{module.location.path}}/src/main/swift/*.swift'
   s.static_framework       = true
-  {% if module.dependencies.main|default:"" %}
+  {% if module.dependencies.main %}
 
   {% endif %}
-  {% for dependency in module.dependencies.main|default:"" %}
+  {% for dependency in module.dependencies.main %}
   {% if dependency.kind == "firstParty" %}
   s.dependency '{{dependency.name}}', '{{custom.moduleVersion}}'
   {% elif dependency.kind == "thirdParty" %}
@@ -18,10 +18,10 @@ Pod::Spec.new do |s|
 
   s.test_spec 'Tests' do |test_spec|
     test_spec.source_files = '{{module.location.path}}/src/test/swift/*.swift'
-    {% if module.dependencies.test|default:"" %}
+    {% if module.dependencies.test %}
 
     {% endif %}
-    {% for dependency in module.dependencies.test|default:"" %}
+    {% for dependency in module.dependencies.test %}
     {% if dependency.kind == "firstParty" %}
     test_spec.dependency '{{dependency.name}}', '{{custom.moduleVersion}}'
     {% elif dependency.kind == "thirdParty" %}

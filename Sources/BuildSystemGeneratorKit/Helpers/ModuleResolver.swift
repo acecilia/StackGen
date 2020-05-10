@@ -14,10 +14,29 @@ class ModuleResolver {
     }
 
     func resolve() throws -> (firstPartyModules: [FirstPartyModule.Output], thirdPartyModules: [ThirdPartyModule.Output]) {
-        let middlewareModules = try bsgFile.modules.map { try resolve($0) }
+        let inputModules = populateDependencyKeys(bsgFile.modules)
+        let middlewareModules = try inputModules.map { try resolve($0) }
         let firstPartyModules = try resolve(middlewareModules)
         let thirdPartyModules = extractThirdPartyModules(firstPartyModules)
         return (firstPartyModules, thirdPartyModules)
+    }
+
+    /// Prefill dependency keys that do not have any dependency with empty arrays, so accessing them in the template is cleaner and safer
+    /// Instead of: `{% for dependency in module.transitiveDependencies.main|default:"" %}`
+    /// We allow to just do: `{% for dependency in module.transitiveDependencies.main %}`
+    private func populateDependencyKeys(_ modules: [FirstPartyModule.Input]) -> [FirstPartyModule.Input] {
+        let keys = modules
+            .reduce(into: Set<String>()) { result, module in
+                module.dependencies.keys.forEach { result.insert($0) }
+            }
+            .sorted()
+        let dict: [String: [String]] = keys.reduce(into: [:]) { result, key in
+            result[key] = []
+        }
+        return modules.map {
+            let newDependenciesDict = $0.dependencies.merging(dict) { current, _ in current }
+            return FirstPartyModule.Input(id: $0.id, dependencies: newDependenciesDict)
+        }
     }
 
     private func extractThirdPartyModules(_ modules: [FirstPartyModule.Output]) -> [ThirdPartyModule.Output] {
