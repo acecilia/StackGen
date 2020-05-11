@@ -14,9 +14,9 @@
         "package": "MoreCodable",
         "repositoryURL": "https://github.com/tattn/MoreCodable.git",
         "state": {
-          "branch": null,
-          "revision": "18ea2c09bf110681c075cc49538eda4bd5573ce8",
-          "version": "1.3.0"
+          "branch": "hotfix/encoding-to-same-encoder",
+          "revision": "cbaee25d5f55d19e3c64bf0a12c3e790d5896eff",
+          "version": null
         }
       },
       {

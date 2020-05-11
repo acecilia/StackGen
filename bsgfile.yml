@@ -1,7 +1,7 @@
-modules:
-- id: Templates/Swift_BuildSystem_Bazel
-- id: Templates/Swift_BuildSystem_Cocoapods
-- id: Templates/Swift_BuildSystem_Xcodegen
+firstPartyModules:
+- id: Swift_BuildSystem_Bazel
+- id: Swift_BuildSystem_Cocoapods
+- id: Swift_BuildSystem_Xcodegen
 # - id: Templates/Swift_Starter_CommandLine
 
 options:

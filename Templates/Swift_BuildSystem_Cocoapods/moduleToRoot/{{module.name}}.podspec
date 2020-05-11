@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   {% if module.dependencies.main %}
 
   {% endif %}
-  {% for dependency in module.dependencies.main %}
+  {% for dependency in module.dependencies.main|expand %}
   {% if dependency.kind == "firstParty" %}
   s.dependency '{{dependency.name}}', '{{custom.moduleVersion}}'
   {% elif dependency.kind == "thirdParty" %}
@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
     {% if module.dependencies.test %}
 
     {% endif %}
-    {% for dependency in module.dependencies.test %}
+    {% for dependency in module.dependencies.test|expand %}
     {% if dependency.kind == "firstParty" %}
     test_spec.dependency '{{dependency.name}}', '{{custom.moduleVersion}}'
     {% elif dependency.kind == "thirdParty" %}

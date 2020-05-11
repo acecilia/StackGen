@@ -32,6 +32,9 @@ function setup() {
   mint bootstrap -l
   bundle install
 
+  echo "✨ Install carthage dependencies"
+  carthage bootstrap --no-use-binaries --platform iOS --cache-builds
+
   echo "✨ Install bazel"
   version="{{custom.bazelVersion}}"
   if [[ $(bazel --version 2>/dev/null) == "bazel $version" ]]; then

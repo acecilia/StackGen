@@ -17,7 +17,7 @@ public class TemplateEngine {
 
     public func render(templateContent: String, context: MainContext) throws -> String {
         extensions.set(context)
-        let encodedContext = try context.render(context.global.output.path.parent)
+        let encodedContext = try context.asDictionary(context.global.output.path.parent)
         let fixedTemplateContent = addNewLineDelimiters(templateContent)
         let rendered = try env.renderTemplate(string: fixedTemplateContent, context: encodedContext)
         return removeNewLinesDelimiters(rendered)
@@ -31,7 +31,8 @@ public class TemplateEngine {
     private func removeNewLinesDelimiters(_ value: String) -> String {
         return value
             .replacingOccurrences(of: "\n( *\n)+", with: "\n", options: .regularExpression)
-            .replacingOccurrences(of: "\n¶", with: "\n")
+            .replacingOccurrences(of: "^\n+", with: "", options: .regularExpression)
+            .replacingOccurrences(of: "¶\n", with: "\n")
     }
 }
 

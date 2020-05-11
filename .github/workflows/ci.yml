@@ -18,13 +18,13 @@ jobs:
       with:
         ruby-version: '2.7'
 
-    - uses: actions/cache@v1
-      with:
-        path: Examples/swift/Carthage
-        # Force to create a new cache every build: https://github.com/actions/cache/issues/109#issuecomment-558771281
-        key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-carthage-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-carthage-
+    # - uses: actions/cache@v1
+    #   with:
+    #     path: Examples/swift/Carthage
+    #     # Force to create a new cache every build: https://github.com/actions/cache/issues/109#issuecomment-558771281
+    #     key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-carthage-${{ github.sha }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-carthage-
     - uses: actions/cache@v1
       with:
         path: /private/var/tmp/_bazel_runner

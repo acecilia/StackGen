@@ -27,10 +27,7 @@ firstPartyModules:
 - id: SwiftModule3
 
 thirdPartyModules:
-- { name: SnapKit, version: 5.0.1, repo: SnapKit/SnapKit }
-
-versionSources:
-- Cartfile
+- { name: SnapKit, version: 5.0.1, repository: SnapKit/SnapKit }
 
 options:
   templatesPath: Swift_BuildSystem_Bazel

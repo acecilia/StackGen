@@ -11,7 +11,6 @@ extension BsgFile {
         case custom
         case firstPartyModules
         case thirdPartyModules
-        case versionSources
         case options
     }
 
@@ -21,7 +20,6 @@ extension BsgFile {
         custom = (try? container.decode([String: StringCodable].self, forKey: .custom)) ?? BsgFile.defaultCustom
         firstPartyModules = (try? container.decode([FirstPartyModule.Input].self, forKey: .firstPartyModules)) ?? BsgFile.defaultFirstPartyModules
         thirdPartyModules = (try? container.decode([ThirdPartyModule.Input].self, forKey: .thirdPartyModules)) ?? BsgFile.defaultThirdPartyModules
-        versionSources = (try? container.decode([Path].self, forKey: .versionSources)) ?? BsgFile.defaultVersionSources
         options = (try? container.decode(Options.Input.self, forKey: .options)) ?? BsgFile.defaultOptions
     }
 

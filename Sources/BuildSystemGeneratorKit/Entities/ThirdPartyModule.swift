@@ -13,7 +13,7 @@ public struct ThirdPartyModule {
     public typealias Output = Compose<_Output, [String: StringCodable]>
     public struct _Output: Codable, Hashable {
         public let name: String
-        public let kind: Dependency.Output.Kind = .thirdParty
+        public let kind: ModuleKind = .thirdParty
     }
 }
 

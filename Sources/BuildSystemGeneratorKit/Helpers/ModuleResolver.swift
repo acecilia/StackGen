@@ -4,7 +4,7 @@ import Path
 class ModuleResolver {
     private let bsgFile: BsgFile
     private let subpaths: [Path]
-    private var modulesCache: [String: FirstPartyModule.Output] = [:]
+    private var transitiveDependenciesCache: [String: [Dependency]] = [:]
 
     init(_ bsgFile: BsgFile) throws {
         self.bsgFile = bsgFile
@@ -12,30 +12,56 @@ class ModuleResolver {
     }
 
     func resolve() throws -> (firstPartyModules: [FirstPartyModule.Output], thirdPartyModules: [ThirdPartyModule.Output]) {
-        let thirdPartyModules = resolve(bsgFile.thirdPartyModules)
+        // Prepare
         let inputModules = populateDependencyKeys(bsgFile.firstPartyModules)
+
+        // Preprocess first party modules
         let middlewareModules = try inputModules.map { try resolve($0) }
-        let firstPartyModules = try resolve(middlewareModules, thirdPartyModules: thirdPartyModules)
+
+        // Perform prechecks on the modules
+        try ensureUniqueModuleNames(bsgFile, middlewareModules)
+
+        // Get modules
+        let thirdPartyModules = bsgFile.thirdPartyModules.map { resolve($0) }
+        let firstPartyModules = try middlewareModules.map { try resolve($0, middlewareModules, thirdPartyModules) }
         return (firstPartyModules, thirdPartyModules)
     }
 
-    private func resolve(_ modules: [ThirdPartyModule.Input]) -> [ThirdPartyModule.Output] {
-        return modules.map {
-            ThirdPartyModule.Output(.init(name: $0.name), $0.dictionary)
+    private func ensureUniqueModuleNames(_ bsgFile: BsgFile, _ middleware: [FirstPartyModule.Middleware]) throws {
+        let allModules: [Module] = bsgFile.thirdPartyModules + middleware
+        let duplicates = Dictionary(grouping: allModules, by: \.name)
+            .filter { $1.count > 1 }
+            .map(\.key)
+        if duplicates.isEmpty == false {
+            throw CustomError(.foundDuplicatedModules(duplicates))
         }
+
+        for module in middleware {
+            for (_, dependencies) in module.dependencies {
+                let duplicates = Dictionary(grouping: dependencies) { $0 }
+                    .filter { $1.count > 1 }
+                    .map(\.key)
+                if duplicates.isEmpty == false {
+                    throw CustomError(.foundDuplicatedDependencies(duplicates, module.name))
+                }
+            }
+        }
+
+    }
+
+    private func resolve(_ module: ThirdPartyModule.Input) -> ThirdPartyModule.Output {
+        return ThirdPartyModule.Output(.init(name: module.name), module.dictionary)
     }
 
     /// Prefill dependency keys that do not have any dependency with empty arrays, so accessing them in the template is cleaner and safer
     /// Instead of having to do: `{% for dependency in module.transitiveDependencies.main|default:"" %}`
     /// We allow to just do: `{% for dependency in module.transitiveDependencies.main %}`
     private func populateDependencyKeys(_ modules: [FirstPartyModule.Input]) -> [FirstPartyModule.Input] {
-        let keys = modules
-            .reduce(into: Set<String>()) { result, module in
-                module.dependencies.keys.forEach { result.insert($0) }
+        var dict: [String: [String]] = [:]
+        modules.forEach {
+            $0.dependencies.keys.forEach {
+                dict[$0] = []
             }
-            .sorted()
-        let dict: [String: [String]] = keys.reduce(into: [:]) { result, key in
-            result[key] = []
         }
         return modules.map {
             let newDependenciesDict = $0.dependencies.merging(dict) { current, _ in current }
@@ -59,86 +85,114 @@ class ModuleResolver {
         return target
     }
 
-    private func resolve(dependencyName: String, using modules: [FirstPartyModule.Middleware], _ thirdPartyModules: [ThirdPartyModule.Output]) throws -> Dependency.Output {
-        let moduleCandidates = modules.filter { $0.name == dependencyName }
-
-        switch moduleCandidates.count {
-        case 0:
-            // TODO: finish this up
-            return .thirdParty(thirdPartyModules.first { $0.name == dependencyName }!)
-
-        case 1:
-            let moduleCandidate = moduleCandidates[0]
-            let target = try resolve(moduleCandidate, using: modules, thirdPartyModules: thirdPartyModules)
-            return .firstParty(target.reduced)
-
-        default:
-            throw CustomError(.multipleModulesWithSameNameFoundAmongDetectedModules(dependencyName, modules.map { $0.name }))
+    private func getTransitiveDependencies(_ dependency: String, _ middleware: [FirstPartyModule.Middleware], _ thirdParty: [ThirdPartyModule.Output]) throws -> [Dependency] {
+        if let transitiveDependencies = transitiveDependenciesCache[dependency] {
+            return transitiveDependencies
         }
+
+        var transitiveDependencies: Set<Dependency> = []
+
+        if let module = middleware.first(where: { $0.name == dependency }) {
+            transitiveDependencies.insert(.firstParty(module))
+
+            try module.dependencies.main.forEach {
+                try getTransitiveDependencies($0, middleware, thirdParty).forEach {
+                    transitiveDependencies.insert($0)
+                }
+            }
+        } else if let module = thirdParty.first(where: { $0.name == dependency }) {
+            transitiveDependencies.insert(.thirdParty(module))
+        } else {
+            throw CustomError(.unknownModule(dependency, middleware, thirdParty))
+        }
+
+        return Array(transitiveDependencies)
     }
 
-    private func getTransitiveDependencies(from flavourDepDict: [String: [Dependency.Output]]) throws -> [String: [Dependency.Output]] {
-        var transitiveFlavourDepDict: [String: [Dependency.Output]] = [:]
+    private func getTransitiveDependencies(_ module: FirstPartyModule.Middleware, _ middleware: [FirstPartyModule.Middleware], _ thirdParty: [ThirdPartyModule.Output]) throws -> [String: [String]] {
+        var result: [String: [String]] = [:]
 
-        for (flavour, dependencies) in flavourDepDict {
-            var transitiveDependencies: Set<Dependency.Output> = []
+        for (flavour, dependencies) in module.dependencies {
+            var transitiveDependencies: Set<Dependency> = []
 
             for dependency in dependencies {
-                transitiveDependencies.insert(dependency)
-
-                switch dependency {
-                case let .firstParty(module):
-                    let fullModule = try modulesCache[module.name].unwrap(
-                        onFailure: "Module '\(module.name)' should have been processed already"
-                    )
-                    fullModule.transitiveDependencies[flavour]?.forEach {
-                        transitiveDependencies.insert($0)
-                    }
-
-                case let .thirdParty(module):
-                    transitiveDependencies.insert(.thirdParty(module))
+                try getTransitiveDependencies(dependency, middleware, thirdParty).forEach {
+                    transitiveDependencies.insert($0)
                 }
             }
 
-            transitiveFlavourDepDict[flavour] = Array(transitiveDependencies).sorted()
+            result[flavour] = Array(transitiveDependencies).sorted().map(\.name)
         }
 
-        return transitiveFlavourDepDict
+        return result
     }
 
-    private func resolve(_ middlewareTarget: FirstPartyModule.Middleware, using modules: [FirstPartyModule.Middleware], thirdPartyModules: [ThirdPartyModule.Output]) throws -> FirstPartyModule.Output {
-        if let module = modulesCache[middlewareTarget.name] {
-            return module
-        }
-
-        let dependencies: [String: [Dependency.Output]] = try middlewareTarget.dependencies.mapValues {
-            try $0
-                .map { try resolve(dependencyName: $0, using: modules, thirdPartyModules) }
-                .sorted()
-        }
-        let transitiveDependencies = try getTransitiveDependencies(from: dependencies)
-
-        let module = FirstPartyModule.Output(
-            name: middlewareTarget.name,
-            location: middlewareTarget.location.output,
-            dependencies: dependencies,
-            transitiveDependencies: transitiveDependencies
+    private func resolve(_ module: FirstPartyModule.Middleware, _ middleware: [FirstPartyModule.Middleware], _ thirdParty: [ThirdPartyModule.Output]) throws -> FirstPartyModule.Output {
+        return FirstPartyModule.Output(
+            name: module.name,
+            location: module.location.output,
+            dependencies: module.dependencies,
+            transitiveDependencies: try getTransitiveDependencies(module, middleware, thirdParty)
         )
-        modulesCache[module.name] = module
-        return module
+    }
+}
+
+// MARK: Dependency. Used to sort the transitive dependencies
+
+private enum Dependency: Module, Hashable {
+    case firstParty(FirstPartyModule.Middleware)
+    case thirdParty(ThirdPartyModule.Output)
+
+    var name: String {
+        switch self {
+        case let .firstParty(module):
+            return module.name
+
+        case let .thirdParty(module):
+            return module.name
+        }
     }
 
-    private func resolve(_ middlewareTargets: [FirstPartyModule.Middleware], thirdPartyModules: [ThirdPartyModule.Output]) throws -> [FirstPartyModule.Output] {
-        try middlewareTargets.map {
-            try resolve($0, using: middlewareTargets, thirdPartyModules: thirdPartyModules)
+    var kind: ModuleKind {
+        switch self {
+        case let .firstParty(module):
+            return module.kind
+
+        case let .thirdParty(module):
+            return module.kind
         }
     }
 }
 
-private extension Array where Element == Dependency.Output {
-    func sorted() -> [Dependency.Output] {
+private extension Array where Element == Dependency {
+    func sorted() -> [Element] {
         return self
             .sorted { $0.name < $1.name }
             .sorted { $0.kind < $1.kind }
+    }
+}
+
+// MARK: Module protocol. Used to ensure unique module names
+
+private protocol Module {
+    var name: String { get }
+    var kind: ModuleKind { get }
+}
+
+extension FirstPartyModule.Middleware: Module {
+    var kind: ModuleKind { .firstParty }
+
+}
+
+extension ThirdPartyModule.Input: Module {
+    var name: String { element1.name }
+    var kind: ModuleKind { .thirdParty }
+}
+
+// MARK: Dictionary extension. Used to obtain the transitive dependencies
+
+private extension Dictionary where Key == String, Value == [String] {
+    var main: [String] {
+        return self["main"] ?? []
     }
 }

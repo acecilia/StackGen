@@ -61,10 +61,37 @@ class AbsolutFilter: Filter {
     }
 }
 
+class ExpandDependenciesFilter: Filter {
+    static let filterName = "expand"
+
+    var context: MainContext?
+
+    func run(_ value: Any?) throws -> Any {
+        let dependencies = try value.asStringArray(Self.filterName)
+        let context = try self.context.unwrap(Self.filterName)
+
+        let expandedDependencies: [[String: Any]] = try dependencies.map { dependency in
+            let dependency: Codable = try context.firstPartyModules.first { $0.name == dependency } ??
+                context.thirdPartyModules.first { $0.name == dependency }
+                .unwrap(onFailure: "A module with name '\(dependency)' could not be found")
+            return try dependency.asDictionary(context.global.output.path.parent)
+        }
+
+        return expandedDependencies
+    }
+}
+
 private extension Optional where Wrapped == Any {
     func asString(_ filterName: String, file: String = #file, line: Int = #line) throws -> String {
         guard let unwrapped = self as? String else {
             throw CustomError(.filterFailed(filter: filterName, reason: "The value passed to the filter is not a valid string"))
+        }
+        return unwrapped
+    }
+
+    func asStringArray(_ filterName: String, file: String = #file, line: Int = #line) throws -> [String] {
+        guard let unwrapped = self as? [String] else {
+            throw CustomError(.filterFailed(filter: filterName, reason: "The value passed to the filter is not a valid string array"))
         }
         return unwrapped
     }

@@ -7,7 +7,8 @@ public class CustomExtensions: Extension {
         PathExistsFilter(),
         RelativeToRootFilter(),
         RelativeToModuleFilter(),
-        AbsolutFilter()
+        AbsolutFilter(),
+        ExpandDependenciesFilter()
     ]
 
     override init() {

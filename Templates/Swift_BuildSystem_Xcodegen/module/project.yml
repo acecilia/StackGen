@@ -27,7 +27,7 @@ targets:
     - src/main/swift
     {% if module.transitiveDependencies.main %}
     dependencies:
-    {% for dependency in module.transitiveDependencies.main %}
+    {% for dependency in module.transitiveDependencies.main|expand %}
     {% if dependency.kind == "firstParty" %}
     - framework: {{dependency.name}}.framework
       implicit: true
@@ -65,7 +65,7 @@ targets:
     - src/test/swift
     dependencies:
     - target: {{module.name}}
-    {% for dependency in module.transitiveDependencies.test %}
+    {% for dependency in module.transitiveDependencies.test|expand %}
     {% if dependency.kind == "firstParty" %}
     - framework: {{dependency.name}}.framework
       implicit: true

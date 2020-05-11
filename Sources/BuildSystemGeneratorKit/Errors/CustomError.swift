@@ -16,12 +16,11 @@ public struct CustomError: Error, ErrorInterface {
 
 public extension CustomError {
     enum Kind: CustomStringConvertible {
-        // Version
-        case moduleCouldNotBeFoundInSources(_ moduleName: String, _ sources: [Path])
-
-        // Module filesystem lookup
+        // Module analysis
         case moduleNotFoundInFilesystem(_ moduleId: String)
-//        case multipleModulesWithTheSameIdFoundInFilesystem(_ moduleId: String, _ paths: [Path])
+        case unknownModule(_ name: String, _ firstParty: [FirstPartyModule.Middleware], _ thirdParty: [ThirdPartyModule.Output])
+        case foundDuplicatedModules(_ modules: [String])
+        case foundDuplicatedDependencies(_ dependencies: [String], _ module: String)
 
         // Dependency lookup
         case multipleModulesWithSameNameFoundAmongDetectedModules(_ moduleName: String, _ detectedModules: [String])
@@ -36,21 +35,23 @@ public extension CustomError {
     
         public var description: String {
             switch self {
-            case .moduleCouldNotBeFoundInSources(let moduleName, let sources):
-                let sourcesPaths = sources.map { $0.relative(to: cwd) }.joined(separator: ", ")
-                return "The module '\(moduleName)' could not be found among the sources: \(sourcesPaths)"
-
-//            case .versionCouldNotBeFoundForModule(let moduleName, let line):
-//                return "A version for module '\(moduleName)' could not be found in \(line.source):\(line.index): '\(line.content)'"
-//
-//            case .multipleVersionsFoundForModule(let moduleName, let versionSpecs):
-//                return "Multiple versions found for module '\(moduleName)': '\(versionSpecs)'. Make sure the version resolvers specified in the '\(BsgFile.fileName)' file are correct"
-
             case .moduleNotFoundInFilesystem(let moduleId):
                 return "Module with identifier '\(moduleId)' was not found when looking for it in the filesystem"
 
-//            case .multipleModulesWithTheSameIdFoundInFilesystem(let moduleId, let paths):
-//                return "Multiple filesystem paths were found for module identifier '\(moduleId)': '\(paths)'"
+            case let .unknownModule(name, firstParty, thirdParty):
+                let firstPartyList = firstParty.map { $0.name }.joined(separator: ", ")
+                let thirdPartyList = thirdParty.map { $0.name }.joined(separator: ", ")
+                return """
+                Module '\(name)' could not be found among the first or third party specified modules.
+                First party modules: '\(firstPartyList)'
+                Third party modules: '\(thirdPartyList)'
+                """
+
+            case let .foundDuplicatedModules(modules):
+                return "Found multiple modules with the same name. This is not permitted, a module name must be unique. Duplicated modules: '\(modules.joined(separator: ", "))'"
+
+            case let .foundDuplicatedDependencies(dependencies, module):
+                return "Found dependencies specified multiple times under the '\(module)' first party module. Dependencies: '\(dependencies.joined(separator: ", "))'"
 
             case .multipleModulesWithSameNameFoundAmongDetectedModules(let moduleName, let detectedModules):
                 return "Multiple modules with the same name ('\(moduleName)') were found among the detected modules: '\(detectedModules)'"
