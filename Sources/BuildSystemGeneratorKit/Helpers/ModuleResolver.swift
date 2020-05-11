@@ -29,9 +29,9 @@ class ModuleResolver {
 
     private func ensureUniqueModuleNames(_ bsgFile: BsgFile, _ middleware: [FirstPartyModule.Middleware]) throws {
         let allModules: [Module] = bsgFile.thirdPartyModules + middleware
-        let duplicates = Dictionary(grouping: allModules, by: \.name)
+        let duplicates = Dictionary(grouping: allModules) { $0.name }
             .filter { $1.count > 1 }
-            .map(\.key)
+            .map { $0.key }
         if duplicates.isEmpty == false {
             throw CustomError(.foundDuplicatedModules(duplicates))
         }
@@ -40,7 +40,7 @@ class ModuleResolver {
             for (_, dependencies) in module.dependencies {
                 let duplicates = Dictionary(grouping: dependencies) { $0 }
                     .filter { $1.count > 1 }
-                    .map(\.key)
+                    .map { $0.key }
                 if duplicates.isEmpty == false {
                     throw CustomError(.foundDuplicatedDependencies(duplicates, module.name))
                 }
@@ -121,7 +121,7 @@ class ModuleResolver {
                 }
             }
 
-            result[flavour] = Array(transitiveDependencies).sorted().map(\.name)
+            result[flavour] = Array(transitiveDependencies).sorted().map { $0.name }
         }
 
         return result
