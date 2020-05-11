@@ -2,7 +2,7 @@ import Path
 
 extension Path {
     func fastFindDirectories() throws -> [Path] {
-        let output = try run(#"find "$(pwd)" -type d"#, directory: self)
+        let output = try run(#"find "$(pwd)" -type d | sort -n"#, directory: self)
         return output.components(separatedBy: .newlines).map {
             Path(PathishWrapper(string: $0))
         }

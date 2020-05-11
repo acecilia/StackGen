@@ -53,7 +53,7 @@ public class TemplateResolver {
     private func _render(template: String, to outputPath: Path, module: FirstPartyModule.Output?) throws {
         let outputPath = try resolve(outputPath: outputPath, module: module)
 
-        reporter.info("generating \(outputPath.relative(to: cwd))")
+        reporter.info(.sparkles, "generating \(outputPath.relative(to: cwd))")
 
         let rendered: String = try {
             let context = try createContext(module: module, outputPath: outputPath)

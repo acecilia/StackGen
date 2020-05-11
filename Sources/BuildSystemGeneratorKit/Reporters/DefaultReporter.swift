@@ -9,9 +9,10 @@ public class DefaultReporter: ReporterInterface {
         Swift.print("🌱 Arguments: '\(arguments.joined(separator: " "))'")
     }
 
-    public func info(_ string: String) {
-        Swift.print("✨ \(string.capitalizingFirstLetter())")
+    public func info(_ emoji: Emoji, _ string: String) {
+        Swift.print("\(emoji.character) \(string.capitalizingFirstLetter())")
     }
+
 
     public func warning(_ string: String) {
         Swift.print("⚠️ Warning: \(string)")
@@ -26,6 +27,19 @@ public class DefaultReporter: ReporterInterface {
             Swift.print("✅ Done")
         } else {
             Swift.print("💥 Failed")
+        }
+    }
+}
+
+private extension Emoji {
+    var character: Character {
+        switch self {
+        case .sparkles:
+            return "✨"
+        case .books:
+            return "📚"
+        case .gear:
+            return "⚙️"
         }
     }
 }

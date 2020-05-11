@@ -21,7 +21,7 @@ public extension CustomError {
 
         // Module filesystem lookup
         case moduleNotFoundInFilesystem(_ moduleId: String)
-        case multipleModulesWithTheSameIdFoundInFilesystem(_ moduleId: String, _ paths: [Path])
+//        case multipleModulesWithTheSameIdFoundInFilesystem(_ moduleId: String, _ paths: [Path])
 
         // Dependency lookup
         case multipleModulesWithSameNameFoundAmongDetectedModules(_ moduleName: String, _ detectedModules: [String])
@@ -49,8 +49,8 @@ public extension CustomError {
             case .moduleNotFoundInFilesystem(let moduleId):
                 return "Module with identifier '\(moduleId)' was not found when looking for it in the filesystem"
 
-            case .multipleModulesWithTheSameIdFoundInFilesystem(let moduleId, let paths):
-                return "Multiple filesystem paths were found for module identifier '\(moduleId)': '\(paths)'"
+//            case .multipleModulesWithTheSameIdFoundInFilesystem(let moduleId, let paths):
+//                return "Multiple filesystem paths were found for module identifier '\(moduleId)': '\(paths)'"
 
             case .multipleModulesWithSameNameFoundAmongDetectedModules(let moduleName, let detectedModules):
                 return "Multiple modules with the same name ('\(moduleName)') were found among the detected modules: '\(detectedModules)'"

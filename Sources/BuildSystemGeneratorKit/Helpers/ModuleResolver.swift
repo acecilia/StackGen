@@ -44,23 +44,19 @@ class ModuleResolver {
     }
 
     private func resolve(_ module: FirstPartyModule.Input) throws -> FirstPartyModule.Middleware {
-        let pathCandidates = subpaths.filter { $0.string.hasSuffix(module.id) }
-        switch pathCandidates.count {
-        case 0:
+        guard let path = subpaths.first(where: { $0.string.hasSuffix(module.id) }) else {
             throw CustomError(.moduleNotFoundInFilesystem(module.id))
-
-        case 1:
-            let path = pathCandidates[0]
-            let target = FirstPartyModule.Middleware(
-                name: path.basename(dropExtension: true),
-                location: path,
-                dependencies: module.dependencies
-            )
-            return target
-
-        default:
-            throw CustomError(.multipleModulesWithTheSameIdFoundInFilesystem(module.id, pathCandidates))
         }
+
+        let target = FirstPartyModule.Middleware(
+            name: path.basename(dropExtension: true),
+            location: path,
+            dependencies: module.dependencies
+        )
+
+        reporter.info(.books, "module \(target.name) found at path \(target.location.relative(to: cwd))")
+
+        return target
     }
 
     private func resolve(dependencyName: String, using modules: [FirstPartyModule.Middleware], _ thirdPartyModules: [ThirdPartyModule.Output]) throws -> Dependency.Output {

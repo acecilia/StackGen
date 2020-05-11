@@ -12,7 +12,7 @@ public class GenerateAction: Action {
     }
 
     public func execute() throws {
-        reporter.info("resolving modules")
+        reporter.info(.gear, "resolving modules")
 
         let bsgFile: BsgFile
         let bsgFilePath = cwd/BsgFile.fileName
@@ -27,7 +27,7 @@ public class GenerateAction: Action {
         let resolvedOptions = try bsgFile.options.resolve(using: cliOptions)
         let templateFilePath = try TemplateSpec.selectTemplate(resolvedOptions.templatesPath)
 
-        // Resolve templates
+        reporter.info(.gear, "resolving templates")
         let constants = TemplateResolver.Constants(
             custom: bsgFile.custom,
             firstPartyModules: firstPartyModules,
@@ -37,7 +37,6 @@ public class GenerateAction: Action {
         )
         let templateResolver = TemplateResolver(writer: writer, constants: constants)
 
-        // Generate
         let templatesFileContent = try String(contentsOf: templateFilePath)
         let templatesFileRaw: TemplatesFileRaw = try YAMLDecoder().decode(from: templatesFileContent)
         let templatesFile: TemplatesFile = templatesFileRaw.reduce(into: [:]) { (result, pair) in
@@ -45,6 +44,7 @@ public class GenerateAction: Action {
             result[key] = pair.value
         }
 
+        reporter.info(.gear, "generating files")
         for (path, templateSpec) in templatesFile {
             if path.isFile {
                 try templateResolver.render(
