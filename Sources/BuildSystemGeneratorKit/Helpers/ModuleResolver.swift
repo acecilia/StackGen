@@ -70,7 +70,10 @@ class ModuleResolver {
     }
 
     private func resolve(_ module: FirstPartyModule.Input) throws -> FirstPartyModule.Middleware {
-        guard let path = subpaths.first(where: { $0.string.hasSuffix(module.id) }) else {
+        let matchingPaths = subpaths
+            .filter { $0.string.hasSuffix("/\(module.id)") }
+            .sorted { $0.components.count < $1.components.count }
+        guard let path = matchingPaths.first else {
             throw CustomError(.moduleNotFoundInFilesystem(module.id))
         }
 

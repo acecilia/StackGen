@@ -11,15 +11,6 @@
         }
       },
       {
-        "package": "MoreCodable",
-        "repositoryURL": "https://github.com/tattn/MoreCodable.git",
-        "state": {
-          "branch": "hotfix/encoding-to-same-encoder",
-          "revision": "cbaee25d5f55d19e3c64bf0a12c3e790d5896eff",
-          "version": null
-        }
-      },
-      {
         "package": "ObjectiveKit",
         "repositoryURL": "https://github.com/acecilia/ObjectiveKit",
         "state": {
