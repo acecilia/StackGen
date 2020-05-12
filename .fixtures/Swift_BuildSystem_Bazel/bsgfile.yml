@@ -16,15 +16,15 @@ custom:
   developmentTeam: M7D34XPBZX
 
 firstPartyModules:
-- id: App
+- path: Libraries/App
   dependencies:
     main: [SwiftModule1, SwiftModule3]
-- id: SwiftModule1
+- path: Libraries/SwiftModule1
   dependencies:
     main: [SwiftModule2, SnapKit]
     test: [SwiftModule3]
-- id: SwiftModule2
-- id: SwiftModule3
+- path: Libraries/SwiftModule2
+- path: Libraries/SwiftModule3
 
 thirdPartyModules:
 - { name: SnapKit, version: 5.0.1, repository: SnapKit/SnapKit }

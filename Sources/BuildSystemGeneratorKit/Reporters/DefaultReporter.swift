@@ -38,8 +38,8 @@ private extension Emoji {
             return "✨"
         case .books:
             return "📚"
-        case .gear:
-            return "⚙️"
+        case .hammer:
+            return "🔨"
         }
     }
 }

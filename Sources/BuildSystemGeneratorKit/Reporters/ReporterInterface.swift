@@ -11,5 +11,5 @@ public protocol ReporterInterface {
 public enum Emoji {
     case sparkles
     case books
-    case gear
+    case hammer
 }
