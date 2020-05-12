@@ -6,7 +6,8 @@ public class DefaultReporter: ReporterInterface {
 
     public func start(_ arguments: [String]) {
         Swift.print("🌱 Working directory: \(cwd)")
-        Swift.print("🌱 Arguments: '\(arguments.joined(separator: " "))'")
+        let arguments = arguments.joined(separator: " ")
+        Swift.print("🌱 Arguments: \(arguments.isEmpty ? "None" : arguments)")
     }
 
     public func info(_ emoji: Emoji, _ string: String) {
