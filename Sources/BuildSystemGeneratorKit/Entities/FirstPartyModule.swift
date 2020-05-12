@@ -3,18 +3,11 @@ import Path
 
 public enum FirstPartyModule {
     /// A representation of a first party module when specified in the bsgfile
-    public struct Input: AutoCodable {
+    public struct Input: AutoCodable, Hashable {
         public static let defaultDependencies: [String: [String]] = [:]
 
-        /**
-         An identifier that uniquely identifies the path of a first party module on the current directory.
-         The last component of the path will be used as the name of the module
-
-         - Most of the times, this would be the same as your module name. For example: `SwiftModule`
-         - In case you use the same folder name in multiple places, you will need to add
-         path components until only one matches. For example: `Libraries/SwiftModule`
-         */
-        public let id: String
+        public var name: String { path.basename() }
+        public let path: Path
 
         /**
          A dictionary representing the dependencies of the module
@@ -32,30 +25,10 @@ public enum FirstPartyModule {
         public let dependencies: [String: [String]]
 
         public init(
-            id: String,
+            path: Path,
             dependencies: [String: [String]]
         ) {
-            self.id = id
-            self.dependencies = dependencies
-        }
-    }
-
-    /// A middleware representation of a first party module
-    public struct Middleware: Hashable {
-        /// The name of the first party module
-        public let name: String
-        /// The location of the first party module
-        public let location: Path
-        /// The dependencies of the first party module
-        public let dependencies: [String: [String]]
-
-        public init(
-            name: String,
-            location: Path,
-            dependencies: [String: [String]]
-        ) {
-            self.name = name
-            self.location = location
+            self.path = path
             self.dependencies = dependencies
         }
     }

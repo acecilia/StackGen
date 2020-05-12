@@ -18,7 +18,7 @@ public extension CustomError {
     enum Kind: CustomStringConvertible {
         // Module analysis
         case moduleNotFoundInFilesystem(_ moduleId: String)
-        case unknownModule(_ name: String, _ firstParty: [FirstPartyModule.Middleware], _ thirdParty: [ThirdPartyModule.Output])
+        case unknownModule(_ name: String, _ firstParty: [FirstPartyModule.Input], _ thirdParty: [ThirdPartyModule.Output])
         case foundDuplicatedModules(_ modules: [String])
         case foundDuplicatedDependencies(_ dependencies: [String], _ module: String)
 

@@ -1,4 +1,4 @@
-// Generated using Sourcery 0.17.0 — https://github.com/krzysztofzablocki/Sourcery
+// Generated using Sourcery 0.18.0 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
 
 import Version
@@ -28,14 +28,14 @@ extension BsgFile {
 extension FirstPartyModule.Input {
 
     enum CodingKeys: String, CodingKey {
-        case id
+        case path
         case dependencies
     }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        id = try container.decode(String.self, forKey: .id)
+        path = try container.decode(Path.self, forKey: .path)
         dependencies = (try? container.decode([String: [String]].self, forKey: .dependencies)) ?? FirstPartyModule.Input.defaultDependencies
     }
 
@@ -50,7 +50,7 @@ extension TemplateSpec.Mode.FullValue {
         case filter
     }
 
-     init(from decoder: Decoder) throws {
+    internal init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         if container.allKeys.contains(.module), try container.decodeNil(forKey: .module) == false {
@@ -72,7 +72,7 @@ extension TemplateSpec.Mode.FullValue {
         throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "Unknown enum case"))
     }
 
-     func encode(to encoder: Encoder) throws {
+    internal func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
         switch self {

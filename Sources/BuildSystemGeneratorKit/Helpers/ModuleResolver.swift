@@ -3,32 +3,27 @@ import Path
 
 class ModuleResolver {
     private let bsgFile: BsgFile
-    private let subpaths: [Path]
     private var transitiveDependenciesCache: [String: [Dependency]] = [:]
 
     init(_ bsgFile: BsgFile) throws {
         self.bsgFile = bsgFile
-        self.subpaths = try cwd.fastFindDirectories()
     }
 
     func resolve() throws -> (firstPartyModules: [FirstPartyModule.Output], thirdPartyModules: [ThirdPartyModule.Output]) {
+        // Perform prechecks on the modules
+        try ensureUniqueModuleNames(bsgFile)
+
         // Prepare
         let inputModules = populateDependencyKeys(bsgFile.firstPartyModules)
 
-        // Preprocess first party modules
-        let middlewareModules = try inputModules.map { try resolve($0) }
-
-        // Perform prechecks on the modules
-        try ensureUniqueModuleNames(bsgFile, middlewareModules)
-
         // Get modules
         let thirdPartyModules = bsgFile.thirdPartyModules.map { resolve($0) }
-        let firstPartyModules = try middlewareModules.map { try resolve($0, middlewareModules, thirdPartyModules) }
+        let firstPartyModules = try inputModules.map { try resolve($0, inputModules, thirdPartyModules) }
         return (firstPartyModules, thirdPartyModules)
     }
 
-    private func ensureUniqueModuleNames(_ bsgFile: BsgFile, _ middleware: [FirstPartyModule.Middleware]) throws {
-        let allModules: [Module] = bsgFile.thirdPartyModules + middleware
+    private func ensureUniqueModuleNames(_ bsgFile: BsgFile) throws {
+        let allModules: [Module] = bsgFile.firstPartyModules + bsgFile.thirdPartyModules
         let duplicates = Dictionary(grouping: allModules) { $0.name }
             .filter { $1.count > 1 }
             .map { $0.key }
@@ -36,7 +31,7 @@ class ModuleResolver {
             throw CustomError(.foundDuplicatedModules(duplicates))
         }
 
-        for module in middleware {
+        for module in bsgFile.firstPartyModules {
             for (_, dependencies) in module.dependencies {
                 let duplicates = Dictionary(grouping: dependencies) { $0 }
                     .filter { $1.count > 1 }
@@ -65,30 +60,11 @@ class ModuleResolver {
         }
         return modules.map {
             let newDependenciesDict = $0.dependencies.merging(dict) { current, _ in current }
-            return FirstPartyModule.Input(id: $0.id, dependencies: newDependenciesDict)
+            return FirstPartyModule.Input(path: $0.path, dependencies: newDependenciesDict)
         }
     }
 
-    private func resolve(_ module: FirstPartyModule.Input) throws -> FirstPartyModule.Middleware {
-        let matchingPaths = subpaths
-            .filter { $0.string.hasSuffix("/\(module.id)") }
-            .sorted { $0.components.count < $1.components.count }
-        guard let path = matchingPaths.first else {
-            throw CustomError(.moduleNotFoundInFilesystem(module.id))
-        }
-
-        let target = FirstPartyModule.Middleware(
-            name: path.basename(dropExtension: true),
-            location: path,
-            dependencies: module.dependencies
-        )
-
-        reporter.info(.books, "module \(target.name) found at path \(target.location.relative(to: cwd))")
-
-        return target
-    }
-
-    private func getTransitiveDependencies(_ dependency: String, _ middleware: [FirstPartyModule.Middleware], _ thirdParty: [ThirdPartyModule.Output]) throws -> [Dependency] {
+    private func getTransitiveDependencies(_ dependency: String, _ middleware: [FirstPartyModule.Input], _ thirdParty: [ThirdPartyModule.Output]) throws -> [Dependency] {
         if let transitiveDependencies = transitiveDependenciesCache[dependency] {
             return transitiveDependencies
         }
@@ -112,7 +88,7 @@ class ModuleResolver {
         return Array(transitiveDependencies)
     }
 
-    private func getTransitiveDependencies(_ module: FirstPartyModule.Middleware, _ middleware: [FirstPartyModule.Middleware], _ thirdParty: [ThirdPartyModule.Output]) throws -> [String: [String]] {
+    private func getTransitiveDependencies(_ module: FirstPartyModule.Input, _ middleware: [FirstPartyModule.Input], _ thirdParty: [ThirdPartyModule.Output]) throws -> [String: [String]] {
         var result: [String: [String]] = [:]
 
         for (flavour, dependencies) in module.dependencies {
@@ -130,20 +106,24 @@ class ModuleResolver {
         return result
     }
 
-    private func resolve(_ module: FirstPartyModule.Middleware, _ middleware: [FirstPartyModule.Middleware], _ thirdParty: [ThirdPartyModule.Output]) throws -> FirstPartyModule.Output {
-        return FirstPartyModule.Output(
+    private func resolve(_ module: FirstPartyModule.Input, _ middleware: [FirstPartyModule.Input], _ thirdParty: [ThirdPartyModule.Output]) throws -> FirstPartyModule.Output {
+        let module = FirstPartyModule.Output(
             name: module.name,
-            location: module.location.output,
+            location: module.path.output,
             dependencies: module.dependencies,
             transitiveDependencies: try getTransitiveDependencies(module, middleware, thirdParty)
         )
+
+        reporter.info(.books, "resolved module \(module.name)")
+
+        return module
     }
 }
 
 // MARK: Dependency. Used to sort the transitive dependencies
 
 private enum Dependency: Module, Hashable {
-    case firstParty(FirstPartyModule.Middleware)
+    case firstParty(FirstPartyModule.Input)
     case thirdParty(ThirdPartyModule.Output)
 
     var name: String {
@@ -182,9 +162,8 @@ private protocol Module {
     var kind: ModuleKind { get }
 }
 
-extension FirstPartyModule.Middleware: Module {
+extension FirstPartyModule.Input: Module {
     var kind: ModuleKind { .firstParty }
-
 }
 
 extension ThirdPartyModule.Input: Module {
