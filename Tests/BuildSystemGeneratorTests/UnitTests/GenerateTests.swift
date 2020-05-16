@@ -31,16 +31,14 @@ final class GenerateTests: RuntimeTestCase {
     func testGenerateWithDifferentTopLevel() throws {
         let template = Template.Swift_BuildSystem_Xcodegen
         
-        let destinationA = try tmp("path_A")
-        let destinationB = try tmp("path_B")
-
+        let destinationA = try tmp("destinationA")
+        let destinationB = try tmp("destinationB")
         try prefill(destinationA, using: template)
-        try prefill(destinationB, using: template)
-
+        try (destinationA/BsgFile.fileName).move(into: destinationB)
         try patchTopLevel(at: destinationB/BsgFile.fileName, using: destinationA)
-        let cleanExitCode = try generate(in: destinationB, using: template)
-        XCTAssertEqual(cleanExitCode, 0)
 
-        assert(fixture: fixturesPath/template.rawValue, equals: destinationA)
+        let exitCode = try generate(in: destinationB, using: template)
+        XCTAssertEqual(exitCode, 0)
+        assert(reference: fixturesPath/template.rawValue, equals: destinationA, exclude: [BsgFile.fileName])
     }
 }
