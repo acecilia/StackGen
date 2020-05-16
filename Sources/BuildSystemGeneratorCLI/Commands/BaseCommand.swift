@@ -15,7 +15,13 @@ public class BaseCommand {
         self.env = env
     }
 
-    public func execute() throws {
+    public final func execute() throws {
         env.reporter.start(arguments, env.cwd)
+        try go()
+        env.reporter.end()
+    }
+
+    public func go() throws {
+        fatalError("You must override this when subclassing")
     }
 }

@@ -29,12 +29,8 @@ public class Reporter {
         return "💥 Error: \(string)"
     }
 
-    public func end(_ status: Int32) {
-        if status == 0 {
-            Swift.print("✅ Done")
-        } else {
-            Swift.print("💥 Failed")
-        }
+    public func end() {
+        Swift.print("✅ Done")
     }
 }
 

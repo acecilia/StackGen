@@ -5,9 +5,7 @@ import BuildSystemGeneratorKit
 public class Generate: BaseCommand, Command {
     public let shortDescription: String = "Generates file using the \(BsgFile.fileName) in the current directory"
 
-    public override func execute() throws {
-        try super.execute()
-
+    public override func go() throws {
         let options = Options.CLI(
             templates: templates
         )
