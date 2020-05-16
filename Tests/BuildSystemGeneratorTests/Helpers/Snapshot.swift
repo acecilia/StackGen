@@ -6,12 +6,12 @@ enum Snapshot {
 }
 
 extension XCTestCase {
-    func assert(fixure: Path, equals path: Path, file: StaticString = #file, line: UInt = #line) {
+    func assert(fixture: Path, equals path: Path, file: StaticString = #file, line: UInt = #line) {
         if Snapshot.recording {
-            try! fixure.parent.mkdir(.p)
-            try! path.copy(to: fixure)
+            try! fixture.parent.mkdir(.p)
+            try! path.copy(to: fixture)
         } else {
-            assert(reference: fixure, equals: path, file: file, line: line)
+            assert(reference: fixture, equals: path, file: file, line: line)
         }
     }
 

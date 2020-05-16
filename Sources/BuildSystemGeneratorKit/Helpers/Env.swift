@@ -4,13 +4,13 @@ import Path
 public struct Env {
     public let cwd: Path
     public var topLevel: Path
-    public let reporter: ReporterInterface
+    public let reporter: Reporter
     public let writer: Writer
 
     public init(
         cwd: Path = Path(Path.cwd),
         topLevel: Path = Path(Path.cwd),
-        reporter: ReporterInterface = DefaultReporter(),
+        reporter: Reporter = Reporter(),
         writer: Writer = Writer()
     ) {
         self.cwd = cwd

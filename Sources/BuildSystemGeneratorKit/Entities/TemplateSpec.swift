@@ -35,7 +35,7 @@ public struct TemplateResolver2 {
             .first { $0.exists }
             .require(relativePath)
 
-        env.reporter.info(.pageFacingUp, "using template file at path \(templateFile.string)")
+        env.reporter.info(.pageFacingUp, "using template file at path \(templateFile.relative(to: env.cwd))")
 
         return templateFile
     }

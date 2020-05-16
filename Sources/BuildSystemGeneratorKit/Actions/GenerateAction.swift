@@ -14,11 +14,16 @@ public class GenerateAction: Action {
     public func execute() throws {
         env.reporter.info(.wrench, "resolving modules")
 
-        let bsgFile = try BsgFile.resolve(env)
+        let bsgFile: BsgFile = try {
+            let bsgFile = try BsgFile.resolve(env)
 
-        if let topLevel = bsgFile.options.topLevel {
-            env.topLevel = Path(topLevel) ?? env.cwd/topLevel
-        }
+            if let topLevel = bsgFile.options.topLevel {
+                env.topLevel = Path(topLevel) ?? env.cwd/topLevel
+                return try BsgFile.resolve(env)
+            } else {
+                return bsgFile
+            }
+        }()
 
         let resolvedOptions = try Options.Resolved(cliOptions, bsgFile.options)
         let (firstPartyModules, thirdPartyModules) = try ModuleResolver(bsgFile, env).resolve()
@@ -30,7 +35,7 @@ public class GenerateAction: Action {
             custom: bsgFile.custom,
             firstPartyModules: firstPartyModules,
             thirdPartyModules: thirdPartyModules,
-            root: env.cwd,
+            root: env.topLevel,
             templatesFilePath: templateFilePath
         )
         let templateResolver = TemplateResolver(constants, env)

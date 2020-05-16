@@ -3,9 +3,11 @@ import Path
 
 public class Writer {
     public private(set) var writtenFiles: [Path] = []
-    public var shouldWrite: Bool = true
+    public let shouldWrite: Bool
 
-    public init() { }
+    public init(shouldWrite: Bool = true) {
+        self.shouldWrite = shouldWrite
+    }
     
     public func write(_ string: String, to path: Path) throws {
         writtenFiles.append(path)
