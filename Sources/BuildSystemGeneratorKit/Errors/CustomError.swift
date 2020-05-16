@@ -9,7 +9,7 @@ public struct CustomError: Error, ErrorInterface {
 
     public init(_ kind: Kind, file: String = #file, line: Int = #line) {
         self.kind = kind
-        self.fileName = (cwd/file).basename(dropExtension: false)
+        self.fileName = URL(fileURLWithPath: file).lastPathComponent
         self.line = line
     }
 }
@@ -30,7 +30,7 @@ public extension CustomError {
 
         // Templates
         case templatesFileNotFound(relativePath: String)
-        case errorThrownWhileRendering(templatePath: Path, error: Error)
+        case errorThrownWhileRendering(templatePath: String, error: Error)
         case filterFailed(filter: String, reason: String)
     
         public var description: String {
@@ -65,7 +65,7 @@ public extension CustomError {
             case let .errorThrownWhileRendering(templatePath, error):
                 return """
                 \(error.localizedDescription)
-                Error thrown while rendering template at path '\(templatePath.relative(to: cwd))'
+                Error thrown while rendering template at path '\(templatePath)'
                 """
 
             case let .filterFailed(filter, reason):

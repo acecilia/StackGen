@@ -3,6 +3,12 @@ import SwiftCLI
 import BuildSystemGeneratorKit
 
 public class MessageGenerator: HelpMessageGenerator {
+    private let env: Env
+
+    public init(_ env: Env) {
+        self.env = env
+    }
+
     public func writeUnrecognizedErrorMessage(for error: Error, to out: WritableStream) {
         let fileInformation: String?
         if let error = error as? ErrorInterface {
@@ -20,11 +26,7 @@ public class MessageGenerator: HelpMessageGenerator {
             ]
             .compactMap { $0 }
 
-        writeErrorLine(for: description.joined(separator: ". "), to: out)
-    }
-
-    public func writeErrorLine(for errorMessage: String, to out: WritableStream) {
-        let message = reporter.formatAsError(errorMessage)
+        let message = env.reporter.formatAsError(description.joined(separator: ". "))
         out.print(message)
     }
 }

@@ -4,12 +4,12 @@ import Foundation
 import Path
 
 public class TemplateEngine {
-    private let env: Environment
+    private let environment: Environment
     private let extensions = CustomExtensions()
     
-    public init(_ templatesFilePath: Path) {
-        self.env = Environment(
-            loader: FileSystemLoader(paths: [.init(templatesFilePath.parent.relative(to: cwd))]),
+    public init(_ templatesFilePath: Path, _ env: Env) {
+        self.environment = Environment(
+            loader: FileSystemLoader(paths: [.init(templatesFilePath.parent.relative(to: env.cwd))]),
             extensions: [extensions],
             throwOnUnresolvedVariable: true
         )
@@ -19,7 +19,7 @@ public class TemplateEngine {
         extensions.set(context)
         let encodedContext = try context.asDictionary(context.global.output.path.parent)
         let fixedTemplateContent = addNewLineDelimiters(templateContent)
-        let rendered = try env.renderTemplate(string: fixedTemplateContent, context: encodedContext)
+        let rendered = try environment.renderTemplate(string: fixedTemplateContent, context: encodedContext)
         return removeNewLinesDelimiters(rendered)
     }
 

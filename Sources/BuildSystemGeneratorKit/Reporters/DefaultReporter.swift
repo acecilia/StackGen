@@ -2,16 +2,20 @@ import Foundation
 import Path
 
 public class DefaultReporter: ReporterInterface {
+    public var silent: Bool = false
+
     public init() { }
 
-    public func start(_ arguments: [String]) {
+    public func start(_ arguments: [String], _ cwd: Path) {
         Swift.print("🌱 Working directory: \(cwd)")
         let arguments = arguments.joined(separator: " ")
         Swift.print("🌱 Arguments: \(arguments.isEmpty ? "None" : arguments)")
     }
 
     public func info(_ emoji: Emoji, _ string: String) {
-        Swift.print("\(emoji.character) \(string.capitalizingFirstLetter())")
+        if silent == false  {
+            Swift.print("\(emoji.character) \(string.capitalizingFirstLetter())")
+        }
     }
 
 
@@ -41,6 +45,10 @@ private extension Emoji {
             return "📚"
         case .wrench:
             return "🔧"
+        case .pageFacingUp:
+            return "📄"
+        case .broom:
+            return "🧹"
         }
     }
 }

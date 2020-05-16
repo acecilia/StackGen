@@ -13,15 +13,15 @@ extension TemplateResolver {
 }
 
 public class TemplateResolver {
-    public let templateEngine: TemplateEngine
-    public let writer: Writer
-
     public let constants: Constants
+    public let templateEngine: TemplateEngine
 
-    public init(writer: Writer, constants: Constants) {
-        self.writer = writer
+    private let env: Env
+
+    public init(_ constants: Constants, _ env: Env) {
         self.constants = constants
-        self.templateEngine = TemplateEngine(constants.templatesFilePath)
+        self.templateEngine = TemplateEngine(constants.templatesFilePath, env)
+        self.env = env
     }
 
     public func render(templatePath: Path, relativePath: String, firstPartyModules: [FirstPartyModule.Output], mode: TemplateSpec.Mode) throws {
@@ -36,24 +36,29 @@ public class TemplateResolver {
                 }
 
             case let .moduleToRoot(filter):
-                let destinationPath = cwd/relativePath
+                let destinationPath = env.topLevel/relativePath
                 for module in firstPartyModules where filter.matches(module.name) {
                     try _render(template: template, to: destinationPath, module: module)
                 }
 
             case .root:
-                let destinationPath = cwd/relativePath
+                let destinationPath = env.topLevel/relativePath
                 try _render(template: template, to: destinationPath, module: nil)
             }
         } catch {
-            throw CustomError(.errorThrownWhileRendering(templatePath: templatePath, error: error))
+            throw CustomError(
+                .errorThrownWhileRendering(
+                    templatePath: templatePath.relative(to: env.cwd),
+                    error: error
+                )
+            )
         }
     }
 
     private func _render(template: String, to outputPath: Path, module: FirstPartyModule.Output?) throws {
         let outputPath = try resolve(outputPath: outputPath, module: module)
 
-        reporter.info(.sparkles, "generating \(outputPath.relative(to: cwd))")
+        env.reporter.info(.sparkles, "generating \(outputPath.relative(to: env.cwd))")
 
         let rendered: String = try {
             let context = try createContext(module: module, outputPath: outputPath)
@@ -66,7 +71,7 @@ public class TemplateResolver {
 
         try outputPath.delete()
         try outputPath.parent.mkdir(.p)
-        try writer.write(rendered, to: outputPath)
+        try env.writer.write(rendered, to: outputPath)
     }
 
     private func createContext(module: FirstPartyModule.Output? = nil, outputPath: Path) throws -> MainContext {
@@ -85,7 +90,7 @@ public class TemplateResolver {
     }
 
     private func resolve(outputPath: Path, module: FirstPartyModule.Output?) throws -> Path {
-        let context = try createContext(module: module, outputPath: cwd)
+        let context = try createContext(module: module, outputPath: env.cwd)
 
         let pathString = try templateEngine.render(
             templateContent: outputPath.string,

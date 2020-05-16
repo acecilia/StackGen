@@ -4,9 +4,11 @@ import Path
 class ModuleResolver {
     private let bsgFile: BsgFile
     private var transitiveDependenciesCache: [String: [Dependency]] = [:]
+    private let env: Env
 
-    init(_ bsgFile: BsgFile) throws {
+    init(_ bsgFile: BsgFile, _ env: Env) throws {
         self.bsgFile = bsgFile
+        self.env = env
     }
 
     func resolve() throws -> (firstPartyModules: [FirstPartyModule.Output], thirdPartyModules: [ThirdPartyModule.Output]) {
@@ -114,7 +116,7 @@ class ModuleResolver {
             transitiveDependencies: try getTransitiveDependencies(module, middleware, thirdParty)
         )
 
-        reporter.info(.books, "resolved module \(module.name)")
+        env.reporter.info(.books, "resolved module \(module.name)")
 
         return module
     }

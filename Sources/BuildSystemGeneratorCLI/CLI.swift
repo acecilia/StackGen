@@ -4,29 +4,24 @@ import BuildSystemGeneratorKit
 import Path
 
 public class CLI {
-    let cli: SwiftCLI.CLI
+    public init() { }
 
-    public init() {
-        // Reset current working directory path
-        cwd = Path(Path.cwd)
+    public func execute(with arguments: [String] = []) -> Int32 {
+        let env = Env()
 
-        cli = SwiftCLI.CLI(
+        let cli = SwiftCLI.CLI(
             name: "bsg",
             description: "Generates build system configurations for swift projects",
             commands: [
-                Generate(),
-                Clean()
+                Generate(arguments, env),
+                Clean(arguments, env)
             ]
         )
 
-        cli.helpMessageGenerator = MessageGenerator()
+        cli.helpMessageGenerator = MessageGenerator(env)
         cli.parser.routeBehavior = .searchWithFallback(cli.commands.first! as! Command)
-    }
 
-    public func execute(with arguments: [String] = []) -> Int32 {
-        reporter.start(arguments)
         let status = cli.go(with: arguments)
-        reporter.end(status)
         return status
     }
 }

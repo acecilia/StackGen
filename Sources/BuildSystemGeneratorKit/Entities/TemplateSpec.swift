@@ -1,28 +1,33 @@
 import Foundation
 import Path
 
-public struct TemplateSpec: Decodable {
+
+public struct TemplateResolver2 {
     public static let fileName = "templates.yml"
     public static let defaultFolderName = "Templates"
 
-    public let mode: Mode
+    private let env: Env
 
-    public static func resolveTemplate(_ relativePath: String) throws -> Path {
+    public init(_ env: Env) {
+        self.env = env
+    }
+
+    public func resolveTemplate(_ relativePath: String) throws -> Path {
         let paths: [Path?] = [
             // First: treat as absolut path
             Path(relativePath),
             // Second: check relative to the current location
-            cwd/relativePath,
+            env.cwd/relativePath,
             // Third: check the bundled templates. They should be located next to the binary (follow symlinks if needed)
             try? Bundle.main.executable?.readlink().parent
-                .join(TemplateSpec.defaultFolderName)
+                .join(Self.defaultFolderName)
                 .join(relativePath)
-                .join(TemplateSpec.fileName),
+                .join(Self.fileName),
             // Fourth: check the path relative to this file (to be used during development)
             Path(#file)?.parent.parent.parent.parent
-                .join(TemplateSpec.defaultFolderName)
+                .join(Self.defaultFolderName)
                 .join(relativePath)
-                .join(TemplateSpec.fileName)
+                .join(Self.fileName)
             ]
 
         let templateFile = try paths
@@ -30,10 +35,14 @@ public struct TemplateSpec: Decodable {
             .first { $0.exists }
             .require(relativePath)
 
-        reporter.info(.wrench, "using template file at path \(templateFile.string)")
+        env.reporter.info(.pageFacingUp, "using template file at path \(templateFile.string)")
 
         return templateFile
     }
+}
+
+public struct TemplateSpec: Decodable {
+    public let mode: Mode
 }
 
 private extension Optional {

@@ -2,17 +2,20 @@ import Foundation
 
 public class CleanAction: Action {
     private let cliOptions: Options.CLI
-    private let writer: Writer
+    private let env: Env
 
-    public init(_ cliOptions: Options.CLI, _ writer: Writer = Writer()) {
+    public init(_ cliOptions: Options.CLI, _ env: Env) {
         self.cliOptions = cliOptions
-        self.writer = writer
+        self.env = env
     }
 
     public func execute() throws {
+        let writer = Writer()
         writer.shouldWrite = false
 
-        let generateAction = GenerateAction(cliOptions, writer)
+        env.reporter.info(.broom, "cleaning files")
+
+        let generateAction = GenerateAction(cliOptions, env)
         try generateAction.execute()
 
         for path in writer.writtenFiles {

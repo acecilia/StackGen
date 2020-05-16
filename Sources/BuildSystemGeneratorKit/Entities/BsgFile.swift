@@ -15,13 +15,14 @@ public struct BsgFile: AutoCodable {
     public let thirdPartyModules: [ThirdPartyModule.Input]
     public let options: Options.BsgFile
 
-    static func resolve() throws -> BsgFile {
-        let bsgFilePath = cwd/BsgFile.fileName
+    static func resolve(_ env: Env) throws -> BsgFile {
+        let bsgFilePath = env.cwd/BsgFile.fileName
+
         if bsgFilePath.exists {
             let bsgFileContent = try String(contentsOf: bsgFilePath)
-            return try YAMLDecoder().decode(from: bsgFileContent, userInfo: [.relativePath: cwd])
+            return try YAMLDecoder().decode(from: bsgFileContent, userInfo: [.relativePath: env.topLevel])
         } else {
-            return try YAMLDecoder().decode(from: "{}", userInfo: [.relativePath: cwd])
+            return try YAMLDecoder().decode(from: "{}", userInfo: [.relativePath: env.topLevel])
         }
     }
 }

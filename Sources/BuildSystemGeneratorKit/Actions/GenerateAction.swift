@@ -4,31 +4,36 @@ import Path
 
 public class GenerateAction: Action {
     private let cliOptions: Options.CLI
-    private let writer: Writer
+    private var env: Env
 
-    public init(_ cliOptions: Options.CLI, _ writer: Writer = Writer()) {
+    public init(_ cliOptions: Options.CLI, _ env: Env) {
         self.cliOptions = cliOptions
-        self.writer = writer
+        self.env = env
     }
 
     public func execute() throws {
-        reporter.info(.wrench, "resolving modules")
+        env.reporter.info(.wrench, "resolving modules")
 
-        let bsgFile = try BsgFile.resolve()
-        let resolvedOptions = try Options.Resolved.resolve(cliOptions, bsgFile.options)
-        let (firstPartyModules, thirdPartyModules) = try ModuleResolver(bsgFile).resolve()
+        let bsgFile = try BsgFile.resolve(env)
 
-        reporter.info(.wrench, "resolving templates")
+        if let topLevel = bsgFile.options.topLevel {
+            env.topLevel = Path(topLevel) ?? env.cwd/topLevel
+        }
 
-        let templateFilePath = try TemplateSpec.resolveTemplate(resolvedOptions.templates)
+        let resolvedOptions = try Options.Resolved(cliOptions, bsgFile.options)
+        let (firstPartyModules, thirdPartyModules) = try ModuleResolver(bsgFile, env).resolve()
+
+        env.reporter.info(.wrench, "resolving templates")
+
+        let templateFilePath = try TemplateResolver2(env).resolveTemplate(resolvedOptions.templates)
         let constants = TemplateResolver.Constants(
             custom: bsgFile.custom,
             firstPartyModules: firstPartyModules,
             thirdPartyModules: thirdPartyModules,
-            root: cwd,
+            root: env.cwd,
             templatesFilePath: templateFilePath
         )
-        let templateResolver = TemplateResolver(writer: writer, constants: constants)
+        let templateResolver = TemplateResolver(constants, env)
 
         let templatesFileContent = try String(contentsOf: templateFilePath)
         let templatesFileRaw: TemplatesFileRaw = try YAMLDecoder().decode(from: templatesFileContent)
@@ -37,7 +42,8 @@ public class GenerateAction: Action {
             result[key] = pair.value
         }
 
-        reporter.info(.wrench, "generating files")
+        env.reporter.info(.wrench, "generating files")
+
         for (path, templateSpec) in templatesFile {
             if path.isFile {
                 try templateResolver.render(
