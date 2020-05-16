@@ -18,7 +18,7 @@ public struct BsgFile: AutoCodable {
     static func resolve() throws -> BsgFile {
         let bsgFilePath = cwd/BsgFile.fileName
         if bsgFilePath.exists {
-            let bsgFileContent = try String(contentsOf: cwd/BsgFile.fileName)
+            let bsgFileContent = try String(contentsOf: bsgFilePath)
             return try YAMLDecoder().decode(from: bsgFileContent, userInfo: [.relativePath: cwd])
         } else {
             return try YAMLDecoder().decode(from: "{}", userInfo: [.relativePath: cwd])
