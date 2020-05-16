@@ -19,6 +19,8 @@ public class GenerateAction: Action {
 
             if let topLevel = bsgFile.options.topLevel {
                 env.topLevel = Path(topLevel) ?? env.cwd/topLevel
+                // If the topLevel is not the cwd, parse again the bsgFile in
+                // order to get the right relative paths
                 return try BsgFile.resolve(env)
             } else {
                 return bsgFile
@@ -30,15 +32,15 @@ public class GenerateAction: Action {
 
         env.reporter.info(.wrench, "resolving templates")
 
-        let templateFilePath = try TemplateResolver2(env).resolveTemplate(resolvedOptions.templates)
-        let constants = TemplateResolver.Constants(
+        let templateFilePath = try TemplateResolver(env).resolveTemplate(resolvedOptions.templates)
+        let constants = TemplateRenderer.Constants(
             custom: bsgFile.custom,
             firstPartyModules: firstPartyModules,
             thirdPartyModules: thirdPartyModules,
             root: env.topLevel,
             templatesFilePath: templateFilePath
         )
-        let templateResolver = TemplateResolver(constants, env)
+        let templateRenderer = TemplateRenderer(constants, env)
 
         let templatesFileContent = try String(contentsOf: templateFilePath)
         let templatesFileRaw: TemplatesFileRaw = try YAMLDecoder().decode(from: templatesFileContent)
@@ -51,7 +53,7 @@ public class GenerateAction: Action {
 
         for (path, templateSpec) in templatesFile {
             if path.isFile {
-                try templateResolver.render(
+                try templateRenderer.render(
                     templatePath: path,
                     relativePath: path.basename(),
                     firstPartyModules: firstPartyModules,
@@ -59,7 +61,7 @@ public class GenerateAction: Action {
                 )
             } else if path.isDirectory {
                 for templatePath in path.find().type(.file) where templatePath.basename() != ".DS_Store" {
-                    try templateResolver.render(
+                    try templateRenderer.render(
                         templatePath: templatePath,
                         relativePath: templatePath.relative(to: path),
                         firstPartyModules: firstPartyModules,

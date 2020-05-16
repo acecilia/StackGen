@@ -1,57 +1,8 @@
 import Foundation
 import Path
 
-
-public struct TemplateResolver2 {
-    public static let fileName = "templates.yml"
-    public static let defaultFolderName = "Templates"
-
-    private let env: Env
-
-    public init(_ env: Env) {
-        self.env = env
-    }
-
-    public func resolveTemplate(_ relativePath: String) throws -> Path {
-        let paths: [Path?] = [
-            // First: treat as absolut path
-            Path(relativePath),
-            // Second: check relative to the current location
-            env.cwd/relativePath,
-            // Third: check the bundled templates. They should be located next to the binary (follow symlinks if needed)
-            try? Bundle.main.executable?.readlink().parent
-                .join(Self.defaultFolderName)
-                .join(relativePath)
-                .join(Self.fileName),
-            // Fourth: check the path relative to this file (to be used during development)
-            Path(#file)?.parent.parent.parent.parent
-                .join(Self.defaultFolderName)
-                .join(relativePath)
-                .join(Self.fileName)
-            ]
-
-        let templateFile = try paths
-            .compactMap { $0 }
-            .first { $0.exists }
-            .require(relativePath)
-
-        env.reporter.info(.pageFacingUp, "using template file at path \(templateFile.relative(to: env.cwd))")
-
-        return templateFile
-    }
-}
-
 public struct TemplateSpec: Decodable {
     public let mode: Mode
-}
-
-private extension Optional {
-    func require(_ relativePath: String) throws -> Wrapped {
-        guard let unwrapped = self else {
-            throw CustomError(.templatesFileNotFound(relativePath: relativePath))
-        }
-        return unwrapped
-    }
 }
 
 public extension TemplateSpec {
