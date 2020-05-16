@@ -28,9 +28,9 @@ public enum Options {
 
         public static func resolve(_ cliOptions: CLI, _ bsgFileOptions: BsgFile) throws -> Resolved {
             if let topLevel = bsgFileOptions.topLevel {
-                //cwd = Path(topLevel) ?? Path(Path.cwd)/topLevel
+                cwd = Path(topLevel) ?? Path(Path.cwd)/topLevel
             } else {
-                //cwd = Path(Path.cwd)
+                cwd = Path(Path.cwd)
             }
 
             return Resolved(

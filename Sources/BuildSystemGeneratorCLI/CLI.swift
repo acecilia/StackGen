@@ -1,11 +1,15 @@
 import Foundation
 import SwiftCLI
 import BuildSystemGeneratorKit
+import Path
 
 public class CLI {
     let cli: SwiftCLI.CLI
 
     public init() {
+        // Reset current working directory path
+        cwd = Path(Path.cwd)
+
         cli = SwiftCLI.CLI(
             name: "bsg",
             description: "Generates build system configurations for swift projects",
