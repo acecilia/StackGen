@@ -3,10 +3,10 @@ import Yams
 import Path
 
 public class GenerateAction: Action {
-    private let cliOptions: Options.Input
+    private let cliOptions: Options.CLI
     private let writer: Writer
 
-    public init(_ cliOptions: Options.Input, _ writer: Writer = Writer()) {
+    public init(_ cliOptions: Options.CLI, _ writer: Writer = Writer()) {
         self.cliOptions = cliOptions
         self.writer = writer
     }
@@ -14,20 +14,13 @@ public class GenerateAction: Action {
     public func execute() throws {
         reporter.info(.wrench, "resolving modules")
 
-        let bsgFile: BsgFile
-        let bsgFilePath = cwd/BsgFile.fileName
-        if bsgFilePath.exists {
-            let bsgFileContent = try String(contentsOf: cwd/BsgFile.fileName)
-            bsgFile = try YAMLDecoder().decode(from: bsgFileContent, userInfo: [.relativePath: cwd])
-        } else {
-            bsgFile = try YAMLDecoder().decode(from: "{}", userInfo: [.relativePath: cwd])
-        }
+        let bsgFile = try BsgFile.resolve()
+        let resolvedOptions = try Options.Resolved.resolve(cliOptions, bsgFile.options)
         let (firstPartyModules, thirdPartyModules) = try ModuleResolver(bsgFile).resolve()
 
-        let resolvedOptions = try bsgFile.options.resolve(using: cliOptions)
-        let templateFilePath = try TemplateSpec.selectTemplate(resolvedOptions.templatesPath)
-
         reporter.info(.wrench, "resolving templates")
+
+        let templateFilePath = try TemplateSpec.resolveTemplate(resolvedOptions.templates)
         let constants = TemplateResolver.Constants(
             custom: bsgFile.custom,
             firstPartyModules: firstPartyModules,

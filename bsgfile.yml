@@ -5,4 +5,4 @@ firstPartyModules:
 # - id: Templates/Swift_Starter_CommandLine
 
 options:
-  templatesPath: TemplatesSelfGenerate
+  templates: TemplatesSelfGenerate/templates.yml

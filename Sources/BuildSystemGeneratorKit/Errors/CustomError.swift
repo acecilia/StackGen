@@ -29,7 +29,7 @@ public extension CustomError {
         case requiredParameterNotFound(name: String)
 
         // Templates
-        case templateNotFound(relativePath: String)
+        case templatesFileNotFound(relativePath: String)
         case errorThrownWhileRendering(templatePath: Path, error: Error)
         case filterFailed(filter: String, reason: String)
     
@@ -59,8 +59,8 @@ public extension CustomError {
             case let .requiredParameterNotFound(name):
                 return "Required parameter not passed as command line argument neither found in the '\(BsgFile.fileName)' file. Parameter: '\(name)'"
 
-            case let .templateNotFound(relativePath):
-                return "Templates folder not found for path '\(relativePath)'"
+            case let .templatesFileNotFound(relativePath):
+                return "Templates file not found at path '\(relativePath)'"
 
             case let .errorThrownWhileRendering(templatePath, error):
                 return """

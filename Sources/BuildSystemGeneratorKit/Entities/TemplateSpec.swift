@@ -7,30 +7,39 @@ public struct TemplateSpec: Decodable {
 
     public let mode: Mode
 
-    public static func selectTemplate(_ relativePath: String) throws -> Path {
+    public static func resolveTemplate(_ relativePath: String) throws -> Path {
         let paths: [Path?] = [
             // First: treat as absolut path
             Path(relativePath),
             // Second: check relative to the current location
             cwd/relativePath,
             // Third: check the bundled templates. They should be located next to the binary (follow symlinks if needed)
-            try? Bundle.main.executable?.readlink().parent.join(TemplateSpec.defaultFolderName).join(relativePath),
+            try? Bundle.main.executable?.readlink().parent
+                .join(TemplateSpec.defaultFolderName)
+                .join(relativePath)
+                .join(TemplateSpec.fileName),
             // Fourth: check the path relative to this file (to be used during development)
-            Path(#file)?.parent.parent.parent.parent.join(TemplateSpec.defaultFolderName).join(relativePath)
+            Path(#file)?.parent.parent.parent.parent
+                .join(TemplateSpec.defaultFolderName)
+                .join(relativePath)
+                .join(TemplateSpec.fileName)
             ]
 
-        return try paths
+        let templateFile = try paths
             .compactMap { $0 }
-            .map { $0/TemplateSpec.fileName }
             .first { $0.exists }
             .require(relativePath)
+
+        reporter.info(.wrench, "using template file at path \(templateFile.string)")
+
+        return templateFile
     }
 }
 
 private extension Optional {
     func require(_ relativePath: String) throws -> Wrapped {
         guard let unwrapped = self else {
-            throw CustomError(.templateNotFound(relativePath: relativePath))
+            throw CustomError(.templatesFileNotFound(relativePath: relativePath))
         }
         return unwrapped
     }

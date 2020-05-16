@@ -3,17 +3,12 @@ import SwiftCLI
 import BuildSystemGeneratorKit
 import Path
 
-public class Generate: Command {
-    public let shortDescription: String = "Generates build system configurations for swift projects"
-
-    @Key("-t", "--templatesPath", description: "The path pointing to the folder that contains the '\(TemplateSpec.fileName)' file")
-    var templatesPath: String?
-
-    public init() { }
+public class Generate: BaseCommand, Command {
+    public let shortDescription: String = "Generates file using the \(BsgFile.fileName) in the current directory"
 
     public func execute() throws {
-        let options = Options.Input(
-            templatesPath: templatesPath
+        let options = Options.CLI(
+            templates: templates
         )
         try GenerateAction(options).execute()
     }

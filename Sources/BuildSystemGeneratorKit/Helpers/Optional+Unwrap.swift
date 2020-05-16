@@ -6,4 +6,15 @@ extension Optional {
         }
         return unwrapped
     }
+
+    func unwrap(onFailure kind: CustomError.Kind, file: String = #file, line: Int = #line) throws -> Wrapped {
+        guard let unwrapped = self else {
+            throw CustomError(
+                kind,
+                file: file,
+                line: line
+            )
+        }
+        return unwrapped
+    }
 }

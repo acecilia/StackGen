@@ -2,30 +2,41 @@ import Foundation
 import Path
 
 public enum Options {
-    public struct Input: Codable {
-        public let templatesPath: String?
+    public struct CLI: Codable {
+        public let templates: String?
 
-        public init(templatesPath: String? = nil) {
-            self.templatesPath = templatesPath
+        public init(templates: String? = nil) {
+            self.templates = templates
         }
+    }
 
-        public func resolve(using cliOptions: Options.Input) throws -> Resolved {
-            return Resolved(
-                templatesPath: try (cliOptions.templatesPath ?? self.templatesPath).require(parameter: "templatesPath")
-            )
+    public struct BsgFile: Codable {
+        public let templates: String?
+        public let topLevel: String?
+
+        public init(
+            templates: String? = nil,
+            topLevel: String? = nil
+        ) {
+            self.templates = templates
+            self.topLevel = topLevel
         }
     }
 
     public struct Resolved {
-        public let templatesPath: String
-    }
-}
+        public let templates: String
 
-private extension Optional {
-    func require(parameter: String) throws -> Wrapped {
-        guard let unwrapped = self else {
-            throw CustomError(.requiredParameterNotFound(name: parameter))
+        public static func resolve(_ cliOptions: CLI, _ bsgFileOptions: BsgFile) throws -> Resolved {
+            if let topLevel = bsgFileOptions.topLevel {
+                //cwd = Path(topLevel) ?? Path(Path.cwd)/topLevel
+            } else {
+                //cwd = Path(Path.cwd)
+            }
+
+            return Resolved(
+                templates: try (cliOptions.templates ?? bsgFileOptions.templates)
+                    .unwrap(onFailure: .requiredParameterNotFound(name: "templateFile"))
+            )
         }
-        return unwrapped
     }
 }

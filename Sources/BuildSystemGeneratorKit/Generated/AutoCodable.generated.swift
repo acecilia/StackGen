@@ -1,4 +1,4 @@
-// Generated using Sourcery 0.18.0 — https://github.com/krzysztofzablocki/Sourcery
+// Generated using Sourcery 0.17.0 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
 
 import Version
@@ -20,7 +20,7 @@ extension BsgFile {
         custom = (try? container.decode([String: StringCodable].self, forKey: .custom)) ?? BsgFile.defaultCustom
         firstPartyModules = (try? container.decode([FirstPartyModule.Input].self, forKey: .firstPartyModules)) ?? BsgFile.defaultFirstPartyModules
         thirdPartyModules = (try? container.decode([ThirdPartyModule.Input].self, forKey: .thirdPartyModules)) ?? BsgFile.defaultThirdPartyModules
-        options = (try? container.decode(Options.Input.self, forKey: .options)) ?? BsgFile.defaultOptions
+        options = (try? container.decode(Options.BsgFile.self, forKey: .options)) ?? BsgFile.defaultOptions
     }
 
 }
@@ -50,7 +50,7 @@ extension TemplateSpec.Mode.FullValue {
         case filter
     }
 
-    internal init(from decoder: Decoder) throws {
+     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         if container.allKeys.contains(.module), try container.decodeNil(forKey: .module) == false {
@@ -72,7 +72,7 @@ extension TemplateSpec.Mode.FullValue {
         throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "Unknown enum case"))
     }
 
-    internal func encode(to encoder: Encoder) throws {
+     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
         switch self {
