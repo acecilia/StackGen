@@ -89,7 +89,7 @@ jobs:
     - name: codecov
       run: |
         #sudo ln -s $DEVELOPER_DIR/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-cov /usr/local/bin/llvm-cov
-        object=".build/debug/BuildSystemGeneratorPackageTests.xctest/Contents/MacOS/BuildSystemGeneratorPackageTests"
+        object=".build/debug/StackGenPackageTests.xctest/Contents/MacOS/StackGenPackageTests"
         # Filter which files to add to the report when using llvm-cov: https://stackoverflow.com/questions/44207548/how-to-filter-files-in-llvm-cov-code-coverage-report
-        xcrun llvm-cov export -format="lcov" -instr-profile=".build/debug/codecov/default.profdata" "$object" "Sources/BuildSystemGeneratorKit/" > info.lcov
+        xcrun llvm-cov export -format="lcov" -instr-profile=".build/debug/codecov/default.profdata" "$object" "Sources/StackGenKit/" > info.lcov
         bash <(curl https://codecov.io/bash) -c

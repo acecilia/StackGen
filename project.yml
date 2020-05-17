@@ -1,6 +1,6 @@
 # This file generates an Xcode project used to easily run scripts
 
-name: BuildSystemGenerator
+name: StackGen
 fileGroups: [project.yml, .sourcery.yml]
 
 aggregateTargets:

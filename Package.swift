@@ -3,11 +3,11 @@
 import PackageDescription
 
 let package = Package(
-    name: "BuildSystemGenerator",
+    name: "StackGen",
     platforms: [.macOS(.v10_14)],
     products: [
-        .executable(name: "bsg", targets: ["BuildSystemGenerator"]),
-        .library(name: "BuildSystemGeneratorKit", targets: ["BuildSystemGeneratorKit"]),
+        .executable(name: "stackgen", targets: ["StackGen"]),
+        .library(name: "StackGenKit", targets: ["StackGenKit"]),
     ],
     dependencies: [
         .package(
@@ -26,18 +26,18 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "BuildSystemGenerator",
-            dependencies: ["BuildSystemGeneratorCLI"]
+            name: "StackGen",
+            dependencies: ["StackGenCLI"]
         ),
         .target(
-            name: "BuildSystemGeneratorCLI",
+            name: "StackGenCLI",
             dependencies: [
-                "BuildSystemGeneratorKit",
+                "StackGenKit",
                 "SwiftCLI",
             ]
         ),
         .target(
-            name: "BuildSystemGeneratorKit",
+            name: "StackGenKit",
             dependencies: [
                 "Stencil",
                 "Yams",
@@ -49,9 +49,9 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "BuildSystemGeneratorTests",
+            name: "StackGenTests",
             dependencies: [
-                "BuildSystemGeneratorCLI",
+                "StackGenCLI",
                 "RuntimeTestCase",
             ]
         )

@@ -1,7 +1,7 @@
-# BuildSystemGenerator
+# StackGen
 
-[![CI](https://github.com/acecilia/BuildSystemGenerator/workflows/CI/badge.svg?branch=master)](https://github.com/acecilia/BuildSystemGenerator/actions)
-[![CI](https://codecov.io/gh/acecilia/BuildSystemGenerator/branch/master/graph/badge.svg)](https://codecov.io/github/acecilia/BuildSystemGenerator)
+[![CI](https://github.com/acecilia/StackGen/workflows/CI/badge.svg?branch=master)](https://github.com/acecilia/StackGen/actions)
+[![CI](https://codecov.io/gh/acecilia/StackGen/branch/master/graph/badge.svg)](https://codecov.io/github/acecilia/StackGen)
 
 ## What is this?
 
@@ -12,9 +12,9 @@
 Install the latest version globally by running the following command:
 
 ```shell
-mint install acecilia/BuildSystemGenerator
+mint install acecilia/StackGen
 ```
 
 ## License
 
-BuildSystemGenerator is licensed under the MIT license. See [LICENSE](LICENSE) for more information.
+StackGen is licensed under the MIT license. See [LICENSE](LICENSE) for more information.

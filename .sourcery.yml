@@ -2,4 +2,4 @@ sources:
   - Sources
 templates: 
   - TemplatesSourcery
-output: Sources/BuildSystemGeneratorKit/Generated
+output: Sources/StackGenKit/Generated
