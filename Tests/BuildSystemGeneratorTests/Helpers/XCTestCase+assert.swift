@@ -13,17 +13,17 @@ extension XCTestCase {
     }
 
     func assertSetup() {
-        let r = runCommand(". ./taskfile; setup")
+        let r = runCommand("./taskfile setup")
         XCTAssertEqual(r.exitCode, 0, "Setup failed: '\((r.output + r.error).joined(separator: "\n"))'")
     }
 
     func assertTest() {
-        let r = runCommand(". ./taskfile; test")
+        let r = runCommand("./taskfile test")
         XCTAssertEqual(r.exitCode, 0, "Test failed: '\((r.output + r.error).joined(separator: "\n"))'")
     }
 
     func assertArchive() {
-        let r = runCommand(". ./taskfile; archive")
+        let r = runCommand("./taskfile archive")
         XCTAssertEqual(r.exitCode, 0, "Archive failed: '\((r.output + r.error).joined(separator: "\n"))'")
     }
 

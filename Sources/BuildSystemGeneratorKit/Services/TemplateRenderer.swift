@@ -26,23 +26,25 @@ public class TemplateRenderer {
     public func render(templatePath: Path, relativePath: String, mode: TemplateSpec.Mode) throws {
         do {
             let template = try String(contentsOf: templatePath)
+            let posixPermissions = try FileManager.default
+                .attributesOfItem(atPath: templatePath.string)[.posixPermissions]
 
             switch mode {
             case let .module(filter):
                 for module in constants.firstPartyModules where filter.matches(module.name) {
                     let destinationPath = module.location.path/relativePath
-                    try _render(template: template, to: destinationPath, module: module)
+                    try _render(template: template, to: destinationPath, posixPermissions, module)
                 }
 
             case let .moduleToRoot(filter):
                 let destinationPath = env.root/relativePath
                 for module in constants.firstPartyModules where filter.matches(module.name) {
-                    try _render(template: template, to: destinationPath, module: module)
+                    try _render(template: template, to: destinationPath, posixPermissions, module)
                 }
 
             case .root:
                 let destinationPath = env.root/relativePath
-                try _render(template: template, to: destinationPath, module: nil)
+                try _render(template: template, to: destinationPath, posixPermissions, nil)
             }
         } catch {
             throw CustomError(
@@ -54,7 +56,12 @@ public class TemplateRenderer {
         }
     }
 
-    private func _render(template: String, to outputPath: Path, module: FirstPartyModule.Output?) throws {
+    private func _render(
+        template: String,
+        to outputPath: Path,
+        _ posixPermissions: Any?,
+        _ module: FirstPartyModule.Output?
+    ) throws {
         let outputPath = try resolve(outputPath: outputPath, module: module)
 
         env.reporter.info(.sparkles, "generating \(outputPath.relative(to: env.cwd))")
@@ -70,7 +77,7 @@ public class TemplateRenderer {
 
         try outputPath.delete()
         try outputPath.parent.mkdir(.p)
-        try env.writer.write(rendered, to: outputPath)
+        try env.writer.write(rendered, to: outputPath, with: posixPermissions)
     }
 
     private func createContext(module: FirstPartyModule.Output? = nil, outputPath: Path) throws -> MainContext {

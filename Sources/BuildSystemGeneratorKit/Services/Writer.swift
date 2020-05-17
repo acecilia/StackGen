@@ -9,18 +9,20 @@ public class Writer {
         self.shouldWrite = shouldWrite
     }
     
-    public func write(_ string: String, to path: Path) throws {
+    public func write(_ string: String, to path: Path, with posixPermissions: Any?) throws {
         writtenFiles.append(path)
-        if shouldWrite {
-            try _write(string, to: path)
-        }
-    }
+        guard shouldWrite else { return }
 
-    private func _write(_ string: String, to path: Path) throws {
         if string.isEmpty {
             try path.delete()
         } else {
             try string.write(to: path)
+            if let posixPermissions = posixPermissions {
+                try FileManager.default.setAttributes(
+                    [.posixPermissions: posixPermissions],
+                    ofItemAtPath: path.string
+                )
+            }
         }
     }
 }
