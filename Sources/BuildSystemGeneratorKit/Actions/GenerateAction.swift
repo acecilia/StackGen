@@ -12,7 +12,7 @@ public class GenerateAction: Action {
     }
 
     public func execute() throws {
-        env.reporter.info(.wrench, "resolving modules")
+        env.reporter.info(.wrench, "resolving \(BsgFile.fileName)")
 
         let bsgFile: BsgFile = try {
             let bsgFile = try BsgFile.resolve(env)
@@ -27,36 +27,30 @@ public class GenerateAction: Action {
             }
         }()
 
+        env.reporter.info(.wrench, "resolving templates file")
+
         let resolvedOptions = try Options.Resolved(cliOptions, bsgFile.options)
+        let (templatesFilePath, templatesFile) = try TemplateResolver(env).resolve(resolvedOptions.templates)
+
+        env.reporter.info(.wrench, "resolving modules")
+
         let (firstPartyModules, thirdPartyModules) = try ModuleResolver(bsgFile, env).resolve()
 
-        env.reporter.info(.wrench, "resolving templates")
+        env.reporter.info(.wrench, "generating files")
 
-        let templateFilePath = try TemplateResolver(env).resolveTemplate(resolvedOptions.templates)
         let constants = TemplateRenderer.Constants(
             custom: bsgFile.custom,
             firstPartyModules: firstPartyModules,
             thirdPartyModules: thirdPartyModules,
-            root: env.topLevel,
-            templatesFilePath: templateFilePath
+            templatesFilePath: templatesFilePath
         )
         let templateRenderer = TemplateRenderer(constants, env)
-
-        let templatesFileContent = try String(contentsOf: templateFilePath)
-        let templatesFileRaw: TemplatesFileRaw = try YAMLDecoder().decode(from: templatesFileContent)
-        let templatesFile: TemplatesFile = templatesFileRaw.reduce(into: [:]) { (result, pair) in
-            let key = Path(pair.key) ?? templateFilePath.parent/pair.key
-            result[key] = pair.value
-        }
-
-        env.reporter.info(.wrench, "generating files")
 
         for (path, templateSpec) in templatesFile {
             if path.isFile {
                 try templateRenderer.render(
                     templatePath: path,
                     relativePath: path.basename(),
-                    firstPartyModules: firstPartyModules,
                     mode: templateSpec.mode
                 )
             } else if path.isDirectory {
@@ -64,7 +58,6 @@ public class GenerateAction: Action {
                     try templateRenderer.render(
                         templatePath: templatePath,
                         relativePath: templatePath.relative(to: path),
-                        firstPartyModules: firstPartyModules,
                         mode: templateSpec.mode
                     )
                 }

@@ -14,7 +14,7 @@ final class GenerateTests: RuntimeTestCase {
 
     func generateTest(_ template: Template) throws {
         // Generate
-        let (testPath, generateExitCode) = try generate(using: template)
+        let (testPath, generateExitCode) = try prefillAndGenerate(using: template)
         XCTAssertEqual(generateExitCode, 0)
         assert(fixture: fixturesPath/template.rawValue, equals: testPath)
 

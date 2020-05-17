@@ -7,7 +7,6 @@ extension TemplateRenderer {
         public let custom: [String: StringCodable]
         public let firstPartyModules: [FirstPartyModule.Output]
         public let thirdPartyModules: [ThirdPartyModule.Output]
-        public let root: Path
         public let templatesFilePath: Path
     }
 }
@@ -24,20 +23,20 @@ public class TemplateRenderer {
         self.env = env
     }
 
-    public func render(templatePath: Path, relativePath: String, firstPartyModules: [FirstPartyModule.Output], mode: TemplateSpec.Mode) throws {
+    public func render(templatePath: Path, relativePath: String, mode: TemplateSpec.Mode) throws {
         do {
             let template = try String(contentsOf: templatePath)
 
             switch mode {
             case let .module(filter):
-                for module in firstPartyModules where filter.matches(module.name) {
+                for module in constants.firstPartyModules where filter.matches(module.name) {
                     let destinationPath = module.location.path/relativePath
                     try _render(template: template, to: destinationPath, module: module)
                 }
 
             case let .moduleToRoot(filter):
                 let destinationPath = env.topLevel/relativePath
-                for module in firstPartyModules where filter.matches(module.name) {
+                for module in constants.firstPartyModules where filter.matches(module.name) {
                     try _render(template: template, to: destinationPath, module: module)
                 }
 
@@ -80,7 +79,7 @@ public class TemplateRenderer {
             firstPartyModules: constants.firstPartyModules,
             thirdPartyModules: constants.thirdPartyModules,
             global: Global(
-                root: constants.root.output,
+                root: env.topLevel.output,
                 output: outputPath.output
             ),
             module: module

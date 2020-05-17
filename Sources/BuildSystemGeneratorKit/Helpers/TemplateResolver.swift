@@ -1,5 +1,10 @@
 import Foundation
 import Path
+import Yams
+
+// We require to split this into Raw and not Raw because of https://forums.swift.org/t/decoding-a-dictionary-with-a-custom-key-type/35290
+private typealias TemplatesFileRaw = [String: TemplateSpec]
+public typealias TemplatesFile = [Path: TemplateSpec]
 
 public struct TemplateResolver {
     private static let bundledTemplateFileName = "templates.yml"
@@ -11,7 +16,23 @@ public struct TemplateResolver {
         self.env = env
     }
 
-    public func resolveTemplate(_ relativePath: String) throws -> Path {
+    public func resolve(_ relativePath: String) throws -> (Path, TemplatesFile) {
+        let path = try resolvePath(relativePath)
+        let file = try resolveFile(path)
+        return (path, file)
+    }
+
+    private func resolveFile(_ templateFilePath: Path) throws -> TemplatesFile {
+        let templatesFileContent = try String(contentsOf: templateFilePath)
+        let templatesFileRaw: TemplatesFileRaw = try YAMLDecoder().decode(from: templatesFileContent)
+        let templatesFile: TemplatesFile = templatesFileRaw.reduce(into: [:]) { (result, pair) in
+            let key = Path(pair.key) ?? templateFilePath.parent/pair.key
+            result[key] = pair.value
+        }
+        return templatesFile
+    }
+
+    private func resolvePath(_ relativePath: String) throws -> Path {
         let paths: [Path?] = [
             // First: treat as absolut path
             Path(relativePath),

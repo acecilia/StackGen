@@ -1,8 +1,8 @@
 import XCTest
 
 extension XCTestCase {
-    func assertGenerate(_ template: Template, testFilePath: String = #file, function: String = #function) throws {
-        let r = try generate(using: template, testFilePath:testFilePath, function: function)
+    func assertGenerate(_ template: Template, _ file: String = #file, _ function: String = #function) throws {
+        let r = try prefillAndGenerate(using: template, file, function)
         // runCommand("open \(r.destination)")
         XCTAssertEqual(r.exitCode, 0, "Generation failed using templates '\(template.path)' at '\(r.destination)'")
     }

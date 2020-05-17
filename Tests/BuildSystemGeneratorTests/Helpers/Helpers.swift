@@ -4,26 +4,22 @@ import BuildSystemGeneratorKit
 import Path
 
 let rootPath = Path(#file)!/".."/".."/".."/".."
-let testsOutputPath = rootPath/".testsOutput"
-let templatesPath = rootPath/"Templates"
-
-let carthagePath = examplesPath/"Carthage"/"Build"/"iOS"
-
 let examplesPath = rootPath/"Examples"/"swift"
+let templatesPath = rootPath/"Templates"
+let testsOutputPath = rootPath/".testsOutput"
 let fixturesPath = rootPath/".fixtures"
 
-func tmp(_ suffix: String, _ testFilePath: String = #file, _ testName: String = #function) throws -> Path {
-    guard let testFileName = Path(testFilePath)?.basename(dropExtension: true) else {
-        fatalError("The path to the test file is malformed")
-    }
-    let testOutputPath = testsOutputPath/testFileName/functionName(testName)/suffix
-    try testOutputPath.delete()
-    try testOutputPath.mkdir(.p)
-    return testOutputPath
-}
-
-func functionName(_ methodSignature: String) -> String {
-    methodSignature.components(separatedBy: "(")[0]
+func tmp(
+    _ suffix: String,
+    _ file: String = #file,
+    _ function: String = #function
+) throws -> Path {
+    let fileName = URL(fileURLWithPath: file).lastPathComponent
+    let functionName = function.components(separatedBy: "(")[0]
+    let outputPath = testsOutputPath/fileName/functionName/suffix
+    try outputPath.delete()
+    try outputPath.mkdir(.p)
+    return outputPath
 }
 
 func patchTemplate(at bsgFilePath: Path, using template: Template) throws {
@@ -66,8 +62,12 @@ func generate(in destination: Path, using template: Template) throws -> Int32 {
     return exitCode
 }
 
-func generate(using template: Template, testFilePath: String = #file, function: String = #function) throws -> (destination: Path, exitCode: Int32) {
-    let destination = try tmp(template.rawValue, testFilePath, function)
+func prefillAndGenerate(
+    using template: Template,
+    _ file: String = #file,
+    _ function: String = #function
+) throws -> (destination: Path, exitCode: Int32) {
+    let destination = try tmp(template.rawValue, file, function)
     try prefill(destination, using: template)
     let exitCode = try generate(in: destination, using: template)
     return (destination: destination, exitCode: exitCode)
