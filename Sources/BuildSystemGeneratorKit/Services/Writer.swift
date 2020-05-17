@@ -12,6 +12,14 @@ public class Writer {
     public func write(_ string: String, to path: Path) throws {
         writtenFiles.append(path)
         if shouldWrite {
+            try _write(string, to: path)
+        }
+    }
+
+    private func _write(_ string: String, to path: Path) throws {
+        if string.isEmpty {
+            try path.delete()
+        } else {
             try string.write(to: path)
         }
     }

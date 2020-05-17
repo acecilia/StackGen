@@ -1,0 +1,21 @@
+#!/bin/zsh
+
+#####################################################################
+# This file contains several functions that can be run as tasks
+#
+# In order to run them easily, add the following alias to your shell:
+# > echo "alias task='./taskfile'" >> ~/.zshrc
+#
+# After that, you can run the functions as follows:
+# > task <function_name>
+#####################################################################
+
+# Fail if exit code is not zero, in pipes, and also if variable is not set
+# See: https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -euo pipefail
+
+docs() {
+  swift doc generate Sources --module-name bsg
+}
+
+"$@" # Source: https://stackoverflow.com/a/16159057/3203441

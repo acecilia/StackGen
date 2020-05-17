@@ -3,11 +3,11 @@
 #####################################################################
 # This file contains several functions that can be run as tasks
 #
-# In order to run them easily, do:
-# > . ./{{'{'}}{global.output.basename}}
+# In order to run them easily, add the following alias to your shell:
+# > echo "alias task='./taskfile'" >> ~/.zshrc
 #
-# After sourcing the script you can run each task by its name, for example:
-# > help
+# After that, you can run the functions as follows:
+# > task <function_name>
 #####################################################################
 
 # Fail if exit code is not zero, in pipes, and also if variable is not set
@@ -15,21 +15,21 @@
 set -euo pipefail
 
 {% if module.name == "Swift_BuildSystem_Bazel" %}
-function test() {
+test() {
   bazel test --config ios-debug //Libraries/...
 }
 
-function archive() {
+archive() {
   bazel query '//Libraries/... except filter(.*Tests, //Libraries/...)' | xargs bazel build --config ios-release
 }
 
-function run() {
+run() {
   # An example command to show how to run an app using the simulator
   bazel run --config ios-debug //Libraries/App:AppBundle
 }
 {% endif %}
 {% if module.name == "Swift_BuildSystem_Xcodegen" or module.name == "Swift_BuildSystem_Cocoapods" %}
-function create_projects() {
+create_projects() {
   total_count=0
   generated_count=0
 
@@ -49,16 +49,16 @@ function create_projects() {
   echo "✨ Number of projects generated: ${generated_count}"
 }
 
-function test() {
+test() {
   xcodebuild test -project All.xcodeproj -scheme All -destination 'platform=iOS Simulator,name=iPhone 8,OS=latest' | xcbeautify
 }
 
-function archive() {
+archive() {
   xcodebuild clean archive -project All.xcodeproj -scheme App | xcbeautify
 }
 {% endif %}
 
-function setup() {
+setup() {
   echo "✨ Install project dependencies"
   mint bootstrap -l
   bundle install
@@ -101,7 +101,7 @@ function setup() {
   {% endif %}
 }
 
-function lint() {
+lint() {
   # Allow passing the revision to do the diff against, or default to HEAD
   target_revision="${1:-"HEAD"}"
 
@@ -124,12 +124,6 @@ function lint() {
     # * sed command: treat all warnings as errors, except for lines matching the left regex
     swiftlint lint --strict --use-script-input-files | sed -E '/\(todo\)/! s/warning:/error:/g'
   fi
-}
-
-function help() {
-  echo -n "The available tasks are: "
-  # Approach inspired by https://stackoverflow.com/a/2641911
-  grep "^function" {{'{'}}{global.output.basename}} | sed -e 's/function //g' | sed -e 's/() {//g' | xargs | sed -e 's/ /, /g'
 }
 
 "$@" # Source: https://stackoverflow.com/a/16159057/3203441
