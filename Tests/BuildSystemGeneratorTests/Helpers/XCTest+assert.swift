@@ -1,6 +1,6 @@
 import XCTest
 
-extension XCTestCase {
+extension XCTest {
     func assertGenerate(_ template: Template, _ file: String = #file, _ function: String = #function) throws {
         let r = try prefillAndGenerate(using: template, file, function)
         // runCommand("open \(r.destination)")

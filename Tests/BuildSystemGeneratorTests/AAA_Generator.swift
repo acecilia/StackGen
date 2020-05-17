@@ -6,7 +6,7 @@ import Foundation
 
 // This tests are used to regenerate the fixtures and other files. They are enabled by default, but disabled on CI
 #if DISABLE_GENERATOR
-typealias GeneratorTestCase = NSObject
+typealias GeneratorTestCase = XCTest
 #else
 typealias GeneratorTestCase = XCTestCase
 #endif

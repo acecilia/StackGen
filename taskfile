@@ -15,7 +15,7 @@
 set -euo pipefail
 
 docs() {
-  swift doc generate Sources --module-name bsg
+  swift doc generate Sources --module-name bsg --output docs --format html
 }
 
 "$@" # Source: https://stackoverflow.com/a/16159057/3203441

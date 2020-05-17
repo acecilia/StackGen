@@ -3,7 +3,14 @@ import BuildSystemGeneratorKit
 import Path
 import RuntimeTestCase
 
-final class IntegrationTests: RuntimeTestCase {
+// Integration tests take a lot of time, and my be disabled on CI using this flag
+#if DISABLE_INTEGRATION_TESTS
+typealias IntegrationTestCase = XCTest
+#else
+typealias IntegrationTestCase = XCTestCase
+#endif
+
+final class IntegrationTests: IntegrationTestCase {
     static func testSpecs() -> [RuntimeTestCaseSpec<IntegrationTests>] {
         return Template.Swift_BuildSystem.map { template in
             RuntimeTestCaseSpec(template.rawValue) { testCase in

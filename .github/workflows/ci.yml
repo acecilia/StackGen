@@ -70,4 +70,26 @@ jobs:
       run: sh scripts/setup.sh
     
     - name: Tests
-      run: swift test -Xswiftc -D -Xswiftc DISABLE_GENERATOR
+      run: |
+        cmd='swift test --enable-code-coverage -Xswiftc -D -Xswiftc DISABLE_GENERATOR'
+        # Diff when pushing a commit
+        diff=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})
+        # Diff when on a PR
+        if [ -n "${{ github.base_ref }}" ]; then
+          diff+=$(git diff ${{ github.base_ref }} HEAD)
+        fi
+
+        # Only run integration tests if the fixtures changed
+        if [[ $string == *".fixtures/"* ]]; then
+          cmd += ' -Xswiftc -D -Xswiftc DISABLE_INTEGRATION_TESTS'
+        fi
+
+        eval $cmd
+
+    - name: codecov
+      run: |
+        #sudo ln -s $DEVELOPER_DIR/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-cov /usr/local/bin/llvm-cov
+        object=".build/debug/BuildSystemGeneratorPackageTests.xctest/Contents/MacOS/BuildSystemGeneratorPackageTests"
+        # Filter which files to add to the report when using llvm-cov: https://stackoverflow.com/questions/44207548/how-to-filter-files-in-llvm-cov-code-coverage-report
+        xcrun llvm-cov export -format="lcov" -instr-profile=".build/debug/codecov/default.profdata" "$object" "Sources/BuildSystemGeneratorKit/" > info.lcov
+        bash <(curl https://codecov.io/bash) -c

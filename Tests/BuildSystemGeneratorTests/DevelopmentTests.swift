@@ -8,7 +8,7 @@ import Foundation
 #if false
 typealias DevelomentTestCase = XCTestCase
 #else
-typealias DevelomentTestCase = NSObject
+typealias DevelomentTestCase = XCTest
 #endif
 
 final class DevelopmentTests: DevelomentTestCase {
