@@ -38,13 +38,13 @@ public class GenerateAction: Action {
 
         env.reporter.info(.wrench, "generating files")
 
-        let constants = TemplateRenderer.Constants(
+        let inputContext = Context.Input(
             custom: bsgFile.custom,
             firstPartyModules: firstPartyModules,
             thirdPartyModules: thirdPartyModules,
             templatesFilePath: templatesFilePath
         )
-        let templateRenderer = TemplateRenderer(constants, env)
+        let templateRenderer = TemplateRenderer(inputContext, env)
 
         for (path, templateSpec) in templatesFile {
             if path.isFile {

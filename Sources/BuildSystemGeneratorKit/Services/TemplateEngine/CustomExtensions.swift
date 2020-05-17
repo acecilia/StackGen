@@ -19,7 +19,7 @@ public class CustomExtensions: Extension {
         }
     }
 
-    func set(_ context: MainContext) {
+    func set(_ context: Context.Middleware) {
         for filter in filters {
             filter.context = context
         }

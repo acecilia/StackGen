@@ -6,7 +6,7 @@ options:
 projectReferences:
   Pods:
     path: Pods/Pods.xcodeproj
-{% for module in firstPartyModules where "App" in module.name %}
+{% for module in firstPartyModules|expand where "App" in module.name %}
   {{module.name}}:
     path: {{module.location.path}}/{{module.name}}.xcodeproj
 {% endfor %}
@@ -15,7 +15,7 @@ schemes:
   All:
     build:
       targets:
-        {% for module in firstPartyModules %}
+        {% for module in firstPartyModules|expand %}
         {% if "App" in module.name %}
         {{module.name}}/{{module.name}}Tests: all
         {% else %}
@@ -25,7 +25,7 @@ schemes:
     test:
       gatherCoverageData: true
       targets:
-      {% for module in firstPartyModules %}
+      {% for module in firstPartyModules|expand %}
       {% if "App" in module.name %}
       - name: {{module.name}}/{{module.name}}Tests
         randomExecutionOrder: true

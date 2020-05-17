@@ -58,7 +58,7 @@ final class ContextTests: XCTestCase {
             let userInfo = [CodingUserInfoKey.relativePath: Path.cwd]
 
             let decoder = YAMLDecoder()
-            let decoded = try decoder.decode(MainContext.self, from: contextString, userInfo: userInfo)
+            let decoded = try decoder.decode(Context.self, from: contextString, userInfo: userInfo)
 
             let encoder = YAMLEncoder()
             encoder.options = YAMLEncoder.Options(sortKeys: true)

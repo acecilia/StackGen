@@ -15,9 +15,9 @@ public class TemplateEngine {
         )
     }
 
-    public func render(templateContent: String, context: MainContext) throws -> String {
+    public func render(templateContent: String, context: Context.Middleware) throws -> String {
         extensions.set(context)
-        let encodedContext = try context.asDictionary(context.global.output.path.parent)
+        let encodedContext = try context.output.asDictionary(context.output.global.output.path.parent)
         let fixedTemplateContent = addNewLineDelimiters(templateContent)
         let rendered = try environment.renderTemplate(string: fixedTemplateContent, context: encodedContext)
         return removeNewLinesDelimiters(rendered)

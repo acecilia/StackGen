@@ -1,3 +1,3 @@
-{% for module in thirdPartyModules %}
+{% for module in thirdPartyModules|expand %}
 github "{{module.repository}}" == {{module.version}}
 {% endfor %}

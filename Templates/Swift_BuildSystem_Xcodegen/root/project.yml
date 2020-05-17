@@ -4,7 +4,7 @@ options:
   xcodeGenVersion: {{custom.xcodeGenVersion}}
 
 projectReferences:
-{% for module in firstPartyModules %}
+{% for module in firstPartyModules|expand %}
   {{module.name}}:
     path: {{module.location.path}}/{{module.name}}.xcodeproj
 {% endfor %}
@@ -13,13 +13,13 @@ schemes:
   All:
     build:
       targets:
-        {% for module in firstPartyModules %}
+        {% for module in firstPartyModules|expand %}
         {{module.name}}/{{module.name}}Tests: all
         {% endfor %}
     test:
       gatherCoverageData: true
       targets:
-      {% for module in firstPartyModules %}
+      {% for module in firstPartyModules|expand %}
         - name: {{module.name}}/{{module.name}}Tests
           randomExecutionOrder: true
       {% endfor %}

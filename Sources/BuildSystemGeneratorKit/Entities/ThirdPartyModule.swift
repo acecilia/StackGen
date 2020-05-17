@@ -17,11 +17,6 @@ public struct ThirdPartyModule {
     }
 }
 
-extension StringCodable: Hashable {
-    public var hashValue: Int { 0 }
-    public func hash(into hasher: inout Hasher) {}
-}
-
 extension Compose where Element2 == [String: StringCodable] {
     var dictionary: [String: StringCodable] { element2 }
 }

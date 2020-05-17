@@ -124,7 +124,7 @@ class ModuleResolver {
 
 // MARK: Dependency. Used to sort the transitive dependencies
 
-private enum Dependency: Module, Hashable {
+private enum Dependency: Module {
     case firstParty(FirstPartyModule.Input)
     case thirdParty(ThirdPartyModule.Output)
 
@@ -146,6 +146,16 @@ private enum Dependency: Module, Hashable {
         case let .thirdParty(module):
             return module.kind
         }
+    }
+}
+
+extension Dependency: Hashable {
+    public var hashValue: Int {
+        name.hashValue
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        name.hash(into: &hasher)
     }
 }
 

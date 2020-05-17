@@ -2,28 +2,23 @@ import Foundation
 import Path
 import StringCodable
 
-extension TemplateRenderer {
-    public struct Constants {
-        public let custom: [String: StringCodable]
-        public let firstPartyModules: [FirstPartyModule.Output]
-        public let thirdPartyModules: [ThirdPartyModule.Output]
-        public let templatesFilePath: Path
-    }
-}
-
 public class TemplateRenderer {
-    public let constants: Constants
+    public let inputContext: Context.Input
     public let templateEngine: TemplateEngine
 
     private let env: Env
 
-    public init(_ constants: Constants, _ env: Env) {
-        self.constants = constants
-        self.templateEngine = TemplateEngine(constants.templatesFilePath, env)
+    public init(_ inputContext: Context.Input, _ env: Env) {
+        self.inputContext = inputContext
+        self.templateEngine = TemplateEngine(inputContext.templatesFilePath, env)
         self.env = env
     }
 
-    public func render(templatePath: Path, relativePath: String, mode: TemplateSpec.Mode) throws {
+    public func render(
+        templatePath: Path,
+        relativePath: String,
+        mode: TemplateSpec.Mode
+    ) throws {
         do {
             let template = try String(contentsOf: templatePath)
             let posixPermissions = try FileManager.default
@@ -31,14 +26,14 @@ public class TemplateRenderer {
 
             switch mode {
             case let .module(filter):
-                for module in constants.firstPartyModules where filter.matches(module.name) {
+                for module in inputContext.firstPartyModules where filter.matches(module.name) {
                     let destinationPath = module.location.path/relativePath
                     try _render(template: template, to: destinationPath, posixPermissions, module)
                 }
 
             case let .moduleToRoot(filter):
                 let destinationPath = env.root/relativePath
-                for module in constants.firstPartyModules where filter.matches(module.name) {
+                for module in inputContext.firstPartyModules where filter.matches(module.name) {
                     try _render(template: template, to: destinationPath, posixPermissions, module)
                 }
 
@@ -68,31 +63,35 @@ public class TemplateRenderer {
 
         let rendered: String = try {
             let context = try createContext(module: module, outputPath: outputPath)
-
             return try templateEngine.render(
                 templateContent: template,
                 context: context
             )
         }()
 
-        try outputPath.delete()
         try outputPath.parent.mkdir(.p)
         try env.writer.write(rendered, to: outputPath, with: posixPermissions)
     }
 
-    private func createContext(module: FirstPartyModule.Output? = nil, outputPath: Path) throws -> MainContext {
-        let context = MainContext(
-            custom: constants.custom,
-            firstPartyModules: constants.firstPartyModules,
-            thirdPartyModules: constants.thirdPartyModules,
-            global: Global(
-                root: env.root.output,
-                output: outputPath.output
-            ),
+    private func createContext(
+        module: FirstPartyModule.Output? = nil,
+        outputPath: Path
+    ) throws -> Context.Middleware {
+        let outputContext = Context.Output(
+            custom: inputContext.custom,
+            firstPartyModules: inputContext.firstPartyModuleNames,
+            thirdPartyModules: inputContext.thirdPartyModuleNames,
+            global: Global(root: env.root.output, output: outputPath.output),
             module: module
         )
 
-        return context
+        let middlewareContext = Context.Middleware(
+            firstPartyModules: inputContext.firstPartyModules,
+            thirdPartyModules: inputContext.thirdPartyModules,
+            output: outputContext
+        )
+
+        return middlewareContext
     }
 
     private func resolve(outputPath: Path, module: FirstPartyModule.Output?) throws -> Path {
