@@ -20,9 +20,9 @@ public struct BsgFile: AutoCodable {
 
         if bsgFilePath.exists {
             let bsgFileContent = try String(contentsOf: bsgFilePath)
-            return try YAMLDecoder().decode(from: bsgFileContent, userInfo: [.relativePath: env.topLevel])
+            return try YAMLDecoder().decode(from: bsgFileContent, userInfo: [.relativePath: env.root])
         } else {
-            return try YAMLDecoder().decode(from: "{}", userInfo: [.relativePath: env.topLevel])
+            return try YAMLDecoder().decode(from: "{}", userInfo: [.relativePath: env.root])
         }
     }
 }

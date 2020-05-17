@@ -12,14 +12,14 @@ public enum Options {
 
     public struct BsgFile: Codable {
         public let templates: String?
-        public let topLevel: String?
+        public let root: String?
 
         public init(
             templates: String? = nil,
-            topLevel: String? = nil
+            root: String? = nil
         ) {
             self.templates = templates
-            self.topLevel = topLevel
+            self.root = root
         }
     }
 

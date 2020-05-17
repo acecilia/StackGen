@@ -35,13 +35,13 @@ public class TemplateRenderer {
                 }
 
             case let .moduleToRoot(filter):
-                let destinationPath = env.topLevel/relativePath
+                let destinationPath = env.root/relativePath
                 for module in constants.firstPartyModules where filter.matches(module.name) {
                     try _render(template: template, to: destinationPath, module: module)
                 }
 
             case .root:
-                let destinationPath = env.topLevel/relativePath
+                let destinationPath = env.root/relativePath
                 try _render(template: template, to: destinationPath, module: nil)
             }
         } catch {
@@ -79,7 +79,7 @@ public class TemplateRenderer {
             firstPartyModules: constants.firstPartyModules,
             thirdPartyModules: constants.thirdPartyModules,
             global: Global(
-                root: env.topLevel.output,
+                root: env.root.output,
                 output: outputPath.output
             ),
             module: module
@@ -89,7 +89,7 @@ public class TemplateRenderer {
     }
 
     private func resolve(outputPath: Path, module: FirstPartyModule.Output?) throws -> Path {
-        let context = try createContext(module: module, outputPath: env.topLevel)
+        let context = try createContext(module: module, outputPath: env.root)
 
         let pathString = try templateEngine.render(
             templateContent: outputPath.string,

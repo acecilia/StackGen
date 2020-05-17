@@ -17,9 +17,9 @@ public class GenerateAction: Action {
         let bsgFile: BsgFile = try {
             let bsgFile = try BsgFile.resolve(env)
 
-            if let topLevel = bsgFile.options.topLevel {
-                env.topLevel = Path(topLevel) ?? env.cwd/topLevel
-                // If the topLevel is not the cwd, parse again the bsgFile in
+            if let root = bsgFile.options.root {
+                env.root = Path(root) ?? env.cwd/root
+                // If the root is not the cwd, parse again the bsgFile in
                 // order to get the right relative paths
                 return try BsgFile.resolve(env)
             } else {

@@ -29,9 +29,9 @@ func patchTemplate(at bsgFilePath: Path, using template: Template) throws {
     try content.write(to: bsgFilePath)
 }
 
-func patchTopLevel(at bsgFilePath: Path, using topLevel: Path) throws {
+func patchTopLevel(at bsgFilePath: Path, using root: Path) throws {
     var content = try String(contentsOf: bsgFilePath)
-    content.append("  topLevel: \(topLevel.relative(to: bsgFilePath.parent))")
+    content.append("  root: \(root.relative(to: bsgFilePath.parent))")
     try bsgFilePath.delete()
     try content.write(to: bsgFilePath)
 }
