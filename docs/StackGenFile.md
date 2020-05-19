@@ -44,8 +44,7 @@ let defaultOptions: Options.StackGenFile
 
 ### `custom`
 
-A dictionary used to declare custom values that can be accessed from
-all the templates
+A dictionary used to declare custom values that can be accessed from all the templates
 
 ``` swift
 let custom: [String: StringCodable]

@@ -8,7 +8,7 @@ public struct Input: AutoCodable, Hashable
 
 ## Inheritance
 
-`Hashable`, [`Module`](Module.md), [`AutoCodable`](AutoCodable.md)
+[`AutoCodable`](AutoCodable.md), `Hashable`, [`Module`](Module.md)
 
 ## Initializers
 

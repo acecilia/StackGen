@@ -6,13 +6,13 @@ import Yams
 /// The representation of the stackgen.yml file
 public struct StackGenFile: AutoCodable {
     public static let fileName = "stackgen.yml"
+
     static let defaultCustom: [String: StringCodable] = [:]
     static let defaultFirstPartyModules: [FirstPartyModule.Input] = []
     static let defaultThirdPartyModules: [ThirdPartyModule.Input] = []
     static let defaultOptions: Options.StackGenFile = Options.StackGenFile()
 
-    /// A dictionary used to declare custom values that can be accessed from
-    /// all the templates
+    /// A dictionary used to declare custom values that can be accessed from all the templates
     public let custom: [String: StringCodable]
     /// The first party modules to use
     public let firstPartyModules: [FirstPartyModule.Input]
