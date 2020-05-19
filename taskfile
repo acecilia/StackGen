@@ -15,8 +15,8 @@
 set -euo pipefail
 
 docs() {
-  swift doc generate "Sources/StackGenKit" --module-name StackGen --output docs --format html
-  swift doc generate "Sources/StackGenKit" --module-name StackGen --output docsMarkup
+  output="docs"
+  swift doc generate "Sources/StackGenKit" --module-name StackGen --output "$output"
 }
 
 cov() {

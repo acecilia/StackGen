@@ -13,7 +13,7 @@ public struct TemplateSpec: Decodable {
 extension TemplateSpec {
     /// The mode that declares how a template is used
     public enum Mode: Decodable {
-        public static let defaultModuleFilter = NSRegularExpression(".*")
+        static let defaultModuleFilter = NSRegularExpression(".*")
 
         /// The module mode. In this mode the associated template will be executed once per
         /// each one of the declared first party modules. The generated file

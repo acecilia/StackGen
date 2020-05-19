@@ -5,7 +5,7 @@ import Path
 public enum FirstPartyModule {
     /// A representation of a first party module to be used inside the stackgen.yml file
     public struct Input: AutoCodable, Hashable {
-        public static let defaultDependencies: [String: [String]] = [:]
+        static let defaultDependencies: [String: [String]] = [:]
 
         /// The name of the module
         public var name: String { path.basename() }
@@ -14,8 +14,8 @@ public enum FirstPartyModule {
         /**
          A dictionary representing the dependencies of the module
 
-         You can use any string value you want as key of the dictionary, but i
-         n general, the keys of the dictionary represent the kind of target. For example:
+         You can use any string value you want as key of the dictionary, but in general,
+         the keys of the dictionary represent the kind of target. For example:
 
          ```
          {
