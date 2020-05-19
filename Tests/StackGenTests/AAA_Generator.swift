@@ -15,8 +15,8 @@ final class AAA_Generator: GeneratorTestCase {
     func test_01_Clean() throws {
         // It is faster to move the files than to remove them
         let trash = Path(NSTemporaryDirectory())!/"StackGen"/UUID().uuidString
-        try fixturesPath.move(into: trash)
-        try testsOutputPath.move(into: trash)
+        if fixturesPath.exists { try fixturesPath.move(into: trash) }
+        if testsOutputPath.exists { try testsOutputPath.move(into: trash) }
     }
 
     func test_02_SelfGenerate() throws {

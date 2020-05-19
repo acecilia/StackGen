@@ -30,4 +30,5 @@ thirdPartyModules:
 - { name: SnapKit, version: 5.0.1, repository: SnapKit/SnapKit }
 
 options:
+  version: 0.0.1
   templates: Swift_BuildSystem_Xcodegen

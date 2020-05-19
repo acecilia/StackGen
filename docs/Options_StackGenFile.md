@@ -12,10 +12,10 @@ public struct StackGenFile: Codable
 
 ## Initializers
 
-### `init(templates:root:)`
+### `init(version:templates:root:)`
 
 ``` swift
-public init(templates: String? = nil, root: String? = nil)
+public init(version: String, templates: String? = nil, root: String? = nil)
 ```
 
 ### `init(from:)`
@@ -25,6 +25,14 @@ public init(from decoder: Decoder) throws
 ```
 
 ## Properties
+
+### `version`
+
+The version of StackGen to be used with this stackgen.yml file
+
+``` swift
+let version: String
+```
 
 ### `templates`
 

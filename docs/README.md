@@ -97,3 +97,8 @@
 
   - [TemplatesFile](TemplatesFile.md):
     A representation of the content expected for the templates file
+
+# Global Variables
+
+  - [VERSION](VERSION.md):
+    The version of the current StackGen binary

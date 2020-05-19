@@ -9,9 +9,9 @@ public struct Env {
     /// The root of the repository to use
     public var root: Path
     /// The reporter used to format the output
-    public let reporter: Reporter
+    public var reporter: Reporter
     /// The type used to write files to disk
-    public let writer: Writer
+    public var writer: Writer
 
     public init(
         cwd: Path = Path(Path.cwd),

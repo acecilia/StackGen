@@ -14,15 +14,19 @@ public enum Options {
 
     /// The options that the tool accepts through the stackgen.yml file
     public struct StackGenFile: Codable {
+        /// The version of StackGen to be used with this stackgen.yml file
+        public let version: String
         /// The templates identification to be used
         public let templates: String?
         /// A custom repository root to be used, if it is not the cwd
         public let root: String?
 
         public init(
+            version: String,
             templates: String? = nil,
             root: String? = nil
         ) {
+            self.version = version
             self.templates = templates
             self.root = root
         }

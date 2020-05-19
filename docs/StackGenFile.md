@@ -10,6 +10,14 @@ public struct StackGenFile: AutoCodable
 
 [`AutoCodable`](AutoCodable.md)
 
+## Initializers
+
+### `init(custom:firstPartyModules:thirdPartyModules:options:)`
+
+``` swift
+public init(custom: [String: StringCodable] = defaultCustom, firstPartyModules: [FirstPartyModule.Input] = defaultFirstPartyModules, thirdPartyModules: [ThirdPartyModule.Input] = defaultThirdPartyModules, options: Options.StackGenFile = Options.StackGenFile(version: VERSION))
+```
+
 ## Properties
 
 ### `fileName`
@@ -34,12 +42,6 @@ let defaultFirstPartyModules: [FirstPartyModule.Input]
 
 ``` swift
 let defaultThirdPartyModules: [ThirdPartyModule.Input]
-```
-
-### `defaultOptions`
-
-``` swift
-let defaultOptions: Options.StackGenFile
 ```
 
 ### `custom`

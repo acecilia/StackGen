@@ -1,9 +1,24 @@
 // Generated using Sourcery 0.18.0 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
 
-import Version
 import Path
 import StringCodable
+
+extension FirstPartyModule.Input {
+
+    enum CodingKeys: String, CodingKey {
+        case path
+        case dependencies
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        path = try container.decode(Path.self, forKey: .path)
+        dependencies = (try? container.decode([String: [String]].self, forKey: .dependencies)) ?? FirstPartyModule.Input.defaultDependencies
+    }
+
+}
 
 extension StackGenFile {
 
@@ -20,23 +35,7 @@ extension StackGenFile {
         custom = (try? container.decode([String: StringCodable].self, forKey: .custom)) ?? StackGenFile.defaultCustom
         firstPartyModules = (try? container.decode([FirstPartyModule.Input].self, forKey: .firstPartyModules)) ?? StackGenFile.defaultFirstPartyModules
         thirdPartyModules = (try? container.decode([ThirdPartyModule.Input].self, forKey: .thirdPartyModules)) ?? StackGenFile.defaultThirdPartyModules
-        options = (try? container.decode(Options.StackGenFile.self, forKey: .options)) ?? StackGenFile.defaultOptions
-    }
-
-}
-
-extension FirstPartyModule.Input {
-
-    enum CodingKeys: String, CodingKey {
-        case path
-        case dependencies
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        path = try container.decode(Path.self, forKey: .path)
-        dependencies = (try? container.decode([String: [String]].self, forKey: .dependencies)) ?? FirstPartyModule.Input.defaultDependencies
+        options = try container.decode(Options.StackGenFile.self, forKey: .options)
     }
 
 }

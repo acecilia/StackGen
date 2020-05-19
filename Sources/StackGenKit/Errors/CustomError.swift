@@ -18,6 +18,9 @@ public struct CustomError: Error {
 public extension CustomError {
     /// The kind of errors that the tool is expecing
     enum Kind: CustomStringConvertible {
+        // Version
+        case stackgenFileVersionNotMatching(_ version: String)
+
         // Module analysis
         case moduleNotFoundInFilesystem(_ moduleId: String)
         case unknownModule(_ name: String, _ firstParty: [FirstPartyModule.Input], _ thirdParty: [ThirdPartyModule.Output])
@@ -40,6 +43,13 @@ public extension CustomError {
     
         public var description: String {
             switch self {
+            case let .stackgenFileVersionNotMatching(version):
+                return """
+                The version of the binary did not match the version specified inside the '\(StackGenFile.fileName)' file.
+                Version of the binary: '\(VERSION)'.
+                Version inside the '\(StackGenFile.fileName)' file: '\(version)'.
+                """
+
             case .moduleNotFoundInFilesystem(let moduleId):
                 return "Module with identifier '\(moduleId)' was not found when looking for it in the filesystem"
 

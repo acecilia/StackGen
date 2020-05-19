@@ -38,7 +38,7 @@ var root: Path
 The reporter used to format the output
 
 ``` swift
-let reporter: Reporter
+var reporter: Reporter
 ```
 
 ### `writer`
@@ -46,5 +46,5 @@ let reporter: Reporter
 The type used to write files to disk
 
 ``` swift
-let writer: Writer
+var writer: Writer
 ```

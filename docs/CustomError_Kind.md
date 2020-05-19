@@ -12,6 +12,12 @@ enum Kind
 
 ## Enumeration Cases
 
+### `stackgenFileVersionNotMatching`
+
+``` swift
+case stackgenFileVersionNotMatching(_ version: String)
+```
+
 ### `moduleNotFoundInFilesystem`
 
 ``` swift

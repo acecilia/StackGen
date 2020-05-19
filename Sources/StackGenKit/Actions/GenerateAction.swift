@@ -27,6 +27,9 @@ public class GenerateAction: Action {
                 return stackgenFile
             }
         }()
+        guard stackgenFile.options.version == VERSION else {
+            throw CustomError(.stackgenFileVersionNotMatching(stackgenFile.options.version))
+        }
 
         env.reporter.info(.wrench, "resolving templates file")
 
