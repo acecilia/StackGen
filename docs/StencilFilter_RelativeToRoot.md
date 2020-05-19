@@ -8,7 +8,7 @@ public class RelativeToRoot: StencilFilterInterface
 
 ## Inheritance
 
-[`StencilFilterInterface`](/StencilFilterInterface)
+[`StencilFilterInterface`](StencilFilterInterface)
 
 ## Properties
 

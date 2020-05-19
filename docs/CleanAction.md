@@ -8,7 +8,7 @@ public class CleanAction: Action
 
 ## Inheritance
 
-[`Action`](/Action)
+[`Action`](Action)
 
 ## Initializers
 

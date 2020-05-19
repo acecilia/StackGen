@@ -8,7 +8,7 @@ public class Absolut: StencilFilterInterface
 
 ## Inheritance
 
-[`StencilFilterInterface`](/StencilFilterInterface)
+[`StencilFilterInterface`](StencilFilterInterface)
 
 ## Properties
 

@@ -8,7 +8,7 @@ public class GenerateAction: Action
 
 ## Inheritance
 
-[`Action`](/Action)
+[`Action`](Action)
 
 ## Initializers
 

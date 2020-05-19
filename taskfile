@@ -18,8 +18,12 @@ docs() {
   output="docs"
   rm -rf "$output"
   swift doc generate "Sources/StackGenKit" --module-name StackGen --output "$output"
-  rm "$output"/_Footer.md
-  mv "$output"/_Sidebar.md "$output"/README.md
+  rm "$output"/_Footer.md "$output"/_Sidebar.md
+  mv "$output"/Home.md "$output"/README.md
+
+  for f in $(find docs -name '*.md'); do
+    sed -i '' -E "s/\]\(\//](/g" "$f"
+  done
 }
 
 cov() {
