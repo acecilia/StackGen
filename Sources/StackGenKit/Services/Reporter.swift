@@ -36,6 +36,7 @@ public class Reporter {
 }
 
 extension Reporter {
+    /// The emojis to be used when printing
     public enum Emoji {
         case sparkles
         case books

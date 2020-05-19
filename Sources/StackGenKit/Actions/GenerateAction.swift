@@ -2,6 +2,7 @@ import Foundation
 import Yams
 import Path
 
+/// The action corresponting to the `generate` subcommand
 public class GenerateAction: Action {
     private let cliOptions: Options.CLI
     private var env: Env

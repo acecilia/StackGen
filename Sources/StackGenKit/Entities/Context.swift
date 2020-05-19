@@ -2,6 +2,7 @@ import Foundation
 import Path
 import StringCodable
 
+/// A namespace grouping the entities representing the context to be passed to the templates
 public struct Context: Codable {
     /// The initial representation of the context that will be passed to the templates
     public struct Input {

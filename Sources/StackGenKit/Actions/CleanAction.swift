@@ -1,5 +1,6 @@
 import Foundation
 
+/// The action corresponting to the `clean` subcommand
 public class CleanAction: Action {
     private let cliOptions: Options.CLI
     private let env: Env

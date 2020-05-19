@@ -1,6 +1,7 @@
 import Foundation
 import Path
 
+/// A namespace grouping the options passed to the tool
 public enum Options {
     /// The options that the tool accepts through the command line
     public struct CLI: Codable {

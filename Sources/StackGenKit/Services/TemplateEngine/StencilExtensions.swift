@@ -2,13 +2,14 @@ import Foundation
 import Stencil
 import Path
 
-public class CustomExtensions: Extension {
-    private let filters: [Filter] = [
-        PathExistsFilter(),
-        RelativeToRootFilter(),
-        RelativeToModuleFilter(),
-        AbsolutFilter(),
-        ExpandDependenciesFilter()
+/// The stencil filters to be used
+public class StencilExtensions: Extension {
+    private let filters: [StencilFilterInterface] = [
+        StencilFilter.PathExists(),
+        StencilFilter.RelativeToRoot(),
+        StencilFilter.RelativeToModule(),
+        StencilFilter.Absolut(),
+        StencilFilter.ExpandDependencies()
     ]
 
     override init() {

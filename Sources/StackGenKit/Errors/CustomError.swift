@@ -1,6 +1,7 @@
 import Foundation
 import Path
 
+/// The errors thrown by the tool
 public struct CustomError: Error {
     public let kind: Kind
     public let fileName: String
@@ -15,6 +16,7 @@ public struct CustomError: Error {
 }
 
 public extension CustomError {
+    /// The kind of errors that the tool is expecing
     enum Kind: CustomStringConvertible {
         // Module analysis
         case moduleNotFoundInFilesystem(_ moduleId: String)

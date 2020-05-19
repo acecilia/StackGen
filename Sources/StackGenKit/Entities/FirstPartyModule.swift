@@ -1,6 +1,7 @@
 import Foundation
 import Path
 
+/// A namespace grouping the entities representing a first party module
 public enum FirstPartyModule {
     /// A representation of a first party module to be used inside the stackgen.yml file
     public struct Input: AutoCodable, Hashable {

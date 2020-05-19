@@ -3,9 +3,10 @@ import Path
 import Foundation
 import Path
 
+/// A wrapper around the template engine to use
 public class TemplateEngine {
     private let environment: Environment
-    private let extensions = CustomExtensions()
+    private let extensions = StencilExtensions()
     
     public init(_ templatesFilePath: Path, _ env: Env) {
         self.environment = Environment(
