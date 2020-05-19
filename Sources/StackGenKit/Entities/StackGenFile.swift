@@ -22,11 +22,11 @@ public struct StackGenFile: AutoCodable {
     public let options: Options.StackGenFile
 
     static func resolve(_ env: Env) throws -> StackGenFile {
-        let stackGenFilePath = env.cwd/StackGenFile.fileName
+        let stackgenFilePath = env.cwd/StackGenFile.fileName
 
-        if stackGenFilePath.exists {
-            let stackGenFileContent = try String(contentsOf: stackGenFilePath)
-            return try YAMLDecoder().decode(from: stackGenFileContent, userInfo: [.relativePath: env.root])
+        if stackgenFilePath.exists {
+            let stackgenFileContent = try String(contentsOf: stackgenFilePath)
+            return try YAMLDecoder().decode(from: stackgenFileContent, userInfo: [.relativePath: env.root])
         } else {
             return try YAMLDecoder().decode(from: "{}", userInfo: [.relativePath: env.root])
         }

@@ -1,7 +1,7 @@
 import Foundation
 
-// Source: https://www.hackingwithswift.com/articles/108/how-to-use-regular-expressions-in-swift
-
+/// Convenient extensions
+/// Source: https://www.hackingwithswift.com/articles/108/how-to-use-regular-expressions-in-swift
 extension NSRegularExpression {
     convenience init(_ pattern: String) {
         do {
@@ -22,6 +22,7 @@ extension NSRegularExpression {
     }
 }
 
+/// A wrapper around NSRegularExpression that can be encoded and decoded
 @propertyWrapper
 public struct RegularExpression: Codable, ExpressibleByStringLiteral {
     public let wrappedValue: NSRegularExpression

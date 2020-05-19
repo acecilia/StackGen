@@ -22,16 +22,16 @@ func tmp(
     return outputPath
 }
 
-func patchTemplate(at stackGenFilePath: Path, using template: Template) throws {
-    let content = try String(contentsOf: stackGenFilePath)
+func patchTemplate(at stackgenFilePath: Path, using template: Template) throws {
+    let content = try String(contentsOf: stackgenFilePath)
         .replacingOccurrences(of: "Swift_BuildSystem_Xcodegen", with: template.rawValue)
-    try content.write(to: stackGenFilePath)
+    try content.write(to: stackgenFilePath)
 }
 
-func patchTopLevel(at stackGenFilePath: Path, using root: Path) throws {
-    var content = try String(contentsOf: stackGenFilePath)
-    content.append("  root: \(root.relative(to: stackGenFilePath.parent))")
-    try content.write(to: stackGenFilePath)
+func patchTopLevel(at stackgenFilePath: Path, using root: Path) throws {
+    var content = try String(contentsOf: stackgenFilePath)
+    content.append("  root: \(root.relative(to: stackgenFilePath.parent))")
+    try content.write(to: stackgenFilePath)
 }
 
 func prefill(_ destination: Path, using template: Template) throws {
@@ -44,9 +44,9 @@ func prefill(_ destination: Path, using template: Template) throws {
 func generate(in destination: Path, using template: Template) throws -> Int32 {
     let generateCmd: [String]
 
-    let stackGenFilePath = destination/StackGenFile.fileName
-    if stackGenFilePath.exists {
-        try patchTemplate(at: stackGenFilePath, using: template)
+    let stackgenFilePath = destination/StackGenFile.fileName
+    if stackgenFilePath.exists {
+        try patchTemplate(at: stackgenFilePath, using: template)
         generateCmd = [Generate.name]
     } else {
         generateCmd = [Generate.name, "-t", template.rawValue]
@@ -75,8 +75,8 @@ func clean(using template: Template) -> Int32 {
     let cli = CLI()
 
     let cmd: [String]
-    let stackGenFilePath = Path.cwd/StackGenFile.fileName
-    if stackGenFilePath.exists {
+    let stackgenFilePath = Path.cwd/StackGenFile.fileName
+    if stackgenFilePath.exists {
         cmd = [Clean.name]
     } else {
         cmd = [Clean.name, "-t", template.rawValue]

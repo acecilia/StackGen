@@ -1,31 +1,34 @@
 import Foundation
 import Path
 
-class ModuleResolver {
-    private let stackGenFile: StackGenFile
+/// The service that resolves the modules specified in the stackgen.yml file
+public class ModuleResolver {
+    private let stackgenFile: StackGenFile
+    /// A cache used to speed up module resolution
     private var transitiveDependenciesCache: [String: [Dependency]] = [:]
     private let env: Env
 
-    init(_ stackGenFile: StackGenFile, _ env: Env) throws {
-        self.stackGenFile = stackGenFile
+    public init(_ stackgenFile: StackGenFile, _ env: Env) throws {
+        self.stackgenFile = stackgenFile
         self.env = env
     }
 
-    func resolve() throws -> (firstPartyModules: [FirstPartyModule.Output], thirdPartyModules: [ThirdPartyModule.Output]) {
+    /// The entry point used to resolve the modules
+    public func resolve() throws -> (firstPartyModules: [FirstPartyModule.Output], thirdPartyModules: [ThirdPartyModule.Output]) {
         // Perform prechecks on the modules
-        try ensureUniqueModuleNames(stackGenFile)
+        try ensureUniqueModuleNames(stackgenFile)
 
         // Prepare
-        let inputModules = populateDependencyKeys(stackGenFile.firstPartyModules)
+        let inputModules = populateDependencyKeys(stackgenFile.firstPartyModules)
 
         // Get modules
-        let thirdPartyModules = stackGenFile.thirdPartyModules.map { resolve($0) }
+        let thirdPartyModules = stackgenFile.thirdPartyModules.map { resolve($0) }
         let firstPartyModules = try inputModules.map { try resolve($0, inputModules, thirdPartyModules) }
         return (firstPartyModules, thirdPartyModules)
     }
 
-    private func ensureUniqueModuleNames(_ stackGenFile: StackGenFile) throws {
-        let allModules: [Module] = stackGenFile.firstPartyModules + stackGenFile.thirdPartyModules
+    private func ensureUniqueModuleNames(_ stackgenFile: StackGenFile) throws {
+        let allModules: [Module] = stackgenFile.firstPartyModules + stackgenFile.thirdPartyModules
         let duplicates = Dictionary(grouping: allModules) { $0.name }
             .filter { $1.count > 1 }
             .map { $0.key }
@@ -33,7 +36,7 @@ class ModuleResolver {
             throw CustomError(.foundDuplicatedModules(duplicates))
         }
 
-        for module in stackGenFile.firstPartyModules {
+        for module in stackgenFile.firstPartyModules {
             for (_, dependencies) in module.dependencies {
                 let duplicates = Dictionary(grouping: dependencies) { $0 }
                     .filter { $1.count > 1 }

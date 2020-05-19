@@ -31,8 +31,8 @@ public enum Options {
     public struct Resolved {
         public let templates: String
 
-        public init(_ cliOptions: CLI, _ stackGenFileOptions: StackGenFile) throws  {
-            self.templates = try (cliOptions.templates ?? stackGenFileOptions.templates)
+        public init(_ cliOptions: CLI, _ stackgenFileOptions: StackGenFile) throws  {
+            self.templates = try (cliOptions.templates ?? stackgenFileOptions.templates)
                 .unwrap(onFailure: .requiredParameterNotFound(name: "templateFile"))
         }
     }

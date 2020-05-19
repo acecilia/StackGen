@@ -1,7 +1,7 @@
 import Foundation
 import Path
 
-public struct CustomError: Error, ErrorInterface {
+public struct CustomError: Error {
     public let kind: Kind
     public let fileName: String
     public let line: Int
@@ -32,6 +32,9 @@ public extension CustomError {
         case templatesFileNotFound(relativePath: String)
         case errorThrownWhileRendering(templatePath: String, error: Error)
         case filterFailed(filter: String, reason: String)
+
+        // Unexpected
+        case unexpected(_ description: String)
     
         public var description: String {
             switch self {
@@ -70,6 +73,9 @@ public extension CustomError {
 
             case let .filterFailed(filter, reason):
                 return "The stencil filter '\(filter)' Failed. Reason: \(reason)"
+
+            case let .unexpected(description):
+                return "An unexpected error occurred. \(description)"
             }
         }
     }

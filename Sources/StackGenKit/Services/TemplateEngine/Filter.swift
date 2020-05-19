@@ -101,7 +101,11 @@ private extension Optional where Wrapped == Any {
 private extension Optional where Wrapped == Context.Middleware {
     func unwrap(_ filterName: String, file: String = #file, line: Int = #line) throws -> Wrapped {
         guard let unwrapped = self else {
-            throw UnexpectedError("The context needed to compute the filter '\(filterName)' is not available", file: file, line: line)
+            throw CustomError(
+                .unexpected("The context needed to compute the filter '\(filterName)' is not available"),
+                file: file,
+                line: line
+            )
         }
         return unwrapped
     }
@@ -110,7 +114,11 @@ private extension Optional where Wrapped == Context.Middleware {
 private extension Optional where Wrapped == FirstPartyModule.Output {
     func unwrap(_ filterName: String, file: String = #file, line: Int = #line) throws -> Wrapped {
         guard let unwrapped = self else {
-            throw UnexpectedError("The module needed to compute the filter '\(filterName)' is not available", file: file, line: line)
+            throw CustomError(
+                .unexpected("The module needed to compute the filter '\(filterName)' is not available"),
+                file: file,
+                line: line
+            )
         }
         return unwrapped
     }

@@ -11,7 +11,7 @@ public class MessageGenerator: HelpMessageGenerator {
 
     public func writeUnrecognizedErrorMessage(for error: Error, to out: WritableStream) {
         let fileInformation: String?
-        if let error = error as? ErrorInterface {
+        if let error = error as? CustomError {
             fileInformation = "Error originated at file \(error.fileName):\(error.line)"
         } else {
             fileInformation = nil

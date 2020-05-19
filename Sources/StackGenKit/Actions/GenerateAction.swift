@@ -14,32 +14,32 @@ public class GenerateAction: Action {
     public func execute() throws {
         env.reporter.info(.wrench, "resolving \(StackGenFile.fileName)")
 
-        let stackGenFile: StackGenFile = try {
-            let stackGenFile = try StackGenFile.resolve(env)
+        let stackgenFile: StackGenFile = try {
+            let stackgenFile = try StackGenFile.resolve(env)
 
-            if let root = stackGenFile.options.root {
+            if let root = stackgenFile.options.root {
                 env.root = Path(root) ?? env.cwd/root
-                // If the root is not the cwd, parse again the stackGenFile in
+                // If the root is not the cwd, parse again the stackgenFile in
                 // order to get the right relative paths
                 return try StackGenFile.resolve(env)
             } else {
-                return stackGenFile
+                return stackgenFile
             }
         }()
 
         env.reporter.info(.wrench, "resolving templates file")
 
-        let resolvedOptions = try Options.Resolved(cliOptions, stackGenFile.options)
-        let (templatesFilePath, templatesFile) = try TemplateResolver(env).resolve(resolvedOptions.templates)
+        let resolvedOptions = try Options.Resolved(cliOptions, stackgenFile.options)
+        let (templatesFilePath, templatesFile) = try TemplatesFileResolver(env).resolve(resolvedOptions.templates)
 
         env.reporter.info(.wrench, "resolving modules")
 
-        let (firstPartyModules, thirdPartyModules) = try ModuleResolver(stackGenFile, env).resolve()
+        let (firstPartyModules, thirdPartyModules) = try ModuleResolver(stackgenFile, env).resolve()
 
         env.reporter.info(.wrench, "generating files")
 
         let inputContext = Context.Input(
-            custom: stackGenFile.custom,
+            custom: stackgenFile.custom,
             firstPartyModules: firstPartyModules,
             thirdPartyModules: thirdPartyModules,
             templatesFilePath: templatesFilePath

@@ -1,6 +1,7 @@
 import Foundation
 import Path
 
+/// The service used to write files to disk
 public class Writer {
     public private(set) var writtenFiles: [Path] = []
     public let shouldWrite: Bool

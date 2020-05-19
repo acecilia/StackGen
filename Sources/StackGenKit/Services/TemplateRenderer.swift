@@ -2,9 +2,11 @@ import Foundation
 import Path
 import StringCodable
 
+/// The service in charge of passing the context to the templates, render them
+/// and write them to disk
 public class TemplateRenderer {
-    public let inputContext: Context.Input
-    public let templateEngine: TemplateEngine
+    private let inputContext: Context.Input
+    private let templateEngine: TemplateEngine
 
     private let env: Env
 

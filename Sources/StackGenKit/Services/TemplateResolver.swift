@@ -2,10 +2,11 @@ import Foundation
 import Path
 import Yams
 
-// We require to split this into Raw and not Raw because of https://forums.swift.org/t/decoding-a-dictionary-with-a-custom-key-type/35290
+/// We need this because of https://forums.swift.org/t/decoding-a-dictionary-with-a-custom-key-type/35290
 private typealias TemplatesFileRaw = [String: TemplateSpec]
 
-public struct TemplateResolver {
+/// The service in charge of resolving which templates file to use
+public struct TemplatesFileResolver {
     private static let bundledTemplateFileName = "templates.yml"
     private static let bundledTemplatesDirectoryName = "Templates"
 

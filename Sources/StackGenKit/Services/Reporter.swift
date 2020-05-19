@@ -1,6 +1,7 @@
 import Foundation
 import Path
 
+/// The service used to format the prints
 public class Reporter {
     public let silent: Bool
 
@@ -34,7 +35,17 @@ public class Reporter {
     }
 }
 
-private extension Emoji {
+extension Reporter {
+    public enum Emoji {
+        case sparkles
+        case books
+        case wrench
+        case pageFacingUp
+        case broom
+    }
+}
+
+private extension Reporter.Emoji {
     var character: Character {
         switch self {
         case .sparkles:
