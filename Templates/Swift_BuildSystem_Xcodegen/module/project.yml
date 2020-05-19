@@ -1,0 +1,92 @@
+name: {{module.name}}
+
+options:
+  defaultConfig: Release
+  bundleIdPrefix: {{custom.bundleIdPrefix}}
+  transitivelyLinkDependencies: true
+  createIntermediateGroups: true
+  xcodeGenVersion: {{custom.xcodeGenVersion}}
+
+fileGroups: [project.yml]
+
+settings:
+  base:
+    SWIFT_VERSION: {{custom.swiftVersion}}
+    DEVELOPMENT_TEAM: {{custom.developmentTeam}}
+    IPHONEOS_DEPLOYMENT_TARGET: {{custom.minimumDeploymentTarget}}
+
+targets:
+  {{module.name}}:
+    {% if "App" in module.name %}
+    type: application
+    {% else %}
+    type: framework.static
+    {% endif %}
+    platform: iOS
+    sources:
+    - src/main/swift
+    {% if module.transitiveDependencies.main %}
+    dependencies:
+    {% for dependency in module.transitiveDependencies.main|expand %}
+    {% if dependency.kind == "firstParty" %}
+    - framework: {{dependency.name}}.framework
+      implicit: true
+      # embed: false # Bring this back when https://github.com/yonaskolb/XcodeGen/pull/820 is merged and released
+    {% elif dependency.kind == "thirdParty" %}
+    - framework: {{global.root.path}}/Carthage/Build/iOS/{{dependency.name}}.framework
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    info:
+      path: SupportingFiles/{{module.name}}/Info.plist
+      properties:
+        {% if "App" in module.name %}
+        UISupportedInterfaceOrientations:
+        - UIInterfaceOrientationPortrait # At least one value here is required to avoid https://stackoverflow.com/questions/20369290/xcode-is-creating-generic-xcode-archive-instead-of-ios-app-archive
+        UILaunchStoryboardName: ''
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: YES
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+            - UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
+              UISceneConfigurationName: Default Configuration
+        {% endif %}
+        CFBundleShortVersionString: {{custom.moduleVersion}}
+
+  {% if "src/test/swift"|pathExists %}
+  {{module.name}}Tests:
+    type: bundle.unit-test
+    platform: iOS
+    settings:
+      base:
+        # Needed for getting proper test coverage percentages when using static frameworks
+        OTHER_LDFLAGS: -all_load
+    sources:
+    - src/test/swift
+    dependencies:
+    - target: {{module.name}}
+    {% for dependency in module.transitiveDependencies.test|expand %}
+    {% if dependency.kind == "firstParty" %}
+    - framework: {{dependency.name}}.framework
+      implicit: true
+      # embed: false # Bring this back when https://github.com/yonaskolb/XcodeGen/pull/820 is merged and released
+    {% elif dependency.kind == "thirdParty" %}
+    - framework: {{global.root.path}}/Carthage/Build/iOS/{{dependency.name}}.framework
+    {% endif %}
+    {% endfor %}
+    info:
+      path: SupportingFiles/{{module.name}}Tests/Info.plist
+  {% endif %}
+
+schemes:
+  {{module.name}}:
+    build:
+      targets:
+        {{module.name}}: all
+    {% if "src/test/swift"|pathExists %}
+    test:
+      gatherCoverageData: true
+      targets:
+        - name: {{module.name}}Tests
+          randomExecutionOrder: true
+    {% endif %}

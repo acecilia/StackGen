@@ -1,0 +1,30 @@
+name: All
+
+options:
+  xcodeGenVersion: 2.15.1
+
+projectReferences:
+  Pods:
+    path: Pods/Pods.xcodeproj
+  App:
+    path: Libraries/App/App.xcodeproj
+
+schemes:
+  All:
+    build:
+      targets:
+        App/AppTests: all
+        Pods/SwiftModule1-Unit-Tests: all
+        Pods/SwiftModule2-Unit-Tests: all
+        Pods/SwiftModule3-Unit-Tests: all
+    test:
+      gatherCoverageData: true
+      targets:
+      - name: App/AppTests
+        randomExecutionOrder: true
+      - name: Pods/SwiftModule1-Unit-Tests
+        randomExecutionOrder: true
+      - name: Pods/SwiftModule2-Unit-Tests
+        randomExecutionOrder: true
+      - name: Pods/SwiftModule3-Unit-Tests
+        randomExecutionOrder: true

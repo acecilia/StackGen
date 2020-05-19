@@ -1,0 +1,35 @@
+load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
+
+##########################
+# Main module rules
+##########################
+
+swift_library(
+  name = "SwiftModule3",
+  srcs = glob(["src/main/swift/**/*.swift"]),
+  deps = [
+  ],
+  module_name = "SwiftModule3",
+  visibility = ["//visibility:public"],
+)
+
+##########################
+# Unit test rules
+##########################
+
+swift_library(
+  name = "SwiftModule3TestsLib",
+  srcs = glob(["src/test/swift/**/*.swift"]),
+  deps = [
+    ":SwiftModule3",
+  ],
+  module_name = "SwiftModule3Tests",
+)
+
+ios_unit_test(
+  name = "SwiftModule3Tests",
+  deps = [":SwiftModule3TestsLib"],
+  minimum_os_version = "13.0",
+  test_host = None,
+)

@@ -1,0 +1,48 @@
+load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application")
+
+##########################
+# Main module rules
+##########################
+
+swift_library(
+  name = "App",
+  srcs = glob(["src/main/swift/**/*.swift"]),
+  deps = [
+    "//Libraries/SwiftModule1:SwiftModule1",
+    "//Libraries/SwiftModule3:SwiftModule3",
+  ],
+  module_name = "App",
+  visibility = ["//visibility:public"],
+)
+
+ios_application(
+    name = "AppBundle",
+    bundle_id = "com.acecilia.App",
+    families = ["iphone", "ipad",],
+    infoplists = ["SupportingFiles/Info.plist"],
+    minimum_os_version = "13.0",
+    deps = ["App"],
+    visibility = ["//visibility:public"],
+)
+
+##########################
+# Unit test rules
+##########################
+
+swift_library(
+  name = "AppTestsLib",
+  srcs = glob(["src/test/swift/**/*.swift"]),
+  deps = [
+    ":App",
+  ],
+  module_name = "AppTests",
+)
+
+ios_unit_test(
+  name = "AppTests",
+  deps = [":AppTestsLib"],
+  minimum_os_version = "13.0",
+  test_host = ":AppBundle",
+)

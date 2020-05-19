@@ -1,0 +1,23 @@
+# This file generates an Xcode project used to easily run scripts
+
+name: StackGen
+fileGroups: [project.yml, .sourcery.yml]
+
+aggregateTargets:
+  sourcery:
+    buildScripts:
+      - name: Sourcery
+        script: |
+          sourcery
+
+  xcodegen:
+    buildScripts:
+      - name: Xcodegen
+        script: |
+          rm -rf *.xcodeproj && xcodegen
+
+  carthage:
+    buildScripts:
+      - name: Carthage
+        script: |
+          cd Examples/swift; carthage bootstrap --no-use-binaries --platform iOS

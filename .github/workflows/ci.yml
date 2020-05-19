@@ -1,0 +1,95 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: macos-10.15
+    strategy:
+        matrix:
+          DEVELOPER_DIR:
+          - /Applications/Xcode_11.3.1.app/Contents/Developer
+          - /Applications/Xcode_11.4.1.app/Contents/Developer
+    env:
+      DEVELOPER_DIR: ${{ matrix.DEVELOPER_DIR }}
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '2.7'
+
+    # - uses: actions/cache@v1
+    #   with:
+    #     path: Examples/swift/Carthage
+    #     # Force to create a new cache every build: https://github.com/actions/cache/issues/109#issuecomment-558771281
+    #     key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-carthage-${{ github.sha }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-carthage-
+    - uses: actions/cache@v1
+      with:
+        path: /private/var/tmp/_bazel_runner
+        key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-bazel-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-bazel-
+    ###########################################
+    # The following caching steps are disabled because they can lead to random build errors, for example:
+    # * In swift: https://stackoverflow.com/questions/15463179/how-to-fix-pch-error
+    ###########################################
+    # - uses: actions/cache@v1
+    #   with:
+    #     path: .build
+    #     key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-spm-${{ github.sha }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-spm-
+    - name: Limit cache
+      run: |
+        cache_paths="Examples/swift/Carthage /private/var/tmp/_bazel_runner"
+        echo "Cache sizes:"
+        echo "$(du -sch $cache_paths)"
+        total_cache_size=$(du -smc $cache_paths | grep total | cut -f1)
+        # Github cache limit is 5GB at the time of writing (31/03/2020)
+        # The cache limit should be divided by the number of matrices
+        if [ "$total_cache_size" -gt 2500 ]; then 
+          echo "Cache size is over the limit: reseting it..."
+          rm -rf $cache_paths
+          echo "Done"
+        else
+          echo "Cache size is under the limit: nothing to be done"
+        fi
+
+    - name: Select Xcode version
+      run: sudo xcode-select -s "$DEVELOPER_DIR"
+
+    - name: Remove default bazel executable, to test bazel installation
+      run: |
+        bazel_path="$(which bazel)"
+        sudo rm "$bazel_path"
+        echo "Removed bazel at path '$bazel_path'"
+
+    - name: Setup
+      run: sh scripts/setup.sh
+    
+    - name: Tests
+      run: |
+        cmd='swift test --enable-code-coverage -Xswiftc -D -Xswiftc DISABLE_GENERATOR'
+        # Diff when pushing a commit
+        diff=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})
+        # Diff when on a PR
+        if [ -n "${{ github.base_ref }}" ]; then
+          diff+=$(git diff ${{ github.base_ref }} HEAD)
+        fi
+
+        # Only run integration tests if the fixtures changed
+        if [[ $string == *".fixtures/"* ]]; then
+          cmd += ' -Xswiftc -D -Xswiftc DISABLE_INTEGRATION_TESTS'
+        fi
+
+        eval $cmd
+
+    - name: codecov
+      run: |
+        #sudo ln -s $DEVELOPER_DIR/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-cov /usr/local/bin/llvm-cov
+        object=".build/debug/StackGenPackageTests.xctest/Contents/MacOS/StackGenPackageTests"
+        # Filter which files to add to the report when using llvm-cov: https://stackoverflow.com/questions/44207548/how-to-filter-files-in-llvm-cov-code-coverage-report
+        xcrun llvm-cov export -format="lcov" -instr-profile=".build/debug/codecov/default.profdata" "$object" "Sources/StackGenKit/" > info.lcov
+        bash <(curl https://codecov.io/bash) -c
