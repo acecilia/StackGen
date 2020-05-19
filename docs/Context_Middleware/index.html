@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StackGen - Context.Middleware</title>
+    <link rel="stylesheet" type="text/css" href="/all.css" media="all" />
+</head>
+<body>
+    <header>
+        <a href="/">
+            <strong>
+                StackGen
+            </strong>
+            <span>Documentation</span>
+        </a>
+        <sup>Beta</sup>
+    </header>
+
+    <!--
+    <form class="search">
+        <input type="search" placeholder="Search" />
+    </form>
+    -->
+
+    <nav>
+        <div class="wrapper">
+            <h2>On This Page</h2>
+            <ol><li><a href="#relationships">Relationships</a><ul><li><a href="#relationships">Member Of</a></li></ul></li><li><a href="#initializers">Initializers</a><ul><li class="initializer"><a href="#context.middleware.init(firstpartymodules:thirdpartymodules:output:)">init(first​Party​Modules:​third​Party​Modules:​output:​)</a></li></ul></li><li><a href="#properties">Properties</a><ul><li class="property"><a href="#context.middleware.firstpartymodules">first​Party​Modules</a></li><li class="property"><a href="#context.middleware.thirdpartymodules">third​Party​Modules</a></li><li class="property"><a href="#context.middleware.output">output</a></li></ul></li></ol>
+        </div>
+    </nav>
+
+    <main>
+        <article>
+            <h1>
+    <small>Structure</small>
+    <code class="name">Context.​Middleware</code>
+</h1>
+
+<html><body><pre class="highlight"><code><span class="keyword">public</span> <span class="keyword">struct</span> <span class="type">Middleware</span></code></pre></body></html>
+<div class="summary" role="doc-abstract">
+    <p>A middleware representation of the context that will be passed to the templates</p>
+
+</div>
+<section id="relationships">
+    <h2 hidden>Relationships</h2>
+        
+        <h3>Member Of</h3>
+<dl>
+    <dt class="structure"><code><a href="/Context">Context</a></code></dt>
+<dd><p>A namespace grouping the entities representing the context to be passed to the templates</p>
+</dd>
+</dl>
+</section>
+    <section id="initializers">
+        <h2>Initializers</h2>
+
+        <div role="article" class="initializer" id="context.middleware.init(firstpartymodules:thirdpartymodules:output:)">
+    <h3>
+        <code>init(first​Party​Modules:​third​Party​Modules:​output:​)</code>
+    </h3>
+    <html><body><pre class="highlight"><code><span class="keyword">public</span> <span class="keyword">init</span>(<span class="variable">firstPartyModules</span>: [<a href="/FirstPartyModule"><span class="type">FirstPartyModule</span></a>.<span class="type">Output</span>], <span class="variable">thirdPartyModules</span>: [<a href="/ThirdPartyModule"><span class="type">ThirdPartyModule</span></a>.<span class="type">Output</span>], <span class="variable">output</span>: <span class="type">Output</span>)</code></pre></body></html>
+</div>
+    </section>
+    <section id="properties">
+        <h2>Properties</h2>
+
+        <div role="article" class="variable" id="context.middleware.firstpartymodules">
+    <h3>
+        <code>first​Party​Modules</code>
+    </h3>
+    <html><body><pre class="highlight"><code><span class="keyword">let</span> <span class="variable">firstPartyModules</span>: [<a href="/FirstPartyModule"><span class="type">FirstPartyModule</span></a>.<span class="type">Output</span>]</code></pre></body></html>
+</div>
+<div role="article" class="variable" id="context.middleware.thirdpartymodules">
+    <h3>
+        <code>third​Party​Modules</code>
+    </h3>
+    <html><body><pre class="highlight"><code><span class="keyword">let</span> <span class="variable">thirdPartyModules</span>: [<a href="/ThirdPartyModule"><span class="type">ThirdPartyModule</span></a>.<span class="type">Output</span>]</code></pre></body></html>
+</div>
+<div role="article" class="variable" id="context.middleware.output">
+    <h3>
+        <code>output</code>
+    </h3>
+    <html><body><pre class="highlight"><code><span class="keyword">let</span> <span class="variable">output</span>: <span class="type">Output</span></code></pre></body></html>
+</div>
+    </section>
+
+
+
+        </article>
+    </main>
+
+    <footer>
+        <p>
+    Generated on <time datetime="2020-05-19T23:28:04+0200">May 19, 2020</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-beta.3</span>.
+</p>
+    </footer>
+</body>
+</html>
