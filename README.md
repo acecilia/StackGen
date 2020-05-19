@@ -38,7 +38,7 @@ In order to start using `StackGen` you will need three things:
 
 1. The `stackgen.yml` file. The contents allowed inside it can be found [here](docs/StackGenFile.md). An example of it can be found [here](Examples/swift/stackgen.yml).
 2. A bunch of templates. At the moment the only supported template language is [stencil](https://github.com/stencilproject/Stencil). StackGen comes with several groups of templates out of the fox, which you can use as is or as a reference to create custom ones: find them [here](Templates). The context that is available from inside the templates is defined [here](docs/Context_Output.md). In addition, there are several custom stencil filters available: [abs](docs/StencilFilter_Absolut.md), [expand](docs/StencilFilter_ExpandDependencies.md), [pathExists](docs/StencilFilter_PathExists.md), [rm](docs/StencilFilter_RelativeToModule.md) and [rr](docs/StencilFilter_RelativeToRoot.md). Note that if the resulting file after rendering a template is empty, then the file will not be created.
-3. A `yml` file that lists and configures the templates to use. You should pass the path to this file to StackGen (through command line or setting it up inside the `stackgen.yml`). The contents allowed inside it can be found [here](TemplatesFile.md). An example of it can be found [here](Templates/Swift_BuildSystem_Xcodegen/templates.yml).
+3. A `yml` file that lists and configures the templates to use. You should pass the path to this file to StackGen (through command line or setting it up inside the `stackgen.yml`). The contents allowed inside it can be found [here](docs/TemplatesFile.md). An example of it can be found [here](Templates/Swift_BuildSystem_Cocoapods/templates.yml).
 
 ## Installation
 
