@@ -86,6 +86,10 @@
 
 # Protocols
 
+  - [Action](Action.md):
+    A protocol that specifies a common API for an action.
+    An action contains the code to be called when a subcommand is executed from the
+    command line
   - [StencilFilterInterface](StencilFilterInterface.md):
     An interface shared between all stencil filters
 
