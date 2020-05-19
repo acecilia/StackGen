@@ -32,6 +32,12 @@ StackGen is able to generate all the files in each module from a centralise plac
     * A linter configuration file that specify the lint rules.
     * Multiple script files to perform tasks on the module.
 
+## Setup
+
+In order to start using `StackGen` you will need three things:
+
+1. The `stackgen.yml` file. The contents allowed inside it can be found [here](docs/SpecgenFile.md)
+
 ## Installation
 
 ### Mint
