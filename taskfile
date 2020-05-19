@@ -15,7 +15,14 @@
 set -euo pipefail
 
 docs() {
-  swift doc generate Sources --module-name stackGen --output docs --format html
+  swift doc generate Sources --module-name StackGen --output docs --format html
+}
+
+cov() {
+  # brew install jq
+  swift doc coverage Sources --output "dcov.json"
+  cat "dcov.json" | jq ".data.totals"
+  rm "dcov.json"
 }
 
 "$@" # Source: https://stackoverflow.com/a/16159057/3203441

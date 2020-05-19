@@ -2,17 +2,19 @@ import Foundation
 import Path
 
 public enum FirstPartyModule {
-    /// A representation of a first party module when specified in the stackGenfile
+    /// A representation of a first party module to be used inside the stackgen.yml file
     public struct Input: AutoCodable, Hashable {
         public static let defaultDependencies: [String: [String]] = [:]
 
+        /// The name of the module
         public var name: String { path.basename() }
+        /// The path of the module
         public let path: Path
-
         /**
          A dictionary representing the dependencies of the module
 
-         In general, the keys of the dictionary represent the kind of target. For example:
+         You can use any string value you want as key of the dictionary, but i
+         n general, the keys of the dictionary represent the kind of target. For example:
 
          ```
          {
@@ -33,7 +35,8 @@ public enum FirstPartyModule {
         }
     }
 
-    /// A representation of a first party module used for creating the template context
+    /// A representation of a first party module that is used in the context
+    /// rendered by the templates
     public struct Output: Codable, Hashable {
         /// The name of the first party module
         public let name: String

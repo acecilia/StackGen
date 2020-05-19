@@ -3,6 +3,7 @@ import Path
 import StringCodable
 
 public struct Context: Codable {
+    /// The initial representation of the context that will be passed to the templates
     public struct Input {
         public let custom: [String: StringCodable]
         public let firstPartyModules: [FirstPartyModule.Output]
@@ -26,6 +27,7 @@ public struct Context: Codable {
         }
     }
 
+    /// A middleware representation of the context that will be passed to the templates
     public struct Middleware {
         public let firstPartyModules: [FirstPartyModule.Output]
         public let thirdPartyModules: [ThirdPartyModule.Output]
@@ -42,11 +44,17 @@ public struct Context: Codable {
         }
     }
 
+    /// The final representation of the context that will be passed to the templates
     public struct Output: Codable {
+        /// The custom values defined in the stackgen.yml file
         public let custom: [String: StringCodable]
+        /// A list of the first party modules defined in the stackgen.yml file
         public let firstPartyModules: [String]
+        /// A list of the third party modules defined in the stackgen.yml file
         public let thirdPartyModules: [String]
+        /// Several useful global values
         public let global: Global
+        /// The current module that is passed to the template, if any
         public let module: FirstPartyModule.Output?
 
         public init(

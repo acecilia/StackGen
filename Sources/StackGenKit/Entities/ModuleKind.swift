@@ -1,5 +1,6 @@
 import Foundation
 
+/// The kind of module
 public enum ModuleKind: String, Codable, CaseIterable, Comparable {
     case firstParty
     case thirdParty

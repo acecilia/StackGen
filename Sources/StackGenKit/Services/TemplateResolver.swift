@@ -4,7 +4,6 @@ import Yams
 
 // We require to split this into Raw and not Raw because of https://forums.swift.org/t/decoding-a-dictionary-with-a-custom-key-type/35290
 private typealias TemplatesFileRaw = [String: TemplateSpec]
-public typealias TemplatesFile = [Path: TemplateSpec]
 
 public struct TemplateResolver {
     private static let bundledTemplateFileName = "templates.yml"
