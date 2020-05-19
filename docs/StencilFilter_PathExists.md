@@ -8,7 +8,7 @@ public class PathExists: StencilFilterInterface
 
 ## Inheritance
 
-[`StencilFilterInterface`](StencilFilterInterface)
+[`StencilFilterInterface`](StencilFilterInterface.md)
 
 ## Properties
 

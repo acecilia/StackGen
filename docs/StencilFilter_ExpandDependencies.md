@@ -8,7 +8,7 @@ public class ExpandDependencies: StencilFilterInterface
 
 ## Inheritance
 
-[`StencilFilterInterface`](StencilFilterInterface)
+[`StencilFilterInterface`](StencilFilterInterface.md)
 
 ## Properties
 

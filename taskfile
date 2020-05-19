@@ -22,7 +22,7 @@ docs() {
   mv "$output"/Home.md "$output"/README.md
 
   for f in $(find docs -name '*.md'); do
-    sed -i '' -E "s/\]\(\//](/g" "$f"
+    sed -i '' -E "s/\]\(\/([^\)]*)\)/](\1.md)/g" "$f"
   done
 }
 

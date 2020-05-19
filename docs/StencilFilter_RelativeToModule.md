@@ -8,7 +8,7 @@ public class RelativeToModule: StencilFilterInterface
 
 ## Inheritance
 
-[`StencilFilterInterface`](StencilFilterInterface)
+[`StencilFilterInterface`](StencilFilterInterface.md)
 
 ## Properties
 

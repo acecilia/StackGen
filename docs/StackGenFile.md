@@ -8,7 +8,7 @@ public struct StackGenFile: AutoCodable
 
 ## Inheritance
 
-[`AutoCodable`](AutoCodable)
+[`AutoCodable`](AutoCodable.md)
 
 ## Properties
 
