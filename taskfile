@@ -16,7 +16,10 @@ set -euo pipefail
 
 docs() {
   output="docs"
+  rm -rf "$output"
   swift doc generate "Sources/StackGenKit" --module-name StackGen --output "$output"
+  rm "$output"/_Footer.md
+  mv "$output"/_Sidebar.md "$output"/README.md
 }
 
 cov() {

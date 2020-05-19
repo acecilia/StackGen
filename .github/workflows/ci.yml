@@ -93,17 +93,3 @@ jobs:
         # Filter which files to add to the report when using llvm-cov: https://stackoverflow.com/questions/44207548/how-to-filter-files-in-llvm-cov-code-coverage-report
         xcrun llvm-cov export -format="lcov" -instr-profile=".build/debug/codecov/default.profdata" "$object" "Sources/StackGenKit/" > info.lcov
         bash <(curl https://codecov.io/bash) -c
-    
-    - name: Generate documentation
-      uses: SwiftDocOrg/swift-doc@1.0.0-beta.3
-      with:
-        inputs: "Sources/StackGenKit"
-        module-name: StackGen
-        output: "docs"
-
-    - name: Upload Documentation to Wiki
-      uses: SwiftDocOrg/github-wiki-publish-action@v1
-      with:
-        path: "docs"
-      env:
-        GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
