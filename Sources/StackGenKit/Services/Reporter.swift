@@ -23,11 +23,11 @@ public class Reporter {
 
 
     public func warning(_ string: String) {
-        Swift.print("⚠️ Warning: \(string)")
+        Swift.print("⚠️ Warning: \(string.lowercasingFirstLetter())")
     }
 
     public func formatAsError(_ string: String) -> String {
-        return "💥 Error: \(string)"
+        return "💥 Error: \(string.lowercasingFirstLetter())"
     }
 
     public func end() {

@@ -1,0 +1,3 @@
+realm/SwiftLint@{{global.swiftlintVersion}}
+yonaskolb/XcodeGen@{{global.xcodeGenVersion}}
+thii/xcbeautify@{{global.xcbeautifyVersion}}

@@ -12,7 +12,7 @@ public class TemplateRenderer {
 
     public init(_ inputContext: Context.Input, _ env: Env) {
         self.inputContext = inputContext
-        self.templateEngine = TemplateEngine(inputContext.templatesFilePath, env)
+        self.templateEngine = TemplateEngine(env)
         self.env = env
     }
 
@@ -28,14 +28,14 @@ public class TemplateRenderer {
 
             switch mode {
             case let .module(filter):
-                for module in inputContext.firstPartyModules where filter.matches(module.name) {
+                for module in inputContext.firstPartyModules where filter.wrappedValue.matches(module.name) {
                     let destinationPath = module.location.path/relativePath
                     try _render(template: template, to: destinationPath, posixPermissions, module)
                 }
 
             case let .moduleToRoot(filter):
                 let destinationPath = env.root/relativePath
-                for module in inputContext.firstPartyModules where filter.matches(module.name) {
+                for module in inputContext.firstPartyModules where filter.wrappedValue.matches(module.name) {
                     try _render(template: template, to: destinationPath, posixPermissions, module)
                 }
 
@@ -44,7 +44,7 @@ public class TemplateRenderer {
                 try _render(template: template, to: destinationPath, posixPermissions, nil)
             }
         } catch {
-            throw CustomError(
+            throw StackGenError(
                 .errorThrownWhileRendering(
                     templatePath: templatePath.relative(to: env.cwd),
                     error: error
@@ -80,10 +80,10 @@ public class TemplateRenderer {
         outputPath: Path
     ) throws -> Context.Middleware {
         let outputContext = Context.Output(
-            custom: inputContext.custom,
+            env: Context.Env(root: env.root.output, output: outputPath.output),
+            global: inputContext.global,
             firstPartyModules: inputContext.firstPartyModuleNames,
             thirdPartyModules: inputContext.thirdPartyModuleNames,
-            global: Global(root: env.root.output, output: outputPath.output),
             module: module
         )
 
@@ -103,6 +103,6 @@ public class TemplateRenderer {
             templateContent: outputPath.string,
             context: context
         )
-        return Path(pathString)!
+        return Path.root/pathString
     }
 }

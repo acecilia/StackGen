@@ -3,19 +3,25 @@
 The options that the tool accepts through the stackgen.yml file
 
 ``` swift
-public struct StackGenFile: Codable
+public struct StackGenFile: AutoCodable
 ```
 
 ## Inheritance
 
-`Codable`
+[`AutoCodable`](AutoCodable.md)
 
 ## Initializers
 
-### `init(version:templates:root:)`
+### `init(version:templateGroups:root:)`
 
 ``` swift
-public init(version: String, templates: String? = nil, root: String? = nil)
+public init(version: String, templateGroups: [String] = defaultTemplateGroups, root: String? = nil)
+```
+
+### `init(from:)`
+
+``` swift
+public init(from decoder: Decoder) throws
 ```
 
 ### `init(from:)`
@@ -26,6 +32,12 @@ public init(from decoder: Decoder) throws
 
 ## Properties
 
+### `defaultTemplateGroups`
+
+``` swift
+let defaultTemplateGroups: [String]
+```
+
 ### `version`
 
 The version of StackGen to be used with this stackgen.yml file
@@ -34,12 +46,12 @@ The version of StackGen to be used with this stackgen.yml file
 let version: String
 ```
 
-### `templates`
+### `templateGroups`
 
-The templates identification to be used
+The template groups to use
 
 ``` swift
-let templates: String?
+let templateGroups: [String]
 ```
 
 ### `root`

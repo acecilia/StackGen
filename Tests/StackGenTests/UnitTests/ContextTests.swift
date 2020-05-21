@@ -4,61 +4,48 @@ import StackGenKit
 import Path
 
 final class ContextTests: XCTestCase {
-    func xtestContext() throws {
+    func testContext() throws {
         let contextString = """
-        custom:
+        env:
+          output:
+            basename: outputBasename
+            parent: outputParent
+            path: outputParent/outputBasename
+          root:
+            basename: rootBasename
+            parent: rootParent
+            path: rootParent/rootBasename
+        firstPartyModules:
+        - Module1
+        - Module2
+        - Module3
+        global:
           aGlobalVariable: something
           anotherGlobalVariable: somethingElse
-        firstPartyModules:
-        - dependencies:
+        module:
+          dependencies:
             main:
-            - kind: thirdParty
-              name: FileKit
-              source: ../Cartfile
-              sourceParent: ..
-              version: 0.0.1
-            - dependencies: {}
-              kind: firstParty
-              name: Module2
-              path: some/path/Module2
-              transitiveDependencies: {}
-            - dependencies: {}
-              kind: firstParty
-              name: Module3
-              path: some/path/Module3
-              transitiveDependencies: {}
+            - FileKit
+            - Module2
           kind: firstParty
+          location:
+            basename: Module1
+            parent: parentModule1
+            path: parentModule1/Module1
           name: Module1
-          path: some/path/Module1
-          transitiveDependencies: {}
-        - dependencies: {}
-          kind: firstParty
-          name: Module2
-          path: some/path/Module2
-          transitiveDependencies: {}
-        - dependencies: {}
-          kind: firstParty
-          name: Module3
-          path: some/path/Module3
-          transitiveDependencies: {}
-        global:
-          fileName: someFileName
-          parent: somePath
-          root: ..
-          rootBasename: something
+          transitiveDependencies:
+            main:
+            - FileKit
+            - Module2
         thirdPartyModules:
-        - kind: thirdParty
-          name: FileKit
-          source: ../Cartfile
-          sourceParent: ..
-          version: 0.0.1
+        - FileKit
 
         """
         do {
             let userInfo = [CodingUserInfoKey.relativePath: Path.cwd]
 
             let decoder = YAMLDecoder()
-            let decoded = try decoder.decode(Context.self, from: contextString, userInfo: userInfo)
+            let decoded = try decoder.decode(Context.Output.self, from: contextString, userInfo: userInfo)
 
             let encoder = YAMLEncoder()
             encoder.options = YAMLEncoder.Options(sortKeys: true)

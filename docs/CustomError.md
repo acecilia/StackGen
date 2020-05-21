@@ -3,12 +3,12 @@
 The errors thrown by the tool
 
 ``` swift
-public struct CustomError: Error
+public struct CustomError: LocalizedError
 ```
 
 ## Inheritance
 
-`Error`
+`LocalizedError`
 
 ## Initializers
 
@@ -38,8 +38,8 @@ let fileName: String
 let line: Int
 ```
 
-### `description`
+### `errorDescription`
 
 ``` swift
-var description: String
+var errorDescription: String?
 ```

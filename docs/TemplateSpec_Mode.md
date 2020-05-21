@@ -8,7 +8,7 @@ public enum Mode
 
 ## Inheritance
 
-`Decodable`
+[`AutoCodable`](AutoCodable.md)
 
 ## Initializers
 
@@ -30,7 +30,7 @@ available in the context. Optionally you can pass a regex filter to select which
 modules to be used when rendering the template
 
 ``` swift
-case module(filter: NSRegularExpression)
+case module(filter: RegularExpression = Self.defaultFilter)
 ```
 
 ### `moduleToRoot`
@@ -44,7 +44,7 @@ available in the context. Optionally you can pass a regex filter to select which
 modules to be used when rendering the template
 
 ``` swift
-case moduleToRoot(filter: NSRegularExpression)
+case moduleToRoot(filter: RegularExpression = Self.defaultFilter)
 ```
 
 ### `root`
@@ -58,8 +58,16 @@ case root
 
 ## Properties
 
-### `defaultModuleFilter`
+### `defaultFilter`
 
 ``` swift
-let defaultModuleFilter
+let defaultFilter
+```
+
+## Methods
+
+### `encode(to:)`
+
+``` swift
+public func encode(to encoder: Encoder) throws
 ```

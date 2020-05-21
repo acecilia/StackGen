@@ -13,7 +13,7 @@ typealias DevelomentTestCase = XCTest
 
 final class DevelopmentTests: DevelomentTestCase {
     func testRun() throws {
-        let result = try prefillAndGenerate(using: .Swift_BuildSystem_Xcodegen)
+        let result = try prefillAndGenerate(using: .StackGen_Swift_BuildSystem_Cocoapods)
         runCommand("""
         osascript -e 'tell application "Terminal" to do script "cd \(result.destination);./taskfile setup"'
         osascript -e 'tell application "Terminal"' -e 'activate' -e 'end tell'

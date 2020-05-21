@@ -28,7 +28,7 @@ extension XCTest {
     }
 
     func assertLefthook() {
-        let r = runCommand("lefthook run pre-commit")
+        let r = runCommand("bundle exec lefthook run pre-commit")
         XCTAssertEqual(r.exitCode, 0, "Lefthook failed: '\((r.output + r.error).joined(separator: "\n"))'")
     }
 }

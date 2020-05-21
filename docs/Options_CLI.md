@@ -12,16 +12,18 @@ public struct CLI: Codable
 
 ## Initializers
 
-### `init(templates:)`
+### `init(templateGroups:)`
 
 ``` swift
-public init(templates: String? = nil)
+public init(templateGroups: [String]?)
 ```
 
 ## Properties
 
-### `templates`
+### `templateGroups`
+
+The template groups to use
 
 ``` swift
-let templates: String?
+let templateGroups: [String]
 ```

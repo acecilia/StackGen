@@ -24,13 +24,19 @@ func tmp(
 
 func patchTemplate(at stackgenFilePath: Path, using template: Template) throws {
     let content = try String(contentsOf: stackgenFilePath)
-        .replacingOccurrences(of: "Swift_BuildSystem_Xcodegen", with: template.rawValue)
+        .replacingOccurrences(of: "StackGen_Swift_BuildSystem_Xcodegen", with: template.rawValue)
     try content.write(to: stackgenFilePath)
 }
 
 func patchTopLevel(at stackgenFilePath: Path, using root: Path) throws {
-    var content = try String(contentsOf: stackgenFilePath)
-    content.append("  root: \(root.relative(to: stackgenFilePath.parent))")
+    let content = try String(contentsOf: stackgenFilePath)
+        .replacingOccurrences(
+        of: "options:",
+        with: """
+        options:
+          root: \(root.relative(to: stackgenFilePath.parent))
+        """
+    )
     try content.write(to: stackgenFilePath)
 }
 

@@ -7,7 +7,7 @@ public class Clean: BaseCommand, Command {
 
     public override func go() throws {
         let options = Options.CLI(
-            templates: templates
+            templateGroups: templateGroups
         )
         try CleanAction(options, env).execute()
     }
