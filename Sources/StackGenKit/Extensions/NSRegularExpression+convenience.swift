@@ -2,7 +2,7 @@ import Foundation
 
 /// Convenient extensions
 /// Source: https://www.hackingwithswift.com/articles/108/how-to-use-regular-expressions-in-swift
-extension NSRegularExpression {
+public extension NSRegularExpression {
     convenience init(_ pattern: String) {
         do {
             try self.init(pattern: pattern)

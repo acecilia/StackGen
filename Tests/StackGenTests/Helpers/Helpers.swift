@@ -24,7 +24,7 @@ func tmp(
 
 func patchTemplate(at stackgenFilePath: Path, using template: Template) throws {
     let content = try String(contentsOf: stackgenFilePath)
-        .replacingOccurrences(of: "Swift_BuildSystem_Xcodegen", with: template.rawValue)
+        .replacingOccurrences(of: "StackGen_Swift_BuildSystem_Xcodegen", with: template.rawValue)
     try content.write(to: stackgenFilePath)
 }
 

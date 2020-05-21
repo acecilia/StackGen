@@ -3,7 +3,7 @@ import StackGenKit
 import Path
 import RuntimeTestCase
 
-// Integration tests take a lot of time, and my be disabled on CI using this flag
+// Integration tests take a lot of time, and may be disabled on CI using this flag
 #if DISABLE_INTEGRATION_TESTS
 typealias IntegrationTestCase = XCTest
 #else
@@ -23,13 +23,13 @@ final class IntegrationTests: IntegrationTestCase {
         try assertGenerate(template)
         assertSetup()
         assertTest()
-        // Archiving requires a provisioning profile on CI, which is not setup yet
+        // Archiving requires a provisioning profile on CI, which is not ready yet
         // assertArchive()
         assertLefthook()
     }
 
-    func test_Swift_Starter_CommandLine() throws {
-        try assertGenerate(.Swift_Starter_CommandLine)
+    func test_StackGen_Swift_Starter_CommandLine() throws {
+        try assertGenerate(.StackGen_Swift_Starter_CommandLine)
         try assertSPMBuild()
     }
 }

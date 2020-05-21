@@ -7,7 +7,7 @@ public class Generate: BaseCommand, Command {
 
     public override func go() throws {
         let options = Options.CLI(
-            templates: templates
+            templateGroups: templateGroups
         )
         try GenerateAction(options, env).execute()
     }

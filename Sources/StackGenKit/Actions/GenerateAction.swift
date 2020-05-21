@@ -34,7 +34,10 @@ public class GenerateAction: Action {
         env.reporter.info(.wrench, "resolving templates file")
 
         let resolvedOptions = try Options.Resolved(cliOptions, stackgenFile.options)
-        let (templatesFilePath, templatesFile) = try TemplatesFileResolver(env).resolve(resolvedOptions.templates)
+        let templateSpecs = try TemplatesFileResolver(
+            stackgenFile.availableTemplateGroups,
+            env
+        ).resolve(resolvedOptions.templateGroups)
 
         env.reporter.info(.wrench, "resolving modules")
 
@@ -45,23 +48,22 @@ public class GenerateAction: Action {
         let inputContext = Context.Input(
             custom: stackgenFile.custom,
             firstPartyModules: firstPartyModules,
-            thirdPartyModules: thirdPartyModules,
-            templatesFilePath: templatesFilePath
+            thirdPartyModules: thirdPartyModules
         )
         let templateRenderer = TemplateRenderer(inputContext, env)
 
-        for (path, templateSpec) in templatesFile {
-            if path.isFile {
+        for templateSpec in templateSpecs {
+            if templateSpec.path.isFile {
                 try templateRenderer.render(
-                    templatePath: path,
-                    relativePath: path.basename(),
+                    templatePath: templateSpec.path,
+                    relativePath: templateSpec.path.basename(),
                     mode: templateSpec.mode
                 )
-            } else if path.isDirectory {
-                for templatePath in path.find().type(.file) where templatePath.basename() != ".DS_Store" {
+            } else if templateSpec.path.isDirectory {
+                for templatePath in templateSpec.path.find().type(.file) where templatePath.basename() != ".DS_Store" {
                     try templateRenderer.render(
                         templatePath: templatePath,
-                        relativePath: templatePath.relative(to: path),
+                        relativePath: templatePath.relative(to: templateSpec.path),
                         mode: templateSpec.mode
                     )
                 }

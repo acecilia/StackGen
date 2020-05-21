@@ -8,9 +8,9 @@ public class TemplateEngine {
     private let environment: Environment
     private let extensions = StencilExtensions()
     
-    public init(_ templatesFilePath: Path, _ env: Env) {
+    public init(_ env: Env) {
         self.environment = Environment(
-            loader: FileSystemLoader(paths: [.init(templatesFilePath.parent.relative(to: env.cwd))]),
+            loader: FileSystemLoader(paths: [.init()]),
             extensions: [extensions],
             throwOnUnresolvedVariable: true
         )
@@ -41,7 +41,6 @@ extension Stencil.TemplateSyntaxError: LocalizedError {
     public var errorDescription: String? {
         let reporter = SimpleErrorReporter()
         return """
-        Template syntax error.
         \(reporter.renderError(self))
         """
     }

@@ -8,10 +8,10 @@ public class TemplateEngine
 
 ## Initializers
 
-### `init(_:_:)`
+### `init(_:)`
 
 ``` swift
-public init(_ templatesFilePath: Path, _ env: Env)
+public init(_ env: Env)
 ```
 
 ## Properties

@@ -164,7 +164,11 @@ extension <%= type.name %> {
             throw DecodingError.dataCorruptedError(forKey: .enumCaseKey, in: container, debugDescription: "Can't decode '\(enumCase)'")
             <%_ } else if enumCase.associatedValues.filter({ $0.localName != nil }).count == enumCase.associatedValues.count { -%>
             <%_ for associatedValue in enumCase.associatedValues { -%>
-            let <%= associatedValue.localName! %> = try container.decode(<%= associatedValue.typeName %>.self, forKey: .<%= associatedValue.localName! %>)
+            <%_ let shouldWrapTry = associatedValue.defaultValue != nil -%>
+            let <%= associatedValue.localName! %> = <% if shouldWrapTry { %>(try? <% } else { %>try <% } -%>
+            <%_ %>container.decode(<%= associatedValue.typeName %>.self, forKey: .<%= associatedValue.localName! %>)<% -%>
+            <%_ if shouldWrapTry { %>)<% } -%>
+            <%_ if let defaultValue = associatedValue.defaultValue { %> ?? <%= defaultValue -%><%_ } %>
             <%_ } -%>
             self = .<%= enumCase.name %>(<% -%>
                 <%_ %><%= enumCase.associatedValues.map({ "\($0.localName!): \($0.localName!)" }).joined(separator: ", ") %>)

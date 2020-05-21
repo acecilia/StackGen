@@ -4,6 +4,8 @@
     The action corresponting to the `clean` subcommand
   - [GenerateAction](GenerateAction.md):
     The action corresponting to the `generate` subcommand
+  - [BundledTemplateGroup](BundledTemplateGroup.md):
+    The template groups bundled with the tool
   - [Context](Context.md):
     A namespace grouping the entities representing the context to be passed to the templates
   - [Context.Input](Context_Input.md):
@@ -38,8 +40,9 @@
     A path representation to be used when a path is needed inside the context
   - [StackGenFile](StackGenFile.md):
     The representation of the stackgen.yml file
-  - [TemplateSpec](TemplateSpec.md):
-    The specification for a template or a subdirectory of templates
+  - [TemplateSpec](TemplateSpec.md)
+  - [TemplateSpec.\_Input](TemplateSpec__Input.md):
+    A partial representation of a TemplateSpec.Input
   - [TemplateSpec.Mode](TemplateSpec_Mode.md):
     The mode that declares how a template is used
   - [ThirdPartyModule](ThirdPartyModule.md):
@@ -92,11 +95,6 @@
     command line
   - [StencilFilterInterface](StencilFilterInterface.md):
     An interface shared between all stencil filters
-
-# Global Typealiases
-
-  - [TemplatesFile](TemplatesFile.md):
-    A representation of the content expected for the templates file
 
 # Global Variables
 

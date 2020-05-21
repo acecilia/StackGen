@@ -182,7 +182,7 @@ extension FirstPartyModule.Input: Module {
 }
 
 extension ThirdPartyModule.Input: Module {
-    var name: String { element1.name }
+    var name: String { _element1.name }
     var kind: ModuleKind { .thirdParty }
 }
 

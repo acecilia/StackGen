@@ -4,32 +4,37 @@ import StringCodable
 import Yams
 
 /// The representation of the stackgen.yml file
-public struct StackGenFile: AutoCodable {
+public struct StackGenFile: AutoDecodable {
     public static let fileName = "stackgen.yml"
 
     public static let defaultCustom: [String: StringCodable] = [:]
     public static let defaultFirstPartyModules: [FirstPartyModule.Input] = []
     public static let defaultThirdPartyModules: [ThirdPartyModule.Input] = []
+    public static let defaultAvailableTemplateGroups: [String: [TemplateSpec.Input]] = [:]
 
+    /// The options passed to the tool
+    public let options: Options.StackGenFile
     /// A dictionary used to declare custom values that can be accessed from all the templates
     public let custom: [String: StringCodable]
     /// The first party modules to use
     public let firstPartyModules: [FirstPartyModule.Input]
     /// The third party modules to use
     public let thirdPartyModules: [ThirdPartyModule.Input]
-    /// The options passed to the tool
-    public let options: Options.StackGenFile
+    /// The template groups to use
+    public let availableTemplateGroups: [String: [TemplateSpec.Input]]
 
     public init(
+        options: Options.StackGenFile = Options.StackGenFile(version: VERSION),
         custom: [String: StringCodable] = defaultCustom,
         firstPartyModules: [FirstPartyModule.Input] = defaultFirstPartyModules,
         thirdPartyModules: [ThirdPartyModule.Input] = defaultThirdPartyModules,
-        options: Options.StackGenFile = Options.StackGenFile(version: VERSION)
+        availableTemplateGroups: [String: [TemplateSpec.Input]] = defaultAvailableTemplateGroups
     ) {
+        self.options = options
         self.custom = custom
         self.firstPartyModules = firstPartyModules
         self.thirdPartyModules = thirdPartyModules
-        self.options = options
+        self.availableTemplateGroups = availableTemplateGroups
     }
 
     static func resolve(_ env: Env) throws -> StackGenFile {

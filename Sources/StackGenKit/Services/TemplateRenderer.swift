@@ -12,7 +12,7 @@ public class TemplateRenderer {
 
     public init(_ inputContext: Context.Input, _ env: Env) {
         self.inputContext = inputContext
-        self.templateEngine = TemplateEngine(inputContext.templatesFilePath, env)
+        self.templateEngine = TemplateEngine(env)
         self.env = env
     }
 
@@ -28,14 +28,14 @@ public class TemplateRenderer {
 
             switch mode {
             case let .module(filter):
-                for module in inputContext.firstPartyModules where filter.matches(module.name) {
+                for module in inputContext.firstPartyModules where filter.wrappedValue.matches(module.name) {
                     let destinationPath = module.location.path/relativePath
                     try _render(template: template, to: destinationPath, posixPermissions, module)
                 }
 
             case let .moduleToRoot(filter):
                 let destinationPath = env.root/relativePath
-                for module in inputContext.firstPartyModules where filter.matches(module.name) {
+                for module in inputContext.firstPartyModules where filter.wrappedValue.matches(module.name) {
                     try _render(template: template, to: destinationPath, posixPermissions, module)
                 }
 
@@ -103,6 +103,6 @@ public class TemplateRenderer {
             templateContent: outputPath.string,
             context: context
         )
-        return Path(pathString)!
+        return Path.root/pathString
     }
 }

@@ -2,22 +2,28 @@ import Foundation
 import Path
 
 /// The errors thrown by the tool
-public struct CustomError: Error {
+public struct CustomError: LocalizedError {
     public let kind: Kind
     public let fileName: String
     public let line: Int
-    public var description: String { kind.description }
 
     public init(_ kind: Kind, file: String = #file, line: Int = #line) {
         self.kind = kind
         self.fileName = URL(fileURLWithPath: file).lastPathComponent
         self.line = line
     }
+
+    public var errorDescription: String? {
+        """
+        \(kind.errorDescription)
+        Error originated at file '\(fileName)', line '\(line)'
+        """
+    }
 }
 
 public extension CustomError {
     /// The kind of errors that the tool is expecing
-    enum Kind: CustomStringConvertible {
+    enum Kind {
         // Version
         case stackgenFileVersionNotMatching(_ version: String)
 
@@ -34,14 +40,14 @@ public extension CustomError {
         case requiredParameterNotFound(name: String)
 
         // Templates
-        case templatesFileNotFound(relativePath: String)
+        case templateGroupNotFound(identifier: String)
         case errorThrownWhileRendering(templatePath: String, error: Error)
         case filterFailed(filter: String, reason: String)
 
         // Unexpected
         case unexpected(_ description: String)
     
-        public var description: String {
+        public var errorDescription: String {
             switch self {
             case let .stackgenFileVersionNotMatching(version):
                 return """
@@ -74,13 +80,13 @@ public extension CustomError {
             case let .requiredParameterNotFound(name):
                 return "Required parameter not passed as command line argument neither found in the '\(StackGenFile.fileName)' file. Parameter: '\(name)'"
 
-            case let .templatesFileNotFound(relativePath):
-                return "Templates file not found at path '\(relativePath)'"
+            case let .templateGroupNotFound(identifier):
+                return "Templates group not found for identifier '\(identifier)'"
 
             case let .errorThrownWhileRendering(templatePath, error):
                 return """
-                \(error.localizedDescription)
                 Error thrown while rendering template at path '\(templatePath)'
+                \(error.usefulDescription)
                 """
 
             case let .filterFailed(filter, reason):

@@ -11,20 +11,17 @@ public struct Context: Codable {
         public let firstPartyModuleNames: [String]
         public let thirdPartyModules: [ThirdPartyModule.Output]
         public let thirdPartyModuleNames: [String]
-        public let templatesFilePath: Path
 
         public init(
             custom: [String: StringCodable],
             firstPartyModules: [FirstPartyModule.Output],
-            thirdPartyModules: [ThirdPartyModule.Output],
-            templatesFilePath: Path
+            thirdPartyModules: [ThirdPartyModule.Output]
         ) {
             self.custom = custom
             self.firstPartyModules = firstPartyModules
             self.firstPartyModuleNames = firstPartyModules.map { $0.name }
             self.thirdPartyModules = thirdPartyModules
             self.thirdPartyModuleNames = thirdPartyModules.map { $0.name }
-            self.templatesFilePath = templatesFilePath
         }
     }
 

@@ -29,7 +29,7 @@ final class GenerateTests: RuntimeTestCase {
     }
 
     func testGenerateWithDifferentTopLevel() throws {
-        let template = Template.Swift_BuildSystem_Xcodegen
+        let template = Template.StackGen_Swift_BuildSystem_Xcodegen
         
         let destinationA = try tmp("destinationA")
         let destinationB = try tmp("destinationB")
