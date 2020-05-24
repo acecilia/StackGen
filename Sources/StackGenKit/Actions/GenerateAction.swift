@@ -28,7 +28,7 @@ public class GenerateAction: Action {
             }
         }()
         guard stackgenFile.options.version == VERSION else {
-            throw CustomError(.stackgenFileVersionNotMatching(stackgenFile.options.version))
+            throw StackGenError(.stackgenFileVersionNotMatching(stackgenFile.options.version))
         }
 
         env.reporter.info(.wrench, "resolving templates file")
@@ -46,7 +46,7 @@ public class GenerateAction: Action {
         env.reporter.info(.wrench, "generating files")
 
         let inputContext = Context.Input(
-            custom: stackgenFile.custom,
+            global: stackgenFile.global,
             firstPartyModules: firstPartyModules,
             thirdPartyModules: thirdPartyModules
         )

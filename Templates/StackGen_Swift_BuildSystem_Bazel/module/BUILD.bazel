@@ -27,10 +27,10 @@ swift_library(
 
 ios_application(
     name = "{{module.name}}Bundle",
-    bundle_id = "{{custom.bundleIdPrefix}}.{{module.name}}",
+    bundle_id = "{{global.bundleIdPrefix}}.{{module.name}}",
     families = ["iphone", "ipad",],
     infoplists = ["SupportingFiles/Info.plist"],
-    minimum_os_version = "{{custom.minimumDeploymentTarget}}",
+    minimum_os_version = "{{global.minimumDeploymentTarget}}",
     deps = ["{{module.name}}"],
     visibility = ["//visibility:public"],
 )
@@ -59,7 +59,7 @@ swift_library(
 ios_unit_test(
   name = "{{module.name}}Tests",
   deps = [":{{module.name}}TestsLib"],
-  minimum_os_version = "{{custom.minimumDeploymentTarget}}",
+  minimum_os_version = "{{global.minimumDeploymentTarget}}",
   {% if "App" in module.name %}
   test_host = ":{{module.name}}Bundle",
   {% else %}

@@ -1,8 +1,8 @@
 Pod::Spec.new do |s|
   s.name                   = '{{module.name}}'
-  s.version                = '{{custom.moduleVersion}}'
-  s.swift_version          = '{{custom.swiftVersion}}'
-  s.ios.deployment_target  = '{{custom.minimumDeploymentTarget}}'
+  s.version                = '{{global.moduleVersion}}'
+  s.swift_version          = '{{global.swiftVersion}}'
+  s.ios.deployment_target  = '{{global.minimumDeploymentTarget}}'
   s.source_files           = '{{module.location.path}}/src/main/swift/*.swift'
   s.static_framework       = true
   {% if module.dependencies.main %}
@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   {% endif %}
   {% for dependency in module.dependencies.main|expand %}
   {% if dependency.kind == "firstParty" %}
-  s.dependency '{{dependency.name}}', '{{custom.moduleVersion}}'
+  s.dependency '{{dependency.name}}', '{{global.moduleVersion}}'
   {% elif dependency.kind == "thirdParty" %}
   s.dependency '{{dependency.name}}', '{{dependency.version}}'
   {% endif %}
@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
     {% endif %}
     {% for dependency in module.dependencies.test|expand %}
     {% if dependency.kind == "firstParty" %}
-    test_spec.dependency '{{dependency.name}}', '{{custom.moduleVersion}}'
+    test_spec.dependency '{{dependency.name}}', '{{global.moduleVersion}}'
     {% elif dependency.kind == "thirdParty" %}
     test_spec.dependency '{{dependency.name}}', '{{dependency.version}}'
     {% endif %}

@@ -2,7 +2,7 @@ import Foundation
 import Path
 
 /// The errors thrown by the tool
-public struct CustomError: LocalizedError {
+public struct StackGenError: LocalizedError {
     public let kind: Kind
     public let fileName: String
     public let line: Int
@@ -21,7 +21,7 @@ public struct CustomError: LocalizedError {
     }
 }
 
-public extension CustomError {
+public extension StackGenError {
     /// The kind of errors that the tool is expecing
     enum Kind {
         // Version

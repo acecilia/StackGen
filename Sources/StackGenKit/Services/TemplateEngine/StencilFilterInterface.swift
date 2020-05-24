@@ -19,7 +19,7 @@ public enum StencilFilter {
         public func run(_ value: Any?) throws -> Any {
             let string = try value.asString(Self.filterName)
             let context = try self.context.unwrap(Self.filterName)
-            let path = Path(string) ?? context.output.global.output.path.parent.join(string)
+            let path = Path(string) ?? context.output.env.output.path.parent.join(string)
             return path.exists
         }
     }
@@ -33,8 +33,8 @@ public enum StencilFilter {
         public func run(_ value: Any?) throws -> Any {
             let string = try value.asString(Self.filterName)
             let context = try self.context.unwrap(Self.filterName)
-            let path = Path(string) ?? context.output.global.output.path.parent.join(string)
-            return path.relative(to: context.output.global.root.path)
+            let path = Path(string) ?? context.output.env.output.path.parent.join(string)
+            return path.relative(to: context.output.env.root.path)
         }
     }
 
@@ -47,7 +47,7 @@ public enum StencilFilter {
         public func run(_ value: Any?) throws -> Any {
             let string = try value.asString(Self.filterName)
             let context = try self.context.unwrap(Self.filterName)
-            let path = Path(string) ?? context.output.global.output.path.parent.join(string)
+            let path = Path(string) ?? context.output.env.output.path.parent.join(string)
             let module = try context.output.module.unwrap(Self.filterName)
             return path.relative(to: module.location.path)
         }
@@ -61,7 +61,7 @@ public enum StencilFilter {
 
         public func run(_ value: Any?) throws -> Any {
             let string = try value.asString(Self.filterName)
-            let path = try Path(string) ?? context.unwrap(Self.filterName).output.global.output.path.parent.join(string)
+            let path = try Path(string) ?? context.unwrap(Self.filterName).output.env.output.path.parent.join(string)
             return path.relative(to: Path.root)
         }
     }
@@ -82,7 +82,7 @@ public enum StencilFilter {
                     context.thirdPartyModules.first { $0.name == dependency }
                     )
                     .unwrap(onFailure: "A module with name '\(dependency)' could not be found")
-                return try dependency.asDictionary(context.output.global.output.path.parent)
+                return try dependency.asDictionary(context.output.env.output.path.parent)
             }
 
             return expandedDependencies
@@ -93,14 +93,14 @@ public enum StencilFilter {
 private extension Optional where Wrapped == Any {
     func asString(_ filterName: String, file: String = #file, line: Int = #line) throws -> String {
         guard let unwrapped = self as? String else {
-            throw CustomError(.filterFailed(filter: filterName, reason: "The value passed to the filter is not a valid string"))
+            throw StackGenError(.filterFailed(filter: filterName, reason: "The value passed to the filter is not a valid string"))
         }
         return unwrapped
     }
 
     func asStringArray(_ filterName: String, file: String = #file, line: Int = #line) throws -> [String] {
         guard let unwrapped = self as? [String] else {
-            throw CustomError(.filterFailed(filter: filterName, reason: "The value passed to the filter is not a valid string array"))
+            throw StackGenError(.filterFailed(filter: filterName, reason: "The value passed to the filter is not a valid string array"))
         }
         return unwrapped
     }
@@ -110,7 +110,7 @@ private extension Optional where Wrapped == Any {
 private extension Optional where Wrapped == Context.Middleware {
     func unwrap(_ filterName: String, file: String = #file, line: Int = #line) throws -> Wrapped {
         guard let unwrapped = self else {
-            throw CustomError(
+            throw StackGenError(
                 .unexpected("The context needed to compute the filter '\(filterName)' is not available"),
                 file: file,
                 line: line
@@ -123,7 +123,7 @@ private extension Optional where Wrapped == Context.Middleware {
 private extension Optional where Wrapped == FirstPartyModule.Output {
     func unwrap(_ filterName: String, file: String = #file, line: Int = #line) throws -> Wrapped {
         guard let unwrapped = self else {
-            throw CustomError(
+            throw StackGenError(
                 .unexpected("The module needed to compute the filter '\(filterName)' is not available"),
                 file: file,
                 line: line

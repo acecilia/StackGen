@@ -6,14 +6,7 @@ import Path
 final class ContextTests: XCTestCase {
     func testContext() throws {
         let contextString = """
-        custom:
-          aGlobalVariable: something
-          anotherGlobalVariable: somethingElse
-        firstPartyModules:
-        - Module1
-        - Module2
-        - Module3
-        global:
+        env:
           output:
             basename: outputBasename
             parent: outputParent
@@ -22,6 +15,13 @@ final class ContextTests: XCTestCase {
             basename: rootBasename
             parent: rootParent
             path: rootParent/rootBasename
+        firstPartyModules:
+        - Module1
+        - Module2
+        - Module3
+        global:
+          aGlobalVariable: something
+          anotherGlobalVariable: somethingElse
         module:
           dependencies:
             main:

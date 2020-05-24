@@ -8,8 +8,8 @@ build --test_output=errors # Prints log file output to the console on failure
 # iOS flags
 ###################################
 build:ios --apple_platform_type=ios
-build:ios --ios_minimum_os={{custom.minimumDeploymentTarget}}
-build:ios --copt=-swift-version --copt={{custom.swiftVersion}}
+build:ios --ios_minimum_os={{global.minimumDeploymentTarget}}
+build:ios --copt=-swift-version --copt={{global.swiftVersion}}
 build:ios --copt=-whole-module-optimization # faster compilation (see https://www.skilled.io/u/swiftsummit/swift-with-a-hundred-engineers)
 
 # For having a more reproducible build, uncomment following lines:

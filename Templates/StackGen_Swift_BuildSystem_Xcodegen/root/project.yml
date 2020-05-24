@@ -1,7 +1,7 @@
 name: All
 
 options:
-  xcodeGenVersion: {{custom.xcodeGenVersion}}
+  xcodeGenVersion: {{global.xcodeGenVersion}}
 
 projectReferences:
 {% for module in firstPartyModules|expand %}

@@ -44,7 +44,7 @@ public class TemplateRenderer {
                 try _render(template: template, to: destinationPath, posixPermissions, nil)
             }
         } catch {
-            throw CustomError(
+            throw StackGenError(
                 .errorThrownWhileRendering(
                     templatePath: templatePath.relative(to: env.cwd),
                     error: error
@@ -80,10 +80,10 @@ public class TemplateRenderer {
         outputPath: Path
     ) throws -> Context.Middleware {
         let outputContext = Context.Output(
-            custom: inputContext.custom,
+            env: Context.Env(root: env.root.output, output: outputPath.output),
+            global: inputContext.global,
             firstPartyModules: inputContext.firstPartyModuleNames,
             thirdPartyModules: inputContext.thirdPartyModuleNames,
-            global: Global(root: env.root.output, output: outputPath.output),
             module: module
         )
 

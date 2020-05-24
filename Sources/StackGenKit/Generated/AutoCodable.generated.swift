@@ -42,7 +42,7 @@ extension StackGenFile {
 
     enum CodingKeys: String, CodingKey {
         case options
-        case custom
+        case global
         case firstPartyModules
         case thirdPartyModules
         case availableTemplateGroups
@@ -52,7 +52,7 @@ extension StackGenFile {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         options = try container.decode(Options.StackGenFile.self, forKey: .options)
-        custom = (try? container.decode([String: StringCodable].self, forKey: .custom)) ?? StackGenFile.defaultCustom
+        global = (try? container.decode([String: StringCodable].self, forKey: .global)) ?? StackGenFile.defaultGlobal
         firstPartyModules = (try? container.decode([FirstPartyModule.Input].self, forKey: .firstPartyModules)) ?? StackGenFile.defaultFirstPartyModules
         thirdPartyModules = (try? container.decode([ThirdPartyModule.Input].self, forKey: .thirdPartyModules)) ?? StackGenFile.defaultThirdPartyModules
         availableTemplateGroups = (try? container.decode([String: [TemplateSpec.Input]].self, forKey: .availableTemplateGroups)) ?? StackGenFile.defaultAvailableTemplateGroups

@@ -38,10 +38,10 @@ final class MessageGeneratorTests: XCTestCase {
         )
     }
 
-    func testCustomErrors() throws {
+    func testStackGenErrors() throws {
         let builder = Builder()
         let messageGenerator = builder.makeMessageGenerator()
-        let error = builder.makeCustomError()
+        let error = builder.makeStackGenError()
         let errorDescription = messageGenerator.description(for: error)
 
         XCTAssertEqual(
@@ -49,7 +49,7 @@ final class MessageGeneratorTests: XCTestCase {
             #"""
             💥 Error: found multiple modules with the same name. This is not permitted, a module name must be unique. Duplicated modules: 'ModuleA'
             Error originated at file 'MessageGeneratorTests.swift', line '21'
-            CustomError(kind: StackGenKit.CustomError.Kind.foundDuplicatedModules(["ModuleA"]), fileName: "MessageGeneratorTests.swift", line: 21)
+            StackGenError(kind: StackGenKit.StackGenError.Kind.foundDuplicatedModules(["ModuleA"]), fileName: "MessageGeneratorTests.swift", line: 21)
             """#
         )
     }
@@ -71,8 +71,8 @@ private class Builder {
         return MessageGenerator(env)
     }
 
-    func makeCustomError() -> Error {
-        return CustomError(
+    func makeStackGenError() -> Error {
+        return StackGenError(
             .foundDuplicatedModules(["ModuleA"]),
             file: "StackGenTests/MessageGeneratorTests.swift",
             line: 21
@@ -103,10 +103,10 @@ private class Builder {
             firstPartyModules: [],
             thirdPartyModules: [],
             output: Context.Output(
-                custom: [:],
+                env: Context.Env(root: env.cwd.output, output: env.cwd.output),
+                global: [:],
                 firstPartyModules: [],
                 thirdPartyModules: [],
-                global: Global(root: env.cwd.output, output: env.cwd.output),
                 module: nil
             )
         )

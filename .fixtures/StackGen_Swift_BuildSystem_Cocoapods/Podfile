@@ -1,6 +1,5 @@
 install! 'cocoapods',
-  :share_schemes_for_development_pods => true,
-  :disable_input_output_paths => true # Workaround for https://github.com/CocoaPods/CocoaPods/issues/9185
+  :share_schemes_for_development_pods => true
 
 use_frameworks!
 workspace 'All'

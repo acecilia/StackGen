@@ -61,6 +61,7 @@ archive() {
 setup() {
   echo "✨ Install project dependencies"
   mint bootstrap -l
+  # bundle config set path 'vendor/bundle'
   bundle install
 
   {% if module.name == "StackGen_Swift_BuildSystem_Bazel" %}

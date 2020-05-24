@@ -1,5 +1,7 @@
 source 'https://rubygems.org' do
-  gem 'lefthook', '{{custom.lefthookVersion}}'
-  gem 'cocoapods', '{{custom.cocoapodsVersion}}'
-  gem 'cocoapods-binary', '{{custom.cocoapodsBinaryVersion}}'
+  gem 'lefthook', '{{global.lefthookVersion}}'
+  gem 'cocoapods', '1.8.4'
+  # gem 'typhoeus', '1.3.1' # Workaround for https://github.com/CocoaPods/CocoaPods/issues/9814
+  # gem 'xcodeproj', '1.15.0'
+  gem 'cocoapods-binary', '{{global.cocoapodsBinaryVersion}}'
 end

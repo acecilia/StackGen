@@ -1,1 +1,1 @@
-{{custom.bazelVersion}}
+{{global.bazelVersion}}

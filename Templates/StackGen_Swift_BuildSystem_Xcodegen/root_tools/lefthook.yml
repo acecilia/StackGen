@@ -1,4 +1,4 @@
-min_version: {{custom.lefthookVersion}}
+min_version: {{global.lefthookVersion}}
 
 pre-commit:
   parallel: true

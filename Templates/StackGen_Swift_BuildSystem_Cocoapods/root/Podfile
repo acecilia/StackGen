@@ -1,6 +1,5 @@
 install! 'cocoapods',
-  :share_schemes_for_development_pods => true,
-  :disable_input_output_paths => true # Workaround for https://github.com/CocoaPods/CocoaPods/issues/9185
+  :share_schemes_for_development_pods => true
 
 use_frameworks!
 workspace 'All'
@@ -23,7 +22,7 @@ end
 
 {% for module in firstPartyModules|expand where "App" in module.name %}
 target '{{module.name}}' do
-    platform :ios, '{{custom.minimumDeploymentTarget}}'
+    platform :ios, '{{global.minimumDeploymentTarget}}'
     project '{{module.location.path}}/{{module.name}}.xcodeproj'
     {% for dependency in module.transitiveDependencies.main|expand %}
     {% if dependency.kind == "firstParty" %}

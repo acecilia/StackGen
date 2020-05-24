@@ -7,15 +7,15 @@ import Yams
 public struct StackGenFile: AutoDecodable {
     public static let fileName = "stackgen.yml"
 
-    public static let defaultCustom: [String: StringCodable] = [:]
+    public static let defaultGlobal: [String: StringCodable] = [:]
     public static let defaultFirstPartyModules: [FirstPartyModule.Input] = []
     public static let defaultThirdPartyModules: [ThirdPartyModule.Input] = []
     public static let defaultAvailableTemplateGroups: [String: [TemplateSpec.Input]] = [:]
 
     /// The options passed to the tool
     public let options: Options.StackGenFile
-    /// A dictionary used to declare custom values that can be accessed from all the templates
-    public let custom: [String: StringCodable]
+    /// A dictionary used to declare global values that can be accessed from all the templates
+    public let global: [String: StringCodable]
     /// The first party modules to use
     public let firstPartyModules: [FirstPartyModule.Input]
     /// The third party modules to use
@@ -25,13 +25,13 @@ public struct StackGenFile: AutoDecodable {
 
     public init(
         options: Options.StackGenFile = Options.StackGenFile(version: VERSION),
-        custom: [String: StringCodable] = defaultCustom,
+        global: [String: StringCodable] = defaultGlobal,
         firstPartyModules: [FirstPartyModule.Input] = defaultFirstPartyModules,
         thirdPartyModules: [ThirdPartyModule.Input] = defaultThirdPartyModules,
         availableTemplateGroups: [String: [TemplateSpec.Input]] = defaultAvailableTemplateGroups
     ) {
         self.options = options
-        self.custom = custom
+        self.global = global
         self.firstPartyModules = firstPartyModules
         self.thirdPartyModules = thirdPartyModules
         self.availableTemplateGroups = availableTemplateGroups

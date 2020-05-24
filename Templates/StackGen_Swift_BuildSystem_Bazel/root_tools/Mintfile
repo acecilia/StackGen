@@ -1,1 +1,1 @@
-realm/SwiftLint@{{custom.swiftlintVersion}}
+realm/SwiftLint@{{global.swiftlintVersion}}

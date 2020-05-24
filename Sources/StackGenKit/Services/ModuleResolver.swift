@@ -33,7 +33,7 @@ public class ModuleResolver {
             .filter { $1.count > 1 }
             .map { $0.key }
         if duplicates.isEmpty == false {
-            throw CustomError(.foundDuplicatedModules(duplicates))
+            throw StackGenError(.foundDuplicatedModules(duplicates))
         }
 
         for module in stackgenFile.firstPartyModules {
@@ -42,7 +42,7 @@ public class ModuleResolver {
                     .filter { $1.count > 1 }
                     .map { $0.key }
                 if duplicates.isEmpty == false {
-                    throw CustomError(.foundDuplicatedDependencies(duplicates, module.name))
+                    throw StackGenError(.foundDuplicatedDependencies(duplicates, module.name))
                 }
             }
         }
@@ -87,7 +87,7 @@ public class ModuleResolver {
         } else if let module = thirdParty.first(where: { $0.name == dependency }) {
             transitiveDependencies.insert(.thirdParty(module))
         } else {
-            throw CustomError(.unknownModule(dependency, middleware, thirdParty))
+            throw StackGenError(.unknownModule(dependency, middleware, thirdParty))
         }
 
         return Array(transitiveDependencies)

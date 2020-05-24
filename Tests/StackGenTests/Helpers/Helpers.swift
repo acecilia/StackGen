@@ -29,8 +29,14 @@ func patchTemplate(at stackgenFilePath: Path, using template: Template) throws {
 }
 
 func patchTopLevel(at stackgenFilePath: Path, using root: Path) throws {
-    var content = try String(contentsOf: stackgenFilePath)
-    content.append("  root: \(root.relative(to: stackgenFilePath.parent))")
+    let content = try String(contentsOf: stackgenFilePath)
+        .replacingOccurrences(
+        of: "options:",
+        with: """
+        options:
+          root: \(root.relative(to: stackgenFilePath.parent))
+        """
+    )
     try content.write(to: stackgenFilePath)
 }
 

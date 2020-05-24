@@ -3,38 +3,38 @@
 import PackageDescription
 
 let package = Package(
-    name: "{{global.root.basename}}",
+    name: "{{env.root.basename}}",
     platforms: [.macOS(.v10_14)],
     products: [
-        .executable(name: "{{global.root.basename}}", targets: ["{{global.root.basename}}"]),
-        .library(name: "{{global.root.basename}}Kit", targets: ["{{global.root.basename}}Kit"]),
+        .executable(name: "{{env.root.basename}}", targets: ["{{env.root.basename}}"]),
+        .library(name: "{{env.root.basename}}Kit", targets: ["{{env.root.basename}}Kit"]),
     ],
     dependencies: [
         .package(url: "https://github.com/jakeheis/SwiftCLI.git", .upToNextMajor(from: "6.0.1")),
     ],
     targets: [
         .target(
-            name: "{{global.root.basename}}",
+            name: "{{env.root.basename}}",
             dependencies: [
-                "{{global.root.basename}}CLI",
+                "{{env.root.basename}}CLI",
             ]
         ),
         .target(
-            name: "{{global.root.basename}}CLI",
+            name: "{{env.root.basename}}CLI",
             dependencies: [
-                "{{global.root.basename}}Kit",
+                "{{env.root.basename}}Kit",
                 "SwiftCLI",
             ]
         ),
         .target(
-            name: "{{global.root.basename}}Kit",
+            name: "{{env.root.basename}}Kit",
             dependencies: [
             ]
         ),
         .testTarget(
-            name: "{{global.root.basename}}Tests",
+            name: "{{env.root.basename}}Tests",
             dependencies: [
-                "{{global.root.basename}}CLI"
+                "{{env.root.basename}}CLI"
             ]
         ),
     ]
