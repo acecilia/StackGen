@@ -36,12 +36,3 @@ public class TemplateEngine {
             .replacingOccurrences(of: "¶\n", with: "\n")
     }
 }
-
-extension Stencil.TemplateSyntaxError: LocalizedError {
-    public var errorDescription: String? {
-        let reporter = SimpleErrorReporter()
-        return """
-        \(reporter.renderError(self))
-        """
-    }
-}

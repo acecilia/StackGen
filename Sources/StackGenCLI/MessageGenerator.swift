@@ -15,6 +15,6 @@ public class MessageGenerator: HelpMessageGenerator {
     }
 
     public func description(for error: Error) -> String {
-        return env.reporter.formatAsError(error.usefulDescription)
+        return env.reporter.formatAsError(error.finalDescription)
     }
 }

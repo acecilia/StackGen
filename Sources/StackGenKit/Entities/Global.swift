@@ -7,4 +7,12 @@ public struct Global: Codable, Hashable {
     public let root: Path.Output
     /// The output path of the file resulting from rendering a template with a context
     public let output: Path.Output
+
+    public init(
+        root: Path.Output,
+        output: Path.Output
+    ) {
+        self.root = root
+        self.output = output
+    }
 }

@@ -7,48 +7,51 @@ import SwiftCLI
 import Stencil
 
 final class MessageGeneratorTests: XCTestCase {
-    func testMessageGenerator() throws {
+    func testStencilErrors() throws {
         let builder = Builder()
-        let sut = builder.makeSut()
-
-        let stencilError = TemplateSyntaxError(reason: "Stencil template is wrong")
-        let error = CustomError(.errorThrownWhileRendering(templatePath: "template/path", error: stencilError))
-        let errorDescription = sut.description(for: error)
+        let messageGenerator = builder.makeMessageGenerator()
+        let error = builder.makeStencilError()
+        let errorDescription = messageGenerator.description(for: error)
 
         XCTAssertEqual(
             errorDescription,
-            """
-            💥 Error: error thrown while rendering template at path 'template/path'
-            Stencil template is wrong
-            Error originated at file 'MessageGeneratorTests.swift', line '15'
-            """
+            #"""
+            💥 Error: 1:2: error: Variable could not be resolved
+            {{custom.something}}
+              ^~~~~~~~~~~~~~~~
+            """#
         )
     }
 
-    func testUsefulErrorDescription() {
-        do {
-            let error = EnumError.errorA
-            XCTAssertEqual(
-                error.localizedDescription,
-                #"The operation couldn’t be completed. (StackGenTests.EnumError error 0.)"#
-            )
-            XCTAssertEqual(
-                error.usefulDescription,
-                #"The operation couldn’t be completed. (StackGenTests.EnumError error 0.). errorA"#
-            )
-        }
+    func testDecodingErrors() throws {
+        let builder = Builder()
+        let messageGenerator = builder.makeMessageGenerator()
+        let error = builder.makeDecodingError()
+        let errorDescription = messageGenerator.description(for: error)
 
-        do {
-            let error = StructError()
-            XCTAssertEqual(
-                error.localizedDescription,
-                #"The operation couldn’t be completed. (StackGenTests.StructError error 1.)"#
-            )
-            XCTAssertEqual(
-                error.usefulDescription,
-                #"The operation couldn’t be completed. (StackGenTests.StructError error 1.). StructError(property: "a string")"#
-            )
-        }
+        XCTAssertEqual(
+            errorDescription,
+            #"""
+            💥 Error: the data couldn’t be read because it is missing.
+            keyNotFound(CodingKeys(stringValue: "version", intValue: nil), Swift.DecodingError.Context(codingPath: [CodingKeys(stringValue: "options", intValue: nil)], debugDescription: "No value associated with key CodingKeys(stringValue: \"version\", intValue: nil) (\"version\").", underlyingError: nil))
+            """#
+        )
+    }
+
+    func testCustomErrors() throws {
+        let builder = Builder()
+        let messageGenerator = builder.makeMessageGenerator()
+        let error = builder.makeCustomError()
+        let errorDescription = messageGenerator.description(for: error)
+
+        XCTAssertEqual(
+            errorDescription,
+            #"""
+            💥 Error: found multiple modules with the same name. This is not permitted, a module name must be unique. Duplicated modules: 'ModuleA'
+            Error originated at file 'MessageGeneratorTests.swift', line '21'
+            CustomError(kind: StackGenKit.CustomError.Kind.foundDuplicatedModules(["ModuleA"]), fileName: "MessageGeneratorTests.swift", line: 21)
+            """#
+        )
     }
 }
 
@@ -64,7 +67,54 @@ private class Builder {
     var env: Env = Env()
     init() { }
 
-    func makeSut() -> MessageGenerator {
+    func makeMessageGenerator() -> MessageGenerator {
         return MessageGenerator(env)
+    }
+
+    func makeCustomError() -> Error {
+        return CustomError(
+            .foundDuplicatedModules(["ModuleA"]),
+            file: "StackGenTests/MessageGeneratorTests.swift",
+            line: 21
+        )
+    }
+
+    func makeDecodingError() -> Error {
+        let decoder = YAMLDecoder()
+        do {
+            _ = try decoder.decode(
+                StackGenFile.self,
+                from: """
+                options: { }
+                """
+            )
+            fatalError("This should have thrown")
+        } catch {
+            return error
+        }
+    }
+
+    func makeStencilError() -> Error {
+        let templateEngine = TemplateEngine(env)
+        let templateContent = """
+        {{custom.something}}
+        """
+        let context = Context.Middleware(
+            firstPartyModules: [],
+            thirdPartyModules: [],
+            output: Context.Output(
+                custom: [:],
+                firstPartyModules: [],
+                thirdPartyModules: [],
+                global: Global(root: env.cwd.output, output: env.cwd.output),
+                module: nil
+            )
+        )
+        do {
+            _ = try templateEngine.render(templateContent: templateContent, context: context)
+            fatalError("This should have thrown")
+        } catch {
+            return error
+        }
     }
 }

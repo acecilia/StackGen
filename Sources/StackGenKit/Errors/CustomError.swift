@@ -86,7 +86,7 @@ public extension CustomError {
             case let .errorThrownWhileRendering(templatePath, error):
                 return """
                 Error thrown while rendering template at path '\(templatePath)'
-                \(error.usefulDescription)
+                \(error.finalDescription)
                 """
 
             case let .filterFailed(filter, reason):
