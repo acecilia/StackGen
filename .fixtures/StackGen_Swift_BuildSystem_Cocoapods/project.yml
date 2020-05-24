@@ -8,23 +8,29 @@ projectReferences:
     path: Pods/Pods.xcodeproj
   App:
     path: Libraries/App/App.xcodeproj
+  SwiftModule1:
+    path: Pods/SwiftModule1.xcodeproj
+  SwiftModule2:
+    path: Pods/SwiftModule2.xcodeproj
+  SwiftModule3:
+    path: Pods/SwiftModule3.xcodeproj
 
 schemes:
   All:
     build:
       targets:
         App/AppTests: all
-        Pods/SwiftModule1-Unit-Tests: all
-        Pods/SwiftModule2-Unit-Tests: all
-        Pods/SwiftModule3-Unit-Tests: all
+        SwiftModule1/SwiftModule1-Unit-Tests: all
+        SwiftModule2/SwiftModule2-Unit-Tests: all
+        SwiftModule3/SwiftModule3-Unit-Tests: all
     test:
       gatherCoverageData: true
       targets:
       - name: App/AppTests
         randomExecutionOrder: true
-      - name: Pods/SwiftModule1-Unit-Tests
+      - name: SwiftModule1/SwiftModule1-Unit-Tests
         randomExecutionOrder: true
-      - name: Pods/SwiftModule2-Unit-Tests
+      - name: SwiftModule2/SwiftModule2-Unit-Tests
         randomExecutionOrder: true
-      - name: Pods/SwiftModule3-Unit-Tests
+      - name: SwiftModule3/SwiftModule3-Unit-Tests
         randomExecutionOrder: true

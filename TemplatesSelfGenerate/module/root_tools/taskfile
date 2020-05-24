@@ -61,7 +61,7 @@ archive() {
 setup() {
   echo "✨ Install project dependencies"
   mint bootstrap -l
-  # bundle config set path 'vendor/bundle'
+  bundle config set path 'vendor/bundle'
   bundle install
 
   {% if module.name == "StackGen_Swift_BuildSystem_Bazel" %}
@@ -81,7 +81,7 @@ setup() {
   {% if module.name == "StackGen_Swift_BuildSystem_Cocoapods" %}
   echo "✨ Setup project"
   (cd Libraries; create_projects)
-  pod install
+  bundle exec pod install
 
   # In order to create an All scheme, use xcodegen
   xcodegen

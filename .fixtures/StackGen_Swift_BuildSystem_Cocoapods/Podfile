@@ -1,5 +1,7 @@
 install! 'cocoapods',
-  :share_schemes_for_development_pods => true
+  :share_schemes_for_development_pods => true,
+  :disable_input_output_paths => true, # Workaround for https://github.com/CocoaPods/CocoaPods/issues/9185
+  :generate_multiple_pod_projects => true # More perfomant, see http://blog.cocoapods.org/CocoaPods-1.7.0-beta/#multiple-xcodeproj-generation
 
 use_frameworks!
 workspace 'All'
@@ -12,8 +14,8 @@ workspace 'All'
 $useBinaries = true
 
 if $useBinaries
-    plugin 'cocoapods-binary'
-    enable_bitcode_for_prebuilt_frameworks!
+  plugin 'cocoapods-binary'
+  enable_bitcode_for_prebuilt_frameworks!
 end
 
 #################
@@ -21,10 +23,10 @@ end
 #################
 
 target 'App' do
-    platform :ios, '13.0'
-    project 'Libraries/App/App.xcodeproj'
-    pod 'SwiftModule1', :path => '.', :testspecs => ['Tests']
-    pod 'SwiftModule2', :path => '.', :testspecs => ['Tests']
-    pod 'SwiftModule3', :path => '.', :testspecs => ['Tests']
-    pod 'SnapKit', '5.0.1', :binary => $useBinaries
+  platform :ios, '13.0'
+  project 'Libraries/App/App.xcodeproj'
+  pod 'SwiftModule1', :path => '.', :testspecs => ['Tests']
+  pod 'SwiftModule2', :path => '.', :testspecs => ['Tests']
+  pod 'SwiftModule3', :path => '.', :testspecs => ['Tests']
+  pod 'SnapKit', '5.0.1', :binary => $useBinaries
 end

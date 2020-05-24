@@ -45,7 +45,7 @@ archive() {
 setup() {
   echo "✨ Install project dependencies"
   mint bootstrap -l
-  # bundle config set path 'vendor/bundle'
+  bundle config set path 'vendor/bundle'
   bundle install
 
   echo "✨ Install carthage dependencies"

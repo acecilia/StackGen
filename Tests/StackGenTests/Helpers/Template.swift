@@ -6,7 +6,7 @@ typealias Template = BundledTemplateGroup
 
 extension BundledTemplateGroup {
     static var Swift_BuildSystem: [Template] {
-        return [.StackGen_Swift_BuildSystem_Cocoapods]
+        allCases.filter { $0.rawValue.contains(#function) }
     }
 
     var path: Path { try! getRootPath() }

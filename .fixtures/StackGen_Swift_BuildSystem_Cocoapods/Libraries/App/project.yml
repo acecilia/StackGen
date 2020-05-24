@@ -21,6 +21,7 @@ targets:
     platform: iOS
     sources:
     - src/main/swift
+    # Dependencies are not needed here: the Podfile will specify and integrate them
     info:
       path: SupportingFiles/App/Info.plist
       properties:
@@ -46,6 +47,7 @@ targets:
     - src/test/swift
     dependencies:
     - target: App
+    # Dependencies are not needed here: the Podfile will specify and integrate them
     info:
       path: SupportingFiles/AppTests/Info.plist
 

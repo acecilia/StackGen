@@ -6,9 +6,13 @@ options:
 projectReferences:
   Pods:
     path: Pods/Pods.xcodeproj
-{% for module in firstPartyModules|expand where "App" in module.name %}
+{% for module in firstPartyModules|expand %}
   {{module.name}}:
+    {% if "App" in module.name %}
     path: {{module.location.path}}/{{module.name}}.xcodeproj
+    {% else %}
+    path: Pods/{{module.name}}.xcodeproj
+    {% endif %}
 {% endfor %}
 
 schemes:
@@ -19,7 +23,7 @@ schemes:
         {% if "App" in module.name %}
         {{module.name}}/{{module.name}}Tests: all
         {% else %}
-        Pods/{{module.name}}-Unit-Tests: all
+        {{module.name}}/{{module.name}}-Unit-Tests: all
         {% endif %}
         {% endfor %}
     test:
@@ -28,9 +32,8 @@ schemes:
       {% for module in firstPartyModules|expand %}
       {% if "App" in module.name %}
       - name: {{module.name}}/{{module.name}}Tests
-        randomExecutionOrder: true
       {% else %}
-      - name: Pods/{{module.name}}-Unit-Tests
-        randomExecutionOrder: true
+      - name: {{module.name}}/{{module.name}}-Unit-Tests
       {% endif %}
+        randomExecutionOrder: true
       {% endfor %}

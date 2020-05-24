@@ -1,5 +1,7 @@
 install! 'cocoapods',
-  :share_schemes_for_development_pods => true
+  :share_schemes_for_development_pods => true,
+  :disable_input_output_paths => true, # Workaround for https://github.com/CocoaPods/CocoaPods/issues/9185
+  :generate_multiple_pod_projects => true # More perfomant, see http://blog.cocoapods.org/CocoaPods-1.7.0-beta/#multiple-xcodeproj-generation
 
 use_frameworks!
 workspace 'All'
@@ -12,8 +14,8 @@ workspace 'All'
 $useBinaries = true
 
 if $useBinaries
-    plugin 'cocoapods-binary'
-    enable_bitcode_for_prebuilt_frameworks!
+  plugin 'cocoapods-binary'
+  enable_bitcode_for_prebuilt_frameworks!
 end
 
 #################
@@ -22,14 +24,14 @@ end
 
 {% for module in firstPartyModules|expand where "App" in module.name %}
 target '{{module.name}}' do
-    platform :ios, '{{global.minimumDeploymentTarget}}'
-    project '{{module.location.path}}/{{module.name}}.xcodeproj'
-    {% for dependency in module.transitiveDependencies.main|expand %}
-    {% if dependency.kind == "firstParty" %}
-    pod '{{dependency.name}}', :path => '.', :testspecs => ['Tests']
-    {% elif dependency.kind == "thirdParty" %}
-    pod '{{dependency.name}}', '{{dependency.version}}', :binary => $useBinaries
-    {% endif %}
-    {% endfor %}
+  platform :ios, '{{global.minimumDeploymentTarget}}'
+  project '{{module.location.path}}/{{module.name}}.xcodeproj'
+  {% for dependency in module.transitiveDependencies.main|expand %}
+  {% if dependency.kind == "firstParty" %}
+  pod '{{dependency.name}}', :path => '.', :testspecs => ['Tests']
+  {% elif dependency.kind == "thirdParty" %}
+  pod '{{dependency.name}}', '{{dependency.version}}', :binary => $useBinaries
+  {% endif %}
+  {% endfor %}
 end
 {% endfor %}
