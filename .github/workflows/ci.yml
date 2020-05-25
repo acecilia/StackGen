@@ -24,16 +24,12 @@ jobs:
         xcodebuild -version
         swift --version
         swift package --version
-
-    - uses: actions/cache@v1
-      with:
-        path: /usr/local/lib/mint
-        key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-mint-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-mint-
       
     - name: Setup
       run: ./taskfile setup
+
+    - name: Check links
+      run: ./taskfile checkLinks ${{ github.sha }}
 
     - name: Check linux main
       run: swift test --generate-linuxmain && git diff --exit-code Tests
@@ -59,6 +55,13 @@ jobs:
     # - uses: ruby/setup-ruby@v1
     #   with:
     #     ruby-version: '2.7'
+
+    # - uses: actions/cache@v1
+    #   with:
+    #     path: /usr/local/lib/mint
+    #     key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-mint-${{ github.sha }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-mint-
 
     # - uses: actions/cache@v1
     #   with:

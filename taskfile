@@ -18,6 +18,17 @@ docs() {
   sourcedocs generate --clean --reproducible-docs --spm-module StackGenKit
 }
 
+checkLinks() {
+  revision=${1:=master}
+  cmd="bundle exec awesome_bot \
+    --allow-redirect \
+    --skip-save-results \
+    --set-timeout 5 \
+    --base-url https://github.com/acecilia/StackGen/blob/$revision/"
+  
+  eval "${cmd} README.md"
+}
+
 setup() {
   echo "✨ Intalling mint 0.14.2"
   brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/577bc4f3ac6301a3b6b634bd4bac9c5367a667e5/Formula/mint.rb
@@ -27,6 +38,10 @@ setup() {
   # unzip -j -d /usr/local/bin /tmp/sourcedocs.macos.zip 
   mint install acecilia/SourceDocs@nested-types -f
   brew install graphviz # Optional dependency of sourcedocs: needed for generating the dependency graph
+
+  echo "✨ Install gem dependencies"
+  bundle config set path 'vendor/bundle'
+  bundle install
 }
 
 "$@" # Source: https://stackoverflow.com/a/16159057/3203441
