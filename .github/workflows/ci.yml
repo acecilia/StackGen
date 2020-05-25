@@ -41,10 +41,9 @@ jobs:
     - name: Tests
       run: swift test --enable-code-coverage -Xswiftc -D -Xswiftc DISABLE_GENERATOR
 
-    # Not yet possible: need to merge https://github.com/eneko/SourceDocs/pull/51
-    # - name: Check docs
-    #   run: |
-    #     ./taskfile docs && git diff --exit-code Documentation/Reference
+    - name: Check docs
+      run: |
+        ./taskfile docs && git diff --exit-code Documentation/Reference
   
     - name: codecov
       run: |
