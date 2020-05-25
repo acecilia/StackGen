@@ -27,6 +27,9 @@ jobs:
 
     - name: Setup
       run: ./taskfile setup
+
+    - name: Check docs
+      run: ./taskfile docs && git diff --exit-code docs
     
     - name: Tests
       run: swift test --enable-code-coverage -Xswiftc -D -Xswiftc DISABLE_GENERATOR

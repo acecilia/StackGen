@@ -36,6 +36,7 @@ cov() {
 setup() {
   # mint 0.14.2
   brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/577bc4f3ac6301a3b6b634bd4bac9c5367a667e5/Formula/mint.rb
+  mint install swiftdocorg/swift-doc@1.0.0-beta.3
 }
 
 "$@" # Source: https://stackoverflow.com/a/16159057/3203441
