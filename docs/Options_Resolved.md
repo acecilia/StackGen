@@ -16,8 +16,10 @@ public init(_ cliOptions: CLI, _ stackgenFileOptions: StackGenFile) throws
 
 ## Properties
 
-### `templates`
+### `templateGroups`
+
+The template groups to use
 
 ``` swift
-let templates: String
+let templateGroups: [String]
 ```

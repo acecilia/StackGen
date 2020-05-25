@@ -8,9 +8,9 @@ public class TemplateEngine {
     private let environment: Environment
     private let extensions = StencilExtensions()
     
-    public init(_ templatesFilePath: Path, _ env: Env) {
+    public init(_ env: Env) {
         self.environment = Environment(
-            loader: FileSystemLoader(paths: [.init(templatesFilePath.parent.relative(to: env.cwd))]),
+            loader: FileSystemLoader(paths: [.init()]),
             extensions: [extensions],
             throwOnUnresolvedVariable: true
         )
@@ -18,7 +18,7 @@ public class TemplateEngine {
 
     public func render(templateContent: String, context: Context.Middleware) throws -> String {
         extensions.set(context)
-        let encodedContext = try context.output.asDictionary(context.output.global.output.path.parent)
+        let encodedContext = try context.output.asDictionary(context.output.env.output.path.parent)
         let fixedTemplateContent = addNewLineDelimiters(templateContent)
         let rendered = try environment.renderTemplate(string: fixedTemplateContent, context: encodedContext)
         return removeNewLinesDelimiters(rendered)
@@ -34,15 +34,5 @@ public class TemplateEngine {
             .replacingOccurrences(of: "\n( *\n)+", with: "\n", options: .regularExpression)
             .replacingOccurrences(of: "^\n+", with: "", options: .regularExpression)
             .replacingOccurrences(of: "¶\n", with: "\n")
-    }
-}
-
-extension Stencil.TemplateSyntaxError: LocalizedError {
-    public var errorDescription: String? {
-        let reporter = SimpleErrorReporter()
-        return """
-        Template syntax error.
-        \(reporter.renderError(self))
-        """
     }
 }

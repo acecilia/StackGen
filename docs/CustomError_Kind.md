@@ -6,10 +6,6 @@ The kind of errors that the tool is expecing
 enum Kind
 ```
 
-## Inheritance
-
-`CustomStringConvertible`
-
 ## Enumeration Cases
 
 ### `stackgenFileVersionNotMatching`
@@ -54,10 +50,10 @@ case multipleModulesWithSameNameFoundAmongDetectedModules(_ moduleName: String, 
 case requiredParameterNotFound(name: String)
 ```
 
-### `templatesFileNotFound`
+### `templateGroupNotFound`
 
 ``` swift
-case templatesFileNotFound(relativePath: String)
+case templateGroupNotFound(identifier: String)
 ```
 
 ### `errorThrownWhileRendering`
@@ -80,8 +76,8 @@ case unexpected(_ description: String)
 
 ## Properties
 
-### `description`
+### `errorDescription`
 
 ``` swift
-var description: String
+var errorDescription: String
 ```

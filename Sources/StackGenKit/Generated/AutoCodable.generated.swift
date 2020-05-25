@@ -20,69 +20,79 @@ extension FirstPartyModule.Input {
 
 }
 
-extension StackGenFile {
+extension Options.StackGenFile {
 
     enum CodingKeys: String, CodingKey {
-        case custom
-        case firstPartyModules
-        case thirdPartyModules
-        case options
+        case version
+        case templateGroups
+        case root
     }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        custom = (try? container.decode([String: StringCodable].self, forKey: .custom)) ?? StackGenFile.defaultCustom
-        firstPartyModules = (try? container.decode([FirstPartyModule.Input].self, forKey: .firstPartyModules)) ?? StackGenFile.defaultFirstPartyModules
-        thirdPartyModules = (try? container.decode([ThirdPartyModule.Input].self, forKey: .thirdPartyModules)) ?? StackGenFile.defaultThirdPartyModules
-        options = try container.decode(Options.StackGenFile.self, forKey: .options)
+        version = try container.decode(String.self, forKey: .version)
+        templateGroups = (try? container.decode([String].self, forKey: .templateGroups)) ?? Options.StackGenFile.defaultTemplateGroups
+        root = try container.decodeIfPresent(String.self, forKey: .root)
     }
 
 }
 
-extension TemplateSpec.Mode.FullValue {
+extension StackGenFile {
 
     enum CodingKeys: String, CodingKey {
-        case module
-        case moduleToRoot
-        case root
-        case filter
+        case options
+        case global
+        case firstPartyModules
+        case thirdPartyModules
+        case availableTemplateGroups
     }
 
-    internal init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        if container.allKeys.contains(.module), try container.decodeNil(forKey: .module) == false {
-            let associatedValues = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .module)
-            let filter = try associatedValues.decode(RegularExpression?.self, forKey: .filter)
-            self = .module(filter: filter)
-            return
-        }
-        if container.allKeys.contains(.moduleToRoot), try container.decodeNil(forKey: .moduleToRoot) == false {
-            let associatedValues = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .moduleToRoot)
-            let filter = try associatedValues.decode(RegularExpression?.self, forKey: .filter)
-            self = .moduleToRoot(filter: filter)
-            return
-        }
-        if container.allKeys.contains(.root), try container.decodeNil(forKey: .root) == false {
-            self = .root
-            return
-        }
-        throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "Unknown enum case"))
+        options = try container.decode(Options.StackGenFile.self, forKey: .options)
+        global = (try? container.decode([String: StringCodable].self, forKey: .global)) ?? StackGenFile.defaultGlobal
+        firstPartyModules = (try? container.decode([FirstPartyModule.Input].self, forKey: .firstPartyModules)) ?? StackGenFile.defaultFirstPartyModules
+        thirdPartyModules = (try? container.decode([ThirdPartyModule.Input].self, forKey: .thirdPartyModules)) ?? StackGenFile.defaultThirdPartyModules
+        availableTemplateGroups = (try? container.decode([String: [TemplateSpec.Input]].self, forKey: .availableTemplateGroups)) ?? StackGenFile.defaultAvailableTemplateGroups
     }
 
-    internal func encode(to encoder: Encoder) throws {
+}
+
+
+extension TemplateSpec.Mode {
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        let enumCase = try container.decode(String.self, forKey: .enumCaseKey)
+        switch enumCase {
+        case CodingKeys.module.rawValue:
+            let filter = (try? container.decode(RegularExpression.self, forKey: .filter)) ?? Self.defaultFilter
+            self = .module(filter: filter)
+        case CodingKeys.moduleToRoot.rawValue:
+            let filter = (try? container.decode(RegularExpression.self, forKey: .filter)) ?? Self.defaultFilter
+            self = .moduleToRoot(filter: filter)
+        case CodingKeys.root.rawValue:
+            self = .root
+        default:
+            throw DecodingError.dataCorruptedError(forKey: .enumCaseKey, in: container, debugDescription: "Unknown enum case '\(enumCase)'")
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
         switch self {
         case let .module(filter):
-            var associatedValues = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .module)
-            try associatedValues.encode(filter, forKey: .filter)
+            try container.encode(CodingKeys.module.rawValue, forKey: .enumCaseKey)
+            try container.encode(filter, forKey: .filter)
         case let .moduleToRoot(filter):
-            var associatedValues = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .moduleToRoot)
-            try associatedValues.encode(filter, forKey: .filter)
+            try container.encode(CodingKeys.moduleToRoot.rawValue, forKey: .enumCaseKey)
+            try container.encode(filter, forKey: .filter)
         case .root:
-            _ = container.nestedContainer(keyedBy: CodingKeys.self, forKey: .root)
+            try container.encode(CodingKeys.root.rawValue, forKey: .enumCaseKey)
         }
     }
 

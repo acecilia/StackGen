@@ -4,32 +4,37 @@ import StringCodable
 import Yams
 
 /// The representation of the stackgen.yml file
-public struct StackGenFile: AutoCodable {
+public struct StackGenFile: AutoDecodable {
     public static let fileName = "stackgen.yml"
 
-    public static let defaultCustom: [String: StringCodable] = [:]
+    public static let defaultGlobal: [String: StringCodable] = [:]
     public static let defaultFirstPartyModules: [FirstPartyModule.Input] = []
     public static let defaultThirdPartyModules: [ThirdPartyModule.Input] = []
+    public static let defaultAvailableTemplateGroups: [String: [TemplateSpec.Input]] = [:]
 
-    /// A dictionary used to declare custom values that can be accessed from all the templates
-    public let custom: [String: StringCodable]
+    /// The options passed to the tool
+    public let options: Options.StackGenFile
+    /// A dictionary used to declare global values that can be accessed from all the templates
+    public let global: [String: StringCodable]
     /// The first party modules to use
     public let firstPartyModules: [FirstPartyModule.Input]
     /// The third party modules to use
     public let thirdPartyModules: [ThirdPartyModule.Input]
-    /// The options passed to the tool
-    public let options: Options.StackGenFile
+    /// The template groups to use
+    public let availableTemplateGroups: [String: [TemplateSpec.Input]]
 
     public init(
-        custom: [String: StringCodable] = defaultCustom,
+        options: Options.StackGenFile = Options.StackGenFile(version: VERSION),
+        global: [String: StringCodable] = defaultGlobal,
         firstPartyModules: [FirstPartyModule.Input] = defaultFirstPartyModules,
         thirdPartyModules: [ThirdPartyModule.Input] = defaultThirdPartyModules,
-        options: Options.StackGenFile = Options.StackGenFile(version: VERSION)
+        availableTemplateGroups: [String: [TemplateSpec.Input]] = defaultAvailableTemplateGroups
     ) {
-        self.custom = custom
+        self.options = options
+        self.global = global
         self.firstPartyModules = firstPartyModules
         self.thirdPartyModules = thirdPartyModules
-        self.options = options
+        self.availableTemplateGroups = availableTemplateGroups
     }
 
     static func resolve(_ env: Env) throws -> StackGenFile {

@@ -3,28 +3,25 @@ import Path
 import StringCodable
 
 /// A namespace grouping the entities representing the context to be passed to the templates
-public struct Context: Codable {
+public enum Context {
     /// The initial representation of the context that will be passed to the templates
     public struct Input {
-        public let custom: [String: StringCodable]
+        public let global: [String: StringCodable]
         public let firstPartyModules: [FirstPartyModule.Output]
         public let firstPartyModuleNames: [String]
         public let thirdPartyModules: [ThirdPartyModule.Output]
         public let thirdPartyModuleNames: [String]
-        public let templatesFilePath: Path
 
         public init(
-            custom: [String: StringCodable],
+            global: [String: StringCodable],
             firstPartyModules: [FirstPartyModule.Output],
-            thirdPartyModules: [ThirdPartyModule.Output],
-            templatesFilePath: Path
+            thirdPartyModules: [ThirdPartyModule.Output]
         ) {
-            self.custom = custom
+            self.global = global
             self.firstPartyModules = firstPartyModules
             self.firstPartyModuleNames = firstPartyModules.map { $0.name }
             self.thirdPartyModules = thirdPartyModules
             self.thirdPartyModuleNames = thirdPartyModules.map { $0.name }
-            self.templatesFilePath = templatesFilePath
         }
     }
 
@@ -47,29 +44,45 @@ public struct Context: Codable {
 
     /// The final representation of the context that will be passed to the templates
     public struct Output: Codable {
-        /// The custom values defined in the stackgen.yml file
-        public let custom: [String: StringCodable]
+        /// The environment of the Context
+        public let env: Env
+        /// The global values defined in the stackgen.yml file
+        public let global: [String: StringCodable]
         /// A list of the first party modules defined in the stackgen.yml file
         public let firstPartyModules: [String]
         /// A list of the third party modules defined in the stackgen.yml file
         public let thirdPartyModules: [String]
-        /// Several useful global values
-        public let global: Global
         /// The current module that is passed to the template, if any
         public let module: FirstPartyModule.Output?
 
         public init(
-            custom: [String: StringCodable],
+            env: Env,
+            global: [String: StringCodable],
             firstPartyModules: [String],
             thirdPartyModules: [String],
-            global: Global,
             module: FirstPartyModule.Output?
         ) {
-            self.custom = custom
+            self.env = env
+            self.global = global
             self.firstPartyModules = firstPartyModules
             self.thirdPartyModules = thirdPartyModules
-            self.global = global
             self.module = module
+        }
+    }
+
+    /// The environment for a Context
+    public struct Env: Codable, Hashable {
+        /// The root path from where the tool runs
+        public let root: Path.Output
+        /// The output path of the file resulting from rendering a template with a context
+        public let output: Path.Output
+
+        public init(
+            root: Path.Output,
+            output: Path.Output
+        ) {
+            self.root = root
+            self.output = output
         }
     }
 }

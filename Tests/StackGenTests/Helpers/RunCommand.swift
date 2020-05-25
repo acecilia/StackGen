@@ -4,11 +4,18 @@ import Foundation
 
 @discardableResult
 func runCommand(_ cmd: String) -> (output: [String], error: [String], exitCode: Int32) {
-    // For this to work your zsh environment should be set in '.zshenv'
-    // See: https://unix.stackexchange.com/questions/71253/what-should-shouldnt-go-in-zshenv-zshrc-zlogin-zprofile-zlogout
-    // '.zshenv' should include '/usr/local/bin' for brew, for non-interactive shells (where it is not in the PATH by default)
-    // See: https://docs.brew.sh/FAQ#my-mac-apps-dont-find-usrlocalbin-utilities
-    let result = runCommand(cmd: "/bin/zsh", args: "-c", "cd \(FileManager.default.currentDirectoryPath); \(cmd)")
+    // For problems with shell environment when running non-interactive shells see:
+    // * https://unix.stackexchange.com/questions/71253/what-should-shouldnt-go-in-zshenv-zshrc-zlogin-zprofile-zlogout
+    // * https://docs.brew.sh/FAQ#my-mac-apps-dont-find-usrlocalbin-utilities
+    let result = runCommand(
+        cmd: "/bin/zsh",
+        args: "-c",
+        """
+        eval $(/usr/local/bin/brew shellenv) # Allow access to brew installed binaries in this shell
+        cd \(FileManager.default.currentDirectoryPath)
+        \(cmd)
+        """
+    )
     return result
 }
 

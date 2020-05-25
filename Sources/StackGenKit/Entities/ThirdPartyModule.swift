@@ -24,6 +24,6 @@ public struct ThirdPartyModule {
     }
 }
 
-extension Compose where Element2 == [String: StringCodable] {
-    public var dictionary: [String: StringCodable] { element2 }
+public extension Compose where Element2 == [String: StringCodable] {
+    var dictionary: [String: StringCodable] { _element2 }
 }

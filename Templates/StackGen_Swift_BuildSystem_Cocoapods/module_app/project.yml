@@ -1,0 +1,69 @@
+name: {{module.name}}
+
+options:
+  defaultConfig: Release
+  bundleIdPrefix: {{global.bundleIdPrefix}}
+  transitivelyLinkDependencies: true
+  createIntermediateGroups: true
+  xcodeGenVersion: {{global.xcodeGenVersion}}
+
+fileGroups: [project.yml]
+
+settings:
+  base:
+    SWIFT_VERSION: {{global.swiftVersion}}
+    DEVELOPMENT_TEAM: {{global.developmentTeam}}
+    IPHONEOS_DEPLOYMENT_TARGET: {{global.minimumDeploymentTarget}}
+
+targets:
+  {{module.name}}:
+    type: application
+    platform: iOS
+    sources:
+    - src/main/swift
+    # Dependencies are not needed here: the Podfile will specify and integrate them
+    info:
+      path: SupportingFiles/{{module.name}}/Info.plist
+      properties:
+        {% if "App" in module.name %}
+        UISupportedInterfaceOrientations:
+        - UIInterfaceOrientationPortrait # At least one value here is required to avoid https://stackoverflow.com/questions/20369290/xcode-is-creating-generic-xcode-archive-instead-of-ios-app-archive
+        UILaunchStoryboardName: ''
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: YES
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+            - UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
+              UISceneConfigurationName: Default Configuration
+        {% endif %}
+        CFBundleShortVersionString: {{global.moduleVersion}}
+
+  {% if "src/test/swift"|pathExists %}
+  {{module.name}}Tests:
+    type: bundle.unit-test
+    platform: iOS
+    settings:
+      base:
+        # Needed for getting proper test coverage percentages when using static frameworks
+        OTHER_LDFLAGS: -all_load
+    sources:
+    - src/test/swift
+    dependencies:
+    - target: {{module.name}}
+    # Dependencies are not needed here: the Podfile will specify and integrate them
+    info:
+      path: SupportingFiles/{{module.name}}Tests/Info.plist
+  {% endif %}
+
+schemes:
+  {{module.name}}:
+    build:
+      targets:
+        {{module.name}}: all
+    {% if "src/test/swift"|pathExists %}
+    test:
+      gatherCoverageData: true
+      targets:
+        - name: {{module.name}}Tests
+          randomExecutionOrder: true
+    {% endif %}

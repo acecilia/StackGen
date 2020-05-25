@@ -8,10 +8,10 @@ public struct Input
 
 ## Initializers
 
-### `init(custom:firstPartyModules:thirdPartyModules:templatesFilePath:)`
+### `init(custom:firstPartyModules:thirdPartyModules:)`
 
 ``` swift
-public init(custom: [String: StringCodable], firstPartyModules: [FirstPartyModule.Output], thirdPartyModules: [ThirdPartyModule.Output], templatesFilePath: Path)
+public init(custom: [String: StringCodable], firstPartyModules: [FirstPartyModule.Output], thirdPartyModules: [ThirdPartyModule.Output])
 ```
 
 ## Properties
@@ -44,10 +44,4 @@ let thirdPartyModules: [ThirdPartyModule.Output]
 
 ``` swift
 let thirdPartyModuleNames: [String]
-```
-
-### `templatesFilePath`
-
-``` swift
-let templatesFilePath: Path
 ```

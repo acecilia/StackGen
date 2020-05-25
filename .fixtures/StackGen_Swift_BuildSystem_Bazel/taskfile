@@ -1,0 +1,68 @@
+#!/bin/zsh
+
+#####################################################################
+# This file contains several functions that can be run as tasks
+#
+# In order to run them easily, add the following alias to your shell:
+# > echo "alias task='./taskfile'" >> ~/.zshrc
+#
+# After that, you can run the functions as follows:
+# > task <function_name>
+#####################################################################
+
+# Fail if exit code is not zero, in pipes, and also if variable is not set
+# See: https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -euo pipefail
+
+test() {
+  bazelisk test --config ios-debug //Libraries/...
+}
+
+archive() {
+  bazelisk query '//Libraries/... except filter(.*Tests, //Libraries/...)' | xargs bazelisk build --config ios-release
+}
+
+run() {
+  # An example command to show how to run an app using the simulator
+  bazelisk run --config ios-debug //Libraries/App:AppBundle
+}
+
+setup() {
+  echo "✨ Install project dependencies"
+  mint bootstrap -l
+  bundle config set path 'vendor/bundle'
+  bundle install
+
+  echo "✨ Install carthage dependencies"
+  carthage bootstrap --no-use-binaries --platform iOS --cache-builds
+
+  echo "✨ Install bazelisk"
+  brew install bazelisk
+}
+
+lint() {
+  # Allow passing the revision to do the diff against, or default to HEAD
+  target_revision="${1:-"HEAD"}"
+
+  untracked_files=$(git ls-files -o --exclude-standard)
+
+  # Options:
+  # * --diff-filter=AM = only consider added and modified files. See: https://git-scm.com/docs/git-diff/2.22.0#Documentation/git-diff.txt---diff-filterACDMRTUXB82308203
+  # * -M100% = only consider a file as `renamed` when the content is not changed (100% the same), otherwise consider it as `modified`. See: https://git-scm.com/docs/git-diff/2.22.0#Documentation/git-diff.txt--Mltngt
+  added_and_modified_files=$(git diff --name-only --ignore-submodules --diff-filter=AM -M100% --relative "$target_revision")
+
+  # Pass files to swiftlint
+  export SCRIPT_INPUT_FILE_COUNT=0
+  for file_path in $(echo -e "$untracked_files\n$added_and_modified_files" | grep ".swift$"); do
+    export SCRIPT_INPUT_FILE_$SCRIPT_INPUT_FILE_COUNT=$file_path
+    export SCRIPT_INPUT_FILE_COUNT=$((SCRIPT_INPUT_FILE_COUNT + 1))
+  done
+
+  if [ "$SCRIPT_INPUT_FILE_COUNT" -ne 0 ]; then
+    # Explanation
+    # * sed command: treat all warnings as errors, except for lines matching the left regex
+    swiftlint lint --strict --use-script-input-files | sed -E '/\(todo\)/! s/warning:/error:/g'
+  fi
+}
+
+"$@" # Source: https://stackoverflow.com/a/16159057/3203441

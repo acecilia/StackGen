@@ -1,9 +1,14 @@
-firstPartyModules:
-- path: Templates/Swift_BuildSystem_Bazel
-- path: Templates/Swift_BuildSystem_Cocoapods
-- path: Templates/Swift_BuildSystem_Xcodegen
-# - id: Templates/Swift_Starter_CommandLine
-
 options:
-  version: 0.0.1
-  templates: TemplatesSelfGenerate/templates.yml
+  version: 0.0.2
+  templateGroups: [main]
+
+availableTemplateGroups:
+  main:
+  - path: TemplatesSelfGenerate/module
+    mode: module
+
+firstPartyModules:
+- path: Templates/StackGen_Swift_BuildSystem_Bazel
+- path: Templates/StackGen_Swift_BuildSystem_Cocoapods
+- path: Templates/StackGen_Swift_BuildSystem_Xcodegen
+# - id: Templates/StackGen_Swift_Starter_CommandLine

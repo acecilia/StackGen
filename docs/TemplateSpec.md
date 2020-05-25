@@ -1,21 +1,15 @@
 # TemplateSpec
 
-The specification for a template or a subdirectory of templates
-
 ``` swift
-public struct TemplateSpec: Decodable
+public enum TemplateSpec
 ```
 
-## Inheritance
+## Nested Type Aliases
 
-`Decodable`
+### `Input`
 
-## Properties
-
-### `mode`
-
-The mode that declares how a template is used
+The specification for a template file or a directory that contains template files
 
 ``` swift
-let mode: Mode
+public typealias Input = Compose<_Input, TemplateSpec.Mode>
 ```
