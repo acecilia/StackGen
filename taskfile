@@ -15,28 +15,17 @@
 set -euo pipefail
 
 docs() {
-  output="docs"
-  rm -rf "$output"
-  swift doc generate "Sources/StackGenKit" --module-name StackGen --output "$output"
-  rm "$output"/_Footer.md "$output"/_Sidebar.md
-  mv "$output"/Home.md "$output"/README.md
-
-  for f in $(find docs -name '*.md'); do
-    sed -i '' -E "s/\]\(\/([^\)]*)\)/](\1.md)/g" "$f"
-  done
-}
-
-cov() {
-  # brew install jq
-  swift doc coverage "Sources/StackGenKit" --output "dcov.json"
-  cat "dcov.json" | jq ".data.totals"
-  rm "dcov.json"
+  sourcedocs generate --clean --reproducible-docs --spm-module StackGenKit
 }
 
 setup() {
-  # mint 0.14.2
+  echo "✨ Intalling mint 0.14.2"
   brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/577bc4f3ac6301a3b6b634bd4bac9c5367a667e5/Formula/mint.rb
-  mint install swiftdocorg/swift-doc@1.0.0-beta.3
+
+  echo "✨ Intalling sourcedocs"
+  curl -Ls https://github.com/eneko/SourceDocs/releases/download/1.0.0/sourcedocs.macos.zip -o /tmp/sourcedocs.macos.zip
+  unzip -j -d /usr/local/bin /tmp/sourcedocs.macos.zip 
+  brew install graphviz # Optional dependency of sourcedocs: needed for generating the dependency graph
 }
 
 "$@" # Source: https://stackoverflow.com/a/16159057/3203441
