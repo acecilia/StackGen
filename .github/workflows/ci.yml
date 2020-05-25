@@ -35,7 +35,9 @@ jobs:
       run: swift test --generate-linuxmain && git diff --exit-code Tests
 
     - name: Tests
-      run: swift test --enable-code-coverage -Xswiftc -D -Xswiftc DISABLE_GENERATOR
+      run: |
+        xcrun simctl boot "iPhone 8" # Boot simulator in advance, to maybe avoid it randomly freezing during bazel tests
+        swift test --enable-code-coverage -Xswiftc -D -Xswiftc DISABLE_GENERATOR
 
     - name: Check docs
       run: |
