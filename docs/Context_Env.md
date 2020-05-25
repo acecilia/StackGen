@@ -1,14 +1,22 @@
-# Global
+# Context.Env
 
-Global values to be injected in all template contexts
+The environment for a Context
 
 ``` swift
-public struct Global: Codable, Hashable
+public struct Env: Codable, Hashable
 ```
 
 ## Inheritance
 
 `Codable`, `Hashable`
+
+## Initializers
+
+### `init(root:output:)`
+
+``` swift
+public init(root: Path.Output, output: Path.Output)
+```
 
 ## Properties
 

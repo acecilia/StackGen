@@ -8,18 +8,18 @@ public struct Input
 
 ## Initializers
 
-### `init(custom:firstPartyModules:thirdPartyModules:)`
+### `init(global:firstPartyModules:thirdPartyModules:)`
 
 ``` swift
-public init(custom: [String: StringCodable], firstPartyModules: [FirstPartyModule.Output], thirdPartyModules: [ThirdPartyModule.Output])
+public init(global: [String: StringCodable], firstPartyModules: [FirstPartyModule.Output], thirdPartyModules: [ThirdPartyModule.Output])
 ```
 
 ## Properties
 
-### `custom`
+### `global`
 
 ``` swift
-let custom: [String: StringCodable]
+let global: [String: StringCodable]
 ```
 
 ### `firstPartyModules`

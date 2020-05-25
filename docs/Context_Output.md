@@ -12,20 +12,28 @@ public struct Output: Codable
 
 ## Initializers
 
-### `init(custom:firstPartyModules:thirdPartyModules:global:module:)`
+### `init(env:global:firstPartyModules:thirdPartyModules:module:)`
 
 ``` swift
-public init(custom: [String: StringCodable], firstPartyModules: [String], thirdPartyModules: [String], global: Global, module: FirstPartyModule.Output?)
+public init(env: Env, global: [String: StringCodable], firstPartyModules: [String], thirdPartyModules: [String], module: FirstPartyModule.Output?)
 ```
 
 ## Properties
 
-### `custom`
+### `env`
 
-The custom values defined in the stackgen.yml file
+The environment of the Context
 
 ``` swift
-let custom: [String: StringCodable]
+let env: Env
+```
+
+### `global`
+
+The global values defined in the stackgen.yml file
+
+``` swift
+let global: [String: StringCodable]
 ```
 
 ### `firstPartyModules`
@@ -42,14 +50,6 @@ A list of the third party modules defined in the stackgen.yml file
 
 ``` swift
 let thirdPartyModules: [String]
-```
-
-### `global`
-
-Several useful global values
-
-``` swift
-let global: Global
 ```
 
 ### `module`

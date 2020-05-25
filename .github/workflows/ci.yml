@@ -25,6 +25,13 @@ jobs:
         swift --version
         swift package --version
 
+    - uses: actions/cache@v1
+      with:
+        path: /usr/local/lib/mint
+        key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-bazel-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-bazel-
+      
     - name: Setup
       run: ./taskfile setup
 

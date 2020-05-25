@@ -1,4 +1,4 @@
-# CustomError.Kind
+# StackGenError.Kind
 
 The kind of errors that the tool is expecing
 

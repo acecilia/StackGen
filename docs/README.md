@@ -14,6 +14,8 @@
     A middleware representation of the context that will be passed to the templates
   - [Context.Output](Context_Output.md):
     The final representation of the context that will be passed to the templates
+  - [Context.Env](Context_Env.md):
+    The environment for a Context
   - [Env](Env.md):
     An environment wrapper used to inject dependencies around without
     polluting the function signatures with multiple parameters
@@ -24,8 +26,6 @@
   - [FirstPartyModule.Output](FirstPartyModule_Output.md):
     A representation of a first party module that is used in the context
     rendered by the templates
-  - [Global](Global.md):
-    Global values to be injected in all template contexts
   - [ModuleKind](ModuleKind.md):
     The kind of module
   - [Options](Options.md):
@@ -51,9 +51,9 @@
     The typed representation of a third party module
   - [ThirdPartyModule.\_Output](ThirdPartyModule__Output.md):
     The typed representation of a third party module. Used in the context rendered by the templates
-  - [CustomError](CustomError.md):
+  - [StackGenError](StackGenError.md):
     The errors thrown by the tool
-  - [CustomError.Kind](CustomError_Kind.md):
+  - [StackGenError.Kind](StackGenError_Kind.md):
     The kind of errors that the tool is expecing
   - [RegularExpression](RegularExpression.md):
     A wrapper around NSRegularExpression that can be encoded and decoded

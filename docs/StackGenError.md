@@ -1,9 +1,9 @@
-# CustomError
+# StackGenError
 
 The errors thrown by the tool
 
 ``` swift
-public struct CustomError: LocalizedError
+public struct StackGenError: LocalizedError
 ```
 
 ## Inheritance

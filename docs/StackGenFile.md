@@ -12,10 +12,10 @@ public struct StackGenFile: AutoDecodable
 
 ## Initializers
 
-### `init(options:custom:firstPartyModules:thirdPartyModules:availableTemplateGroups:)`
+### `init(options:global:firstPartyModules:thirdPartyModules:availableTemplateGroups:)`
 
 ``` swift
-public init(options: Options.StackGenFile = Options.StackGenFile(version: VERSION), custom: [String: StringCodable] = defaultCustom, firstPartyModules: [FirstPartyModule.Input] = defaultFirstPartyModules, thirdPartyModules: [ThirdPartyModule.Input] = defaultThirdPartyModules, availableTemplateGroups: [String: [TemplateSpec.Input]] = defaultAvailableTemplateGroups)
+public init(options: Options.StackGenFile = Options.StackGenFile(version: VERSION), global: [String: StringCodable] = defaultGlobal, firstPartyModules: [FirstPartyModule.Input] = defaultFirstPartyModules, thirdPartyModules: [ThirdPartyModule.Input] = defaultThirdPartyModules, availableTemplateGroups: [String: [TemplateSpec.Input]] = defaultAvailableTemplateGroups)
 ```
 
 ## Properties
@@ -26,10 +26,10 @@ public init(options: Options.StackGenFile = Options.StackGenFile(version: VERSIO
 let fileName
 ```
 
-### `defaultCustom`
+### `defaultGlobal`
 
 ``` swift
-let defaultCustom: [String: StringCodable]
+let defaultGlobal: [String: StringCodable]
 ```
 
 ### `defaultFirstPartyModules`
@@ -58,12 +58,12 @@ The options passed to the tool
 let options: Options.StackGenFile
 ```
 
-### `custom`
+### `global`
 
-A dictionary used to declare custom values that can be accessed from all the templates
+A dictionary used to declare global values that can be accessed from all the templates
 
 ``` swift
-let custom: [String: StringCodable]
+let global: [String: StringCodable]
 ```
 
 ### `firstPartyModules`
