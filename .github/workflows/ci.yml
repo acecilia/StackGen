@@ -34,14 +34,14 @@ jobs:
     - name: Check linux main
       run: swift test --generate-linuxmain && git diff --exit-code Tests
 
+    - name: Check docs
+      run: |
+        ./taskfile docs && git diff --exit-code Documentation/Reference
+
     - name: Tests
       run: |
         xcrun simctl boot "iPhone 8" # Boot simulator in advance, to maybe avoid it randomly freezing during bazel tests
         swift test --enable-code-coverage -Xswiftc -D -Xswiftc DISABLE_GENERATOR
-
-    - name: Check docs
-      run: |
-        ./taskfile docs && git diff --exit-code Documentation/Reference
   
     - name: codecov
       run: |
