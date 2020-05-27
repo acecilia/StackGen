@@ -16,9 +16,8 @@ set -euo pipefail
 
 docs() {
   echo "✨ Intalling sourcedocs"
-  # curl -Ls https://github.com/eneko/SourceDocs/releases/download/1.0.0/sourcedocs.macos.zip -o /tmp/sourcedocs.macos.zip
-  # unzip -j -d /usr/local/bin /tmp/sourcedocs.macos.zip 
-  mint install acecilia/SourceDocs@nested-types
+  curl -Ls https://github.com/eneko/SourceDocs/releases/download/1.1.0/sourcedocs.macos.zip -o /tmp/sourcedocs.macos.zip
+  unzip -j -d /usr/local/bin /tmp/sourcedocs.macos.zip 
   # brew install graphviz # Optional dependency of sourcedocs: needed for generating the dependency graph
 
   echo "✨ Running sourcedocs"
