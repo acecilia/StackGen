@@ -8,8 +8,12 @@ public protocol StencilFilterInterface: class {
     func run(_ value: Any?) throws -> Any
 }
 
-/// A namespace grouping the stencil filters
-public enum StencilFilter {
+extension TemplateEngine.Stencil {
+    /// A namespace grouping the stencil filters
+    public enum Filter { }
+}
+
+extension TemplateEngine.Stencil.Filter {
     /// An stencil filter to check when a path exists on disk
     public class PathExists: StencilFilterInterface {
         public static let filterName = "pathExists"

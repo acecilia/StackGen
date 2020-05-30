@@ -1,38 +1,46 @@
-import Stencil
 import Path
 import Foundation
 import Path
 
-/// A wrapper around the template engine to use
-public class TemplateEngine {
-    private let environment: Environment
-    private let extensions = StencilExtensions()
-    
+public protocol TemplateEngineInterface {
+    func render(templateContent: String, context: Context.Middleware) throws -> String
+}
+
+public class TemplateEngine: TemplateEngineInterface {
+    private let env: Env
+
+    // Supported template engines
+    private var stencil: Stencil?
+    private var swift: Swift?
+
     public init(_ env: Env) {
-        self.environment = Environment(
-            loader: FileSystemLoader(paths: [.init()]),
-            extensions: [extensions],
-            throwOnUnresolvedVariable: true
-        )
+        self.env = env
     }
 
     public func render(templateContent: String, context: Context.Middleware) throws -> String {
-        extensions.set(context)
-        let encodedContext = try context.output.asDictionary(context.output.env.output.path.parent)
-        let fixedTemplateContent = addNewLineDelimiters(templateContent)
-        let rendered = try environment.renderTemplate(string: fixedTemplateContent, context: encodedContext)
-        return removeNewLinesDelimiters(rendered)
-    }
+        switch TemplateKind(templateContent) {
+        case .stencil:
+            return try stencil.unwrap(fallback: Stencil(env))
+                .render(templateContent: templateContent, context: context)
 
-    /// See: https://github.com/groue/GRMustache/issues/46#issuecomment-19498046
-    private func addNewLineDelimiters(_ value: String) -> String {
-        return value.replacingOccurrences(of: "\n\n", with: "\n¶\n")
-    }
+        case .swift:
+            return try swift.unwrap(fallback: Swift(env))
+                .render(templateContent: templateContent, context: context)
 
-    private func removeNewLinesDelimiters(_ value: String) -> String {
-        return value
-            .replacingOccurrences(of: "\n( *\n)+", with: "\n", options: .regularExpression)
-            .replacingOccurrences(of: "^\n+", with: "", options: .regularExpression)
-            .replacingOccurrences(of: "¶\n", with: "\n")
+        case .plainText:
+            return templateContent
+        }
+    }
+}
+
+private extension Optional {
+    mutating func unwrap(fallback closure: @autoclosure () throws -> Wrapped) throws -> Wrapped {
+        if let value = self {
+            return value
+        } else {
+            let value = try closure()
+            self = value
+            return value
+        }
     }
 }

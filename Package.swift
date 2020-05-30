@@ -24,6 +24,28 @@ let package = Package(
         // .package(path: "../RuntimeTestCaseSwift"),
     ],
     targets: [
+        // ################################
+        // Sourcery
+        // ################################
+
+        .target(
+            name: "SourceryUtils",
+            path: "submodules/sourcery/Sources/SourceryUtils"
+        ),
+        .target(
+            name: "SourceryRuntime",
+            path: "submodules/sourcery/Sources/SourceryRuntime"
+        ),
+        .target(
+            name: "SourcerySwift",
+            dependencies: ["SourceryUtils", "SourceryRuntime"],
+            path: "submodules/sourcery/Sources/SourcerySwift"
+        ),
+
+        // ################################
+        // Main
+        // ################################
+
         .target(
             name: "StackGen",
             dependencies: ["StackGenCLI"]
@@ -44,6 +66,7 @@ let package = Package(
                 "StringCodable",
                 "SwiftCLI",
                 "Compose",
+                "SourcerySwift",
             ]
         ),
         .testTarget(

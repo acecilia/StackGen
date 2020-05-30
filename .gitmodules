@@ -1,0 +1,3 @@
+[submodule "submodules/sourcery"]
+	path = submodules/sourcery
+	url = https://github.com/krzysztofzablocki/Sourcery.git
