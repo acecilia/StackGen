@@ -33,13 +33,9 @@ let package = Package(
             path: "submodules/sourcery/Sources/SourceryUtils"
         ),
         .target(
-            name: "SourceryRuntime",
-            path: "submodules/sourcery/Sources/SourceryRuntime"
-        ),
-        .target(
-            name: "SourcerySwift",
-            dependencies: ["SourceryUtils", "SourceryRuntime"],
-            path: "submodules/sourcery/Sources/SourcerySwift"
+            name: "SwiftTemplateEngine",
+            dependencies: ["SourceryUtils"],
+            path: "submodules/sourcery/Sources/SwiftTemplateEngine"
         ),
 
         // ################################
@@ -66,7 +62,7 @@ let package = Package(
                 "StringCodable",
                 "SwiftCLI",
                 "Compose",
-                "SourcerySwift",
+                "SwiftTemplateEngine",
             ]
         ),
         .testTarget(

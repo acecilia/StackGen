@@ -1,6 +1,6 @@
 import Foundation
-import SourcerySwift
-import struct SourceryUtils.SourceryVersion
+import SwiftTemplateEngine
+import SourceryUtils
 import Path
 
 extension TemplateEngine {
@@ -26,7 +26,13 @@ extension TemplateEngine {
         public func render(templateContent: String, context: Context.Middleware) throws -> String {
             let tmpFile = Self.buildDir/UUID().uuidString
             try templateContent.write(to: tmpFile)
-            let swiftTemplate = try SwiftTemplate(path: .init(tmpFile.string), cachePath: nil, version: Self.version)
+            let swiftTemplate = try SwiftTemplate(
+                path: .init(tmpFile.string),
+                cachePath: nil,
+                version: Self.version,
+                prefix: "",
+                runtimeFiles: []
+            )
             return try swiftTemplate.render(context)
         }
     }
