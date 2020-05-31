@@ -26,7 +26,7 @@ public enum Context {
     }
 
     /// A middleware representation of the context that will be passed to the templates
-    public struct Middleware {
+    public struct Middleware: Codable {
         public let firstPartyModules: [FirstPartyModule.Output]
         public let thirdPartyModules: [ThirdPartyModule.Output]
         public let output: Output

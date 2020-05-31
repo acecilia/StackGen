@@ -1,37 +1,74 @@
 import Foundation
 import SwiftTemplateEngine
-import SourceryUtils
 import Path
 
 extension TemplateEngine {
-    /// A wrapper to render stencil templates
+    /// A wrapper to render Swit templates
     public class Swift: TemplateEngineInterface {
-        private static let version: String? = SourceryVersion.current.value
-
-        /// Copied from Sourcery file SwiftTemplate.swift
-        static let buildDir: Path = {
-            let pathComponent = "SwiftTemplate" + (version.map { "/\($0)" } ?? "")
-            guard let tempDirURL = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(pathComponent) else { fatalError("Unable to get temporary path") }
-            return Path.root/tempDirURL.path
-        }()
+        static let buildDir: Path = Path(NSTemporaryDirectory())!/"StackGen/SwiftTemplate"
 
         public init(_ env: Env) throws {
             try Self.buildDir.mkdir(.p)
         }
 
         deinit {
-            try? Self.buildDir.delete()
+            // Do NOT clean up the buildDir: it will speed up execution of swift templates
+            // try? Self.buildDir.delete()
         }
 
         public func render(templateContent: String, context: Context.Middleware) throws -> String {
-            let tmpFile = Self.buildDir/UUID().uuidString
+            let tmpFile = Self.buildDir/"tmp_template_content.txt"
             try templateContent.write(to: tmpFile)
+            return try render(path: tmpFile, context: context)
+        }
+
+        public func render(path: Path, context: Context.Middleware) throws -> String {
+
             let swiftTemplate = try SwiftTemplate(
-                path: .init(tmpFile.string),
-                cachePath: nil,
-                version: Self.version,
-                prefix: "",
-                runtimeFiles: []
+                path: .init(path.string),
+                prefix: """
+                import Foundation
+                import Path
+                import RuntimeCode
+
+                let contextData = try Data(contentsOf: Path(ProcessInfo().arguments[1])!)
+                let context = try JSONDecoder().decode(Context.Middleware.self, from: contextData)
+                """,
+                runtimeFiles: stackgenRuntimeFiles,
+                manifestCode: """
+                // swift-tools-version:4.0
+                // The swift-tools-version declares the minimum version of Swift required to build this package.
+                import PackageDescription
+                let package = Package(
+                    name: "SwiftTemplate",
+                    products: [
+                        .executable(name: "SwiftTemplate", targets: ["SwiftTemplate"])
+                    ],
+                    dependencies: [
+                        .package(url: "https://github.com/mxcl/Path.swift.git", .exact("1.0.1")),
+                        .package(url: "https://github.com/acecilia/Compose.git", .exact("0.0.4")),
+                        .package(url: "https://github.com/acecilia/StringCodable.git", .revision("b7d46cd32791753df1fe13b0b6ecdd9a19fbabcc")),
+                    ],
+                    targets: [
+                        .target(
+                            name: "RuntimeCode",
+                            dependencies: [
+                                "Path",
+                                "Compose",
+                                "StringCodable",
+                            ]
+                        ),
+                        .target(
+                            name: "SwiftTemplate",
+                            dependencies: [
+                                "RuntimeCode",
+                            ]
+                        ),
+                    ]
+                )
+                """,
+                buildDir: .init(Self.buildDir.string),
+                cachePath: nil
             )
             return try swiftTemplate.render(context)
         }
