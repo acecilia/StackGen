@@ -15,6 +15,7 @@ let package = Package(
             .revision("b43f9dd5151f92625c51c901193549e5d0030244")
             // Using a fork until https://github.com/stencilproject/Stencil/pull/289 is merged and released
         ),
+        .package(url: "https://github.com/kylef/PathKit.git", .upToNextMajor(from: "1.0.0")),
         .package(url: "https://github.com/jpsim/Yams.git", .upToNextMajor(from: "2.0.0")),
         .package(url: "https://github.com/mxcl/Path.swift.git", .upToNextMajor(from: "1.0.1")),
         .package(url: "https://github.com/jakeheis/SwiftCLI.git", .upToNextMajor(from: "6.0.1")),
@@ -30,6 +31,7 @@ let package = Package(
 
         .target(
             name: "SourceryUtils",
+            dependencies: ["PathKit"],
             path: "submodules/sourcery/Sources/SourceryUtils"
         ),
         .target(
