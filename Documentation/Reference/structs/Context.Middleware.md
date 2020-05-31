@@ -3,7 +3,7 @@
 # `Context.Middleware`
 
 ```swift
-public struct Middleware
+public struct Middleware: Codable
 ```
 
 > A middleware representation of the context that will be passed to the templates

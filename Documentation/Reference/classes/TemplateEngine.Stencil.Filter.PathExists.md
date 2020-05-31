@@ -1,12 +1,12 @@
 **CLASS**
 
-# `StencilFilter.Absolut`
+# `TemplateEngine.Stencil.Filter.PathExists`
 
 ```swift
-public class Absolut: StencilFilterInterface
+public class PathExists: StencilFilterInterface
 ```
 
-> An stencil filter that returns the corresponding absolut path
+> An stencil filter to check when a path exists on disk
 
 ## Properties
 ### `context`

@@ -1,9 +1,9 @@
 **ENUM**
 
-# `StencilFilter`
+# `TemplateEngine.Stencil.Filter`
 
 ```swift
-public enum StencilFilter
+public enum Filter
 ```
 
 > A namespace grouping the stencil filters

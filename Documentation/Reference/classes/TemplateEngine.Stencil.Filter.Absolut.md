@@ -1,12 +1,12 @@
 **CLASS**
 
-# `StencilFilter.RelativeToModule`
+# `TemplateEngine.Stencil.Filter.Absolut`
 
 ```swift
-public class RelativeToModule: StencilFilterInterface
+public class Absolut: StencilFilterInterface
 ```
 
-> An stencil filter that returns the path relative to the module being processed
+> An stencil filter that returns the corresponding absolut path
 
 ## Properties
 ### `context`

@@ -1,6 +1,6 @@
 **CLASS**
 
-# `StencilFilter.RelativeToRoot`
+# `TemplateEngine.Stencil.Filter.RelativeToRoot`
 
 ```swift
 public class RelativeToRoot: StencilFilterInterface

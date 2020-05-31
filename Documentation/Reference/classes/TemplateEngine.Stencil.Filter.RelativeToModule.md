@@ -1,12 +1,12 @@
 **CLASS**
 
-# `StencilFilter.PathExists`
+# `TemplateEngine.Stencil.Filter.RelativeToModule`
 
 ```swift
-public class PathExists: StencilFilterInterface
+public class RelativeToModule: StencilFilterInterface
 ```
 
-> An stencil filter to check when a path exists on disk
+> An stencil filter that returns the path relative to the module being processed
 
 ## Properties
 ### `context`

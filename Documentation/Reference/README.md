@@ -4,6 +4,7 @@
 
 -   [Action](protocols/Action.md)
 -   [StencilFilterInterface](protocols/StencilFilterInterface.md)
+-   [TemplateEngineInterface](protocols/TemplateEngineInterface.md)
 
 ## Structs
 
@@ -32,13 +33,15 @@
 -   [GenerateAction](classes/GenerateAction.md)
 -   [ModuleResolver](classes/ModuleResolver.md)
 -   [Reporter](classes/Reporter.md)
--   [StencilExtensions](classes/StencilExtensions.md)
--   [StencilFilter.Absolut](classes/StencilFilter.Absolut.md)
--   [StencilFilter.ExpandDependencies](classes/StencilFilter.ExpandDependencies.md)
--   [StencilFilter.PathExists](classes/StencilFilter.PathExists.md)
--   [StencilFilter.RelativeToModule](classes/StencilFilter.RelativeToModule.md)
--   [StencilFilter.RelativeToRoot](classes/StencilFilter.RelativeToRoot.md)
 -   [TemplateEngine](classes/TemplateEngine.md)
+-   [TemplateEngine.Stencil](classes/TemplateEngine.Stencil.md)
+-   [TemplateEngine.Stencil.Extensions](classes/TemplateEngine.Stencil.Extensions.md)
+-   [TemplateEngine.Stencil.Filter.Absolut](classes/TemplateEngine.Stencil.Filter.Absolut.md)
+-   [TemplateEngine.Stencil.Filter.ExpandDependencies](classes/TemplateEngine.Stencil.Filter.ExpandDependencies.md)
+-   [TemplateEngine.Stencil.Filter.PathExists](classes/TemplateEngine.Stencil.Filter.PathExists.md)
+-   [TemplateEngine.Stencil.Filter.RelativeToModule](classes/TemplateEngine.Stencil.Filter.RelativeToModule.md)
+-   [TemplateEngine.Stencil.Filter.RelativeToRoot](classes/TemplateEngine.Stencil.Filter.RelativeToRoot.md)
+-   [TemplateEngine.Swift](classes/TemplateEngine.Swift.md)
 -   [TemplateRenderer](classes/TemplateRenderer.md)
 -   [Writer](classes/Writer.md)
 
@@ -51,7 +54,8 @@
 -   [Options](enums/Options.md)
 -   [Reporter.Emoji](enums/Reporter.Emoji.md)
 -   [StackGenError.Kind](enums/StackGenError.Kind.md)
--   [StencilFilter](enums/StencilFilter.md)
+-   [TemplateEngine.Stencil.Filter](enums/TemplateEngine.Stencil.Filter.md)
+-   [TemplateKind](enums/TemplateKind.md)
 -   [TemplateSpec](enums/TemplateSpec.md)
 -   [TemplateSpec.Mode](enums/TemplateSpec.Mode.md)
 -   [ThirdPartyModule](enums/ThirdPartyModule.md)

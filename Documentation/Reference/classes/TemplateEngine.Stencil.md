@@ -1,10 +1,12 @@
 **CLASS**
 
-# `TemplateEngine`
+# `TemplateEngine.Stencil`
 
 ```swift
-public class TemplateEngine: TemplateEngineInterface
+public class Stencil: TemplateEngineInterface
 ```
+
+> A wrapper to render stencil templates
 
 ## Methods
 ### `init(_:)`

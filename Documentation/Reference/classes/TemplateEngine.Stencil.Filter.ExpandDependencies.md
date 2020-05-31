@@ -1,6 +1,6 @@
 **CLASS**
 
-# `StencilFilter.ExpandDependencies`
+# `TemplateEngine.Stencil.Filter.ExpandDependencies`
 
 ```swift
 public class ExpandDependencies: StencilFilterInterface
