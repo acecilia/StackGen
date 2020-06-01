@@ -15,10 +15,6 @@ final class ContextTests: XCTestCase {
             basename: rootBasename
             parent: rootParent
             path: rootParent/rootBasename
-        firstPartyModules:
-        - Module1
-        - Module2
-        - Module3
         global:
           aGlobalVariable: something
           anotherGlobalVariable: somethingElse
@@ -27,7 +23,6 @@ final class ContextTests: XCTestCase {
             main:
             - FileKit
             - Module2
-          kind: firstParty
           location:
             basename: Module1
             parent: parentModule1
@@ -37,8 +32,17 @@ final class ContextTests: XCTestCase {
             main:
             - FileKit
             - Module2
-        thirdPartyModules:
-        - FileKit
+        modules:
+        - dependencies: {}
+          kind: firstParty
+          location:
+            basename: Module1Basename
+            parent: Module1Parent
+            path: Module1Parent/Module1Basename
+          name: Module1
+          transitiveDependencies: {}
+        - kind: thirdParty
+          name: FileKit
 
         """
         do {

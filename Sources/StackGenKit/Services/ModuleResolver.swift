@@ -143,11 +143,11 @@ private enum TransitiveDependency: ModuleProtocol {
 
     var kind: ModuleKind {
         switch self {
-        case let .firstParty(module):
-            return module.kind
+        case .firstParty:
+            return .firstParty
 
-        case let .thirdParty(module):
-            return module.kind
+        case .thirdParty:
+            return .thirdParty
         }
     }
 }

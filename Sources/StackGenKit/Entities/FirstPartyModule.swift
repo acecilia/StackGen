@@ -47,8 +47,6 @@ public enum FirstPartyModule {
         public let dependencies: [String: [String]]
         /// The transitive dependencies of the first party module
         public let transitiveDependencies: [String: [String]]
-        /// The kind of dependency that this module represents
-        public let kind: ModuleKind = .firstParty
 
         public init(
             name: String,

@@ -1,1 +1,2 @@
 realm/SwiftLint@{{global.swiftlintVersion}}
+carthage/carthage@{{global.carthageVersion}}

@@ -2,6 +2,71 @@ import SwiftTemplateEngine
 
 let stackgenRuntimeFiles: [SwiftTemplate.File] = [
     .init(
+        name: "Module.swift",
+        content: """
+import Foundation
+
+public enum Module: Codable {
+    case firstParty(FirstPartyModule.Output)
+    case thirdParty(ThirdPartyModule.Output)
+
+    private enum CodingKeys: String, CodingKey {
+        case kind
+    }
+
+    public var name: String {
+        switch self {
+        case let .firstParty(module):
+            return module.name
+
+        case let .thirdParty(module):
+            return module.name
+        }
+    }
+
+    public var kind: ModuleKind {
+        switch self {
+        case .firstParty:
+            return .firstParty
+
+        case .thirdParty:
+            return .thirdParty
+        }
+    }
+
+    private var underlyingValue: Codable {
+        switch self {
+        case let .firstParty(module):
+            return module
+
+        case let .thirdParty(module):
+            return module
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        try underlyingValue.encode(to: encoder)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(kind, forKey: .kind)
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let kind = try container.decode(ModuleKind.self, forKey: .kind)
+        switch kind {
+        case .firstParty:
+            let module = try FirstPartyModule.Output(from: decoder)
+            self = .firstParty(module)
+
+        case .thirdParty:
+            let module = try ThirdPartyModule.Output(from: decoder)
+            self = .thirdParty(module)
+        }
+    }
+}
+"""
+    ),
+    .init(
         name: "Context.swift",
         content: """
 import Foundation
@@ -13,38 +78,14 @@ public enum Context {
     /// The initial representation of the context that will be passed to the templates
     public struct Input {
         public let global: [String: StringCodable]
-        public let firstPartyModules: [FirstPartyModule.Output]
-        public let firstPartyModuleNames: [String]
-        public let thirdPartyModules: [ThirdPartyModule.Output]
-        public let thirdPartyModuleNames: [String]
+        public let modules: [Module]
 
         public init(
             global: [String: StringCodable],
-            firstPartyModules: [FirstPartyModule.Output],
-            thirdPartyModules: [ThirdPartyModule.Output]
+            modules: [Module]
         ) {
             self.global = global
-            self.firstPartyModules = firstPartyModules
-            self.firstPartyModuleNames = firstPartyModules.map { $0.name }
-            self.thirdPartyModules = thirdPartyModules
-            self.thirdPartyModuleNames = thirdPartyModules.map { $0.name }
-        }
-    }
-
-    /// A middleware representation of the context that will be passed to the templates
-    public struct Middleware: Codable {
-        public let firstPartyModules: [FirstPartyModule.Output]
-        public let thirdPartyModules: [ThirdPartyModule.Output]
-        public let output: Output
-
-        public init(
-            firstPartyModules: [FirstPartyModule.Output],
-            thirdPartyModules: [ThirdPartyModule.Output],
-            output: Output
-        ) {
-            self.firstPartyModules = firstPartyModules
-            self.thirdPartyModules = thirdPartyModules
-            self.output = output
+            self.modules = modules
         }
     }
 
@@ -54,24 +95,20 @@ public enum Context {
         public let env: Env
         /// The global values defined in the stackgen.yml file
         public let global: [String: StringCodable]
-        /// A list of the first party modules defined in the stackgen.yml file
-        public let firstPartyModules: [String]
-        /// A list of the third party modules defined in the stackgen.yml file
-        public let thirdPartyModules: [String]
+        /// A list of the modules defined in the stackgen.yml file
+        public let modules: [Module]
         /// The current module that is passed to the template, if any
         public let module: FirstPartyModule.Output?
 
         public init(
             env: Env,
             global: [String: StringCodable],
-            firstPartyModules: [String],
-            thirdPartyModules: [String],
+            modules: [Module],
             module: FirstPartyModule.Output?
         ) {
             self.env = env
             self.global = global
-            self.firstPartyModules = firstPartyModules
-            self.thirdPartyModules = thirdPartyModules
+            self.modules = modules
             self.module = module
         }
     }
@@ -146,8 +183,6 @@ public enum FirstPartyModule {
         public let dependencies: [String: [String]]
         /// The transitive dependencies of the first party module
         public let transitiveDependencies: [String: [String]]
-        /// The kind of dependency that this module represents
-        public let kind: ModuleKind = .firstParty
 
         public init(
             name: String,
@@ -189,7 +224,6 @@ public enum ThirdPartyModule {
     /// The typed representation of a third party module. Used in the context rendered by the templates
     public struct _Output: Codable, Hashable {
         public let name: String
-        public let kind: ModuleKind = .thirdParty
     }
 }
 
@@ -259,13 +293,10 @@ import Foundation
 public extension Array where Element == String {
     func expand() -> [Module] {
         self.map { moduleName in
-            if let module = firstPartyModules.first(where: { $0.name == moduleName }) {
-                return .firstParty(module)
-            } else if let module = thirdPartyModules.first(where: { $0.name == moduleName }) {
-                return .thirdParty(module)
-            } else {
-                fatalError("")
+            guard let module = modules.first(where: { $0.name == moduleName }) else {
+                fatalError("No module found for name '\\(moduleName)'")
             }
+            return module
         }
     }
 }
@@ -277,20 +308,19 @@ public extension Array where Element == String {
 import Foundation
 import Path
 
-public let context: Context.Middleware = {
+public let context: Context.Output = {
     do {
         let contextData = try Data(contentsOf: Path(ProcessInfo().arguments[1])!)
-        return try JSONDecoder().decode(Context.Middleware.self, from: contextData)
+        return try JSONDecoder().decode(Context.Output.self, from: contextData)
     } catch {
         fatalError("\\(error)")
     }
 }()
 
-public let env = context.output.env
-public let global = context.output.global
-public let firstPartyModules = context.firstPartyModules
-public let thirdPartyModules = context.thirdPartyModules
-public let module = context.output.module
+public let env = context.env
+public let global = context.global
+public let modules = context.modules
+public let module = context.module
 """
     ),
 ]

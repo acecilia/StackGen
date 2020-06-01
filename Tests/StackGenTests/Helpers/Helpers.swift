@@ -3,11 +3,11 @@ import StackGenCLI
 import StackGenKit
 import Path
 
-let rootPath = Path(#file)!/".."/".."/".."/".."
-let examplesPath = rootPath/"Examples"/"swift"
-let templatesPath = rootPath/"Templates"
-let testsOutputPath = rootPath/".testsOutput"
-let fixturesPath = rootPath/".fixtures"
+let rootPath = Path(#file)!.join("../../../..")
+let examplesPath = rootPath.join("Examples/swift")
+let templatesPath = rootPath.join("Templates")
+let testsOutputPath = rootPath.join(".testsOutput")
+let fixturesPath = rootPath.join(".fixtures")
 
 func tmp(
     _ suffix: String,

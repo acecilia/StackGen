@@ -51,15 +51,16 @@ final class AAA_Generator: GeneratorTestCase {
             return escapedString
         }
 
-        let stackGenKitFiles = [
-            rootPath/"Sources/StackGenKit/Entities/Context.swift",
-            rootPath/"Sources/StackGenKit/Entities/FirstPartyModule.swift",
-            rootPath/"Sources/StackGenKit/Entities/ThirdPartyModule.swift",
-            rootPath/"Sources/StackGenKit/Entities/ModuleKind.swift",
-            rootPath/"Sources/StackGenKit/Entities/Path+Output.swift",
-            rootPath/"Sources/StackGenKit/Sourcery/AutoCodable.swift",
+        let stackGenKitFiles: [Path] = [
+            rootPath.join("Sources/StackGenKit/Entities/Module.swift"),
+            rootPath.join("Sources/StackGenKit/Entities/Context.swift"),
+            rootPath.join("Sources/StackGenKit/Entities/FirstPartyModule.swift"),
+            rootPath.join("Sources/StackGenKit/Entities/ThirdPartyModule.swift"),
+            rootPath.join("Sources/StackGenKit/Entities/ModuleKind.swift"),
+            rootPath.join("Sources/StackGenKit/Entities/Path+Output.swift"),
+            rootPath.join("Sources/StackGenKit/Sourcery/AutoCodable.swift"),
             ]
-        let runtimeFiles = (rootPath/"Sources/SwiftTemplateRuntime/RuntimeCode").find().type(.file).map { $0 }
+        let runtimeFiles = rootPath.join("Sources/SwiftTemplateRuntime/RuntimeCode").find().type(.file).map { $0 }
         let files = stackGenKitFiles + runtimeFiles
 
         var output: [String] = []

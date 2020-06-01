@@ -20,11 +20,11 @@ public enum Module: Codable {
 
     public var kind: ModuleKind {
         switch self {
-        case let .firstParty(module):
-            return module.kind
+        case .firstParty:
+            return .firstParty
 
-        case let .thirdParty(module):
-            return module.kind
+        case .thirdParty:
+            return .thirdParty
         }
     }
 
@@ -40,7 +40,8 @@ public enum Module: Codable {
 
     public func encode(to encoder: Encoder) throws {
         try underlyingValue.encode(to: encoder)
-        try kind.encode(to: encoder)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(kind, forKey: .kind)
     }
 
     public init(from decoder: Decoder) throws {

@@ -20,7 +20,6 @@ public enum ThirdPartyModule {
     /// The typed representation of a third party module. Used in the context rendered by the templates
     public struct _Output: Codable, Hashable {
         public let name: String
-        public let kind: ModuleKind = .thirdParty
     }
 }
 
