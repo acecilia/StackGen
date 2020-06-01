@@ -6,12 +6,22 @@ import StringCodable
 /// and write them to disk
 public class TemplateRenderer {
     private let inputContext: Context.Input
+    private let firstPartyModules: [FirstPartyModule.Output]
     private let templateEngine: TemplateEngine
 
     private let env: Env
 
     public init(_ inputContext: Context.Input, _ env: Env) {
         self.inputContext = inputContext
+        self.firstPartyModules = inputContext.modules.compactMap {
+            switch $0 {
+            case let .firstParty(module):
+                return module
+
+            case .thirdParty:
+                return nil
+            }
+        }
         self.templateEngine = TemplateEngine(env)
         self.env = env
     }
@@ -23,19 +33,18 @@ public class TemplateRenderer {
     ) throws {
         do {
             let template = try String(contentsOf: templatePath)
-            let posixPermissions = try FileManager.default
-                .attributesOfItem(atPath: templatePath.string)[.posixPermissions]
+            let posixPermissions = try FileManager.default.attributesOfItem(atPath: templatePath.string)[.posixPermissions]
 
             switch mode {
             case let .module(filter):
-                for module in inputContext.firstPartyModules where filter.wrappedValue.matches(module.name) {
+                for module in firstPartyModules where filter.wrappedValue.matches(module.name) {
                     let destinationPath = module.location.path/relativePath
                     try _render(template: template, to: destinationPath, posixPermissions, module)
                 }
 
             case let .moduleToRoot(filter):
                 let destinationPath = env.root/relativePath
-                for module in inputContext.firstPartyModules where filter.wrappedValue.matches(module.name) {
+                for module in firstPartyModules where filter.wrappedValue.matches(module.name) {
                     try _render(template: template, to: destinationPath, posixPermissions, module)
                 }
 
@@ -78,22 +87,15 @@ public class TemplateRenderer {
     private func createContext(
         module: FirstPartyModule.Output? = nil,
         outputPath: Path
-    ) throws -> Context.Middleware {
+    ) throws -> Context.Output {
         let outputContext = Context.Output(
             env: Context.Env(root: env.root.output, output: outputPath.output),
             global: inputContext.global,
-            firstPartyModules: inputContext.firstPartyModuleNames,
-            thirdPartyModules: inputContext.thirdPartyModuleNames,
+            modules: inputContext.modules,
             module: module
         )
 
-        let middlewareContext = Context.Middleware(
-            firstPartyModules: inputContext.firstPartyModules,
-            thirdPartyModules: inputContext.thirdPartyModules,
-            output: outputContext
-        )
-
-        return middlewareContext
+        return outputContext
     }
 
     private func resolve(outputPath: Path, module: FirstPartyModule.Output?) throws -> Path {

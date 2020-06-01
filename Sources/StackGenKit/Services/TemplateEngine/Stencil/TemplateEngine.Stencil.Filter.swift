@@ -4,7 +4,7 @@ import Path
 /// An interface shared between all stencil filters
 public protocol StencilFilterInterface: class {
     static var filterName: String { get }
-    var context: Context.Middleware? { get set }
+    var context: Context.Output? { get set }
     func run(_ value: Any?) throws -> Any
 }
 
@@ -18,12 +18,12 @@ extension TemplateEngine.Stencil.Filter {
     public class PathExists: StencilFilterInterface {
         public static let filterName = "pathExists"
 
-        public var context: Context.Middleware?
+        public var context: Context.Output?
 
         public func run(_ value: Any?) throws -> Any {
             let string = try value.asString(Self.filterName)
             let context = try self.context.unwrap(Self.filterName)
-            let path = Path(string) ?? context.output.env.output.path.parent.join(string)
+            let path = Path(string) ?? context.env.output.path.parent.join(string)
             return path.exists
         }
     }
@@ -32,13 +32,13 @@ extension TemplateEngine.Stencil.Filter {
     public class RelativeToRoot: StencilFilterInterface {
         public static let filterName = "rr"
 
-        public var context: Context.Middleware?
+        public var context: Context.Output?
 
         public func run(_ value: Any?) throws -> Any {
             let string = try value.asString(Self.filterName)
             let context = try self.context.unwrap(Self.filterName)
-            let path = Path(string) ?? context.output.env.output.path.parent.join(string)
-            return path.relative(to: context.output.env.root.path)
+            let path = Path(string) ?? context.env.output.path.parent.join(string)
+            return path.relative(to: context.env.root.path)
         }
     }
 
@@ -46,13 +46,13 @@ extension TemplateEngine.Stencil.Filter {
     public class RelativeToModule: StencilFilterInterface {
         public static let filterName = "rm"
 
-        public var context: Context.Middleware?
+        public var context: Context.Output?
 
         public func run(_ value: Any?) throws -> Any {
             let string = try value.asString(Self.filterName)
             let context = try self.context.unwrap(Self.filterName)
-            let path = Path(string) ?? context.output.env.output.path.parent.join(string)
-            let module = try context.output.module.unwrap(Self.filterName)
+            let path = Path(string) ?? context.env.output.path.parent.join(string)
+            let module = try context.module.unwrap(Self.filterName)
             return path.relative(to: module.location.path)
         }
     }
@@ -61,11 +61,11 @@ extension TemplateEngine.Stencil.Filter {
     public class Absolut: StencilFilterInterface {
         public static let filterName = "abs"
 
-        public var context: Context.Middleware?
+        public var context: Context.Output?
 
         public func run(_ value: Any?) throws -> Any {
             let string = try value.asString(Self.filterName)
-            let path = try Path(string) ?? context.unwrap(Self.filterName).output.env.output.path.parent.join(string)
+            let path = try Path(string) ?? context.unwrap(Self.filterName).env.output.path.parent.join(string)
             return path.relative(to: Path.root)
         }
     }
@@ -74,7 +74,7 @@ extension TemplateEngine.Stencil.Filter {
     public class ExpandDependencies: StencilFilterInterface {
         public static let filterName = "expand"
 
-        public var context: Context.Middleware?
+        public var context: Context.Output?
 
         public func run(_ value: Any?) throws -> Any {
             let dependencies = try value.asStringArray(Self.filterName)
@@ -82,11 +82,10 @@ extension TemplateEngine.Stencil.Filter {
 
             let expandedDependencies: [[String: Any]] = try dependencies.map { dependency in
                 let dependency: Codable = try (
-                    context.firstPartyModules.first { $0.name == dependency } ??
-                    context.thirdPartyModules.first { $0.name == dependency }
+                    context.modules.first { $0.name == dependency }
                     )
                     .unwrap(onFailure: "A module with name '\(dependency)' could not be found")
-                return try dependency.asDictionary(context.output.env.output.path.parent)
+                return try dependency.asDictionary(context.env.output.path.parent)
             }
 
             return expandedDependencies
@@ -111,7 +110,7 @@ private extension Optional where Wrapped == Any {
 }
 
 
-private extension Optional where Wrapped == Context.Middleware {
+private extension Optional where Wrapped == Context.Output {
     func unwrap(_ filterName: String, file: String = #file, line: Int = #line) throws -> Wrapped {
         guard let unwrapped = self else {
             throw StackGenError(

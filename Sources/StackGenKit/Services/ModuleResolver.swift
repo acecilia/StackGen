@@ -14,7 +14,7 @@ public class ModuleResolver {
     }
 
     /// The entry point used to resolve the modules
-    public func resolve() throws -> (firstPartyModules: [FirstPartyModule.Output], thirdPartyModules: [ThirdPartyModule.Output]) {
+    public func resolve() throws -> [Module] {
         // Perform prechecks on the modules
         try ensureUniqueModuleNames(stackgenFile)
 
@@ -24,7 +24,7 @@ public class ModuleResolver {
         // Get modules
         let thirdPartyModules = stackgenFile.thirdPartyModules.map { resolve($0) }
         let firstPartyModules = try inputModules.map { try resolve($0, inputModules, thirdPartyModules) }
-        return (firstPartyModules, thirdPartyModules)
+        return firstPartyModules.map { .firstParty($0) } + thirdPartyModules.map { .thirdParty($0) }
     }
 
     private func ensureUniqueModuleNames(_ stackgenFile: StackGenFile) throws {

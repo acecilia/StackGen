@@ -16,14 +16,13 @@ extension TemplateEngine {
             // try? Self.buildDir.delete()
         }
 
-        public func render(templateContent: String, context: Context.Middleware) throws -> String {
+        public func render(templateContent: String, context: Context.Output) throws -> String {
             let tmpFile = Self.buildDir/"tmp_template_content.txt"
             try templateContent.write(to: tmpFile)
             return try render(path: tmpFile, context: context)
         }
 
-        public func render(path: Path, context: Context.Middleware) throws -> String {
-
+        public func render(path: Path, context: Context.Output) throws -> String {
             let swiftTemplate = try SwiftTemplate(
                 path: .init(path.string),
                 prefix: """

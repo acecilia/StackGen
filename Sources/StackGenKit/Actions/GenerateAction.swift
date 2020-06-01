@@ -41,14 +41,13 @@ public class GenerateAction: Action {
 
         env.reporter.info(.wrench, "resolving modules")
 
-        let (firstPartyModules, thirdPartyModules) = try ModuleResolver(stackgenFile, env).resolve()
+        let modules = try ModuleResolver(stackgenFile, env).resolve()
 
         env.reporter.info(.wrench, "generating files")
 
         let inputContext = Context.Input(
             global: stackgenFile.global,
-            firstPartyModules: firstPartyModules,
-            thirdPartyModules: thirdPartyModules
+            modules: modules
         )
         let templateRenderer = TemplateRenderer(inputContext, env)
 

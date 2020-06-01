@@ -12,5 +12,5 @@ public enum ThirdPartyModule {
 }
 
 public enum Context {
-    public typealias Middleware = StackGenKit.Context.Middleware
+    public typealias Output = StackGenKit.Context.Output
 }

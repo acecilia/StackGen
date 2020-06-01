@@ -25,21 +25,14 @@ private class Builder {
     var env = Env()
     var contextId = UUID().uuidString
 
-    func makeContext() -> Context.Middleware {
+    func makeContext() -> Context.Output {
         let outputContext = Context.Output(
             env: Context.Env(root: env.root.output, output: Path(Path.cwd).output),
             global: ["contextId": .init(contextId)],
-            firstPartyModules: [],
-            thirdPartyModules: [],
+            modules: [],
             module: nil
         )
 
-        let middlewareContext = Context.Middleware(
-            firstPartyModules: [],
-            thirdPartyModules: [],
-            output: outputContext
-        )
-
-        return middlewareContext
+        return outputContext
     }
 }

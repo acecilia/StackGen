@@ -21,7 +21,7 @@ extension TemplateEngine.Stencil {
             }
         }
 
-        func set(_ context: Context.Middleware) {
+        func set(_ context: Context.Output) {
             for filter in filters {
                 filter.context = context
             }

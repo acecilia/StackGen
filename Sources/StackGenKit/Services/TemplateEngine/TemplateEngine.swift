@@ -3,7 +3,7 @@ import Foundation
 import Path
 
 public protocol TemplateEngineInterface {
-    func render(templateContent: String, context: Context.Middleware) throws -> String
+    func render(templateContent: String, context: Context.Output) throws -> String
 }
 
 public class TemplateEngine: TemplateEngineInterface {
@@ -17,7 +17,7 @@ public class TemplateEngine: TemplateEngineInterface {
         self.env = env
     }
 
-    public func render(templateContent: String, context: Context.Middleware) throws -> String {
+    public func render(templateContent: String, context: Context.Output) throws -> String {
         switch TemplateKind(templateContent) {
         case .stencil:
             return try stencil.unwrap(fallback: Stencil(env))

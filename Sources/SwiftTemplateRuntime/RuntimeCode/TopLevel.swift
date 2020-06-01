@@ -1,17 +1,16 @@
 import Foundation
 import Path
 
-public let context: Context.Middleware = {
+public let context: Context.Output = {
     do {
         let contextData = try Data(contentsOf: Path(ProcessInfo().arguments[1])!)
-        return try JSONDecoder().decode(Context.Middleware.self, from: contextData)
+        return try JSONDecoder().decode(Context.Output.self, from: contextData)
     } catch {
         fatalError("\(error)")
     }
 }()
 
-public let env = context.output.env
-public let global = context.output.global
-public let firstPartyModules = context.firstPartyModules
-public let thirdPartyModules = context.thirdPartyModules
-public let module = context.output.module
+public let env = context.env
+public let global = context.global
+public let modules = context.modules
+public let module = context.module
