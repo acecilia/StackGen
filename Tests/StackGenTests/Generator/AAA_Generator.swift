@@ -38,14 +38,30 @@ final class AAA_Generator: GeneratorTestCase {
     }
 
     func test_04_GenerateSwiftRuntime() throws {
-        let files = [
+        func escapingSwiftTokens(_ string: String) -> String {
+            let replacements = [
+              "\\(": "\\\\(",
+              "\\\"": "\\\\\"",
+              "\\n": "\\\\n",
+            ]
+            var escapedString = string
+            replacements.forEach {
+                escapedString = escapedString.replacingOccurrences(of: $0, with: $1)
+            }
+            return escapedString
+        }
+
+        let stackGenKitFiles = [
             rootPath/"Sources/StackGenKit/Entities/Context.swift",
             rootPath/"Sources/StackGenKit/Entities/FirstPartyModule.swift",
             rootPath/"Sources/StackGenKit/Entities/ThirdPartyModule.swift",
             rootPath/"Sources/StackGenKit/Entities/ModuleKind.swift",
             rootPath/"Sources/StackGenKit/Entities/Path+Output.swift",
             rootPath/"Sources/StackGenKit/Sourcery/AutoCodable.swift",
-        ]
+            ]
+        let runtimeFiles = (rootPath/"Sources/SwiftTemplateRuntime/RuntimeCode").find().type(.file).map { $0 }
+        let files = stackGenKitFiles + runtimeFiles
+
         var output: [String] = []
         output.append("""
             import SwiftTemplateEngine
@@ -64,7 +80,7 @@ final class AAA_Generator: GeneratorTestCase {
             \"""
                 ),
             """
-            output.append(string)
+            output.append(escapingSwiftTokens(string))
         }
         output.append("]")
 

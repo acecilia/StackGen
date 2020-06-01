@@ -251,4 +251,46 @@ protocol AutoEncodable: Encodable {}
 protocol AutoCodable: AutoDecodable, AutoEncodable {}
 """
     ),
+    .init(
+        name: "Array+expand.swift",
+        content: """
+import Foundation
+
+public extension Array where Element == String {
+    func expand() -> [Module] {
+        self.map { moduleName in
+            if let module = firstPartyModules.first(where: { $0.name == moduleName }) {
+                return .firstParty(module)
+            } else if let module = thirdPartyModules.first(where: { $0.name == moduleName }) {
+                return .thirdParty(module)
+            } else {
+                fatalError("")
+            }
+        }
+    }
+}
+"""
+    ),
+    .init(
+        name: "TopLevel.swift",
+        content: """
+import Foundation
+import Path
+
+public let context: Context.Middleware = {
+    do {
+        let contextData = try Data(contentsOf: Path(ProcessInfo().arguments[1])!)
+        return try JSONDecoder().decode(Context.Middleware.self, from: contextData)
+    } catch {
+        fatalError("\\(error)")
+    }
+}()
+
+public let env = context.output.env
+public let global = context.output.global
+public let firstPartyModules = context.firstPartyModules
+public let thirdPartyModules = context.thirdPartyModules
+public let module = context.output.module
+"""
+    ),
 ]

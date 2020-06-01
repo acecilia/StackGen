@@ -5,7 +5,7 @@ import Path
 public class ModuleResolver {
     private let stackgenFile: StackGenFile
     /// A cache used to speed up module resolution
-    private var transitiveDependenciesCache: [String: [Dependency]] = [:]
+    private var transitiveDependenciesCache: [String: [TransitiveDependency]] = [:]
     private let env: Env
 
     public init(_ stackgenFile: StackGenFile, _ env: Env) throws {
@@ -28,7 +28,7 @@ public class ModuleResolver {
     }
 
     private func ensureUniqueModuleNames(_ stackgenFile: StackGenFile) throws {
-        let allModules: [Module] = stackgenFile.firstPartyModules + stackgenFile.thirdPartyModules
+        let allModules: [ModuleProtocol] = stackgenFile.firstPartyModules + stackgenFile.thirdPartyModules
         let duplicates = Dictionary(grouping: allModules) { $0.name }
             .filter { $1.count > 1 }
             .map { $0.key }
@@ -69,12 +69,12 @@ public class ModuleResolver {
         }
     }
 
-    private func getTransitiveDependencies(_ dependency: String, _ middleware: [FirstPartyModule.Input], _ thirdParty: [ThirdPartyModule.Output]) throws -> [Dependency] {
+    private func getTransitiveDependencies(_ dependency: String, _ middleware: [FirstPartyModule.Input], _ thirdParty: [ThirdPartyModule.Output]) throws -> [TransitiveDependency] {
         if let transitiveDependencies = transitiveDependenciesCache[dependency] {
             return transitiveDependencies
         }
 
-        var transitiveDependencies: Set<Dependency> = []
+        var transitiveDependencies: Set<TransitiveDependency> = []
 
         if let module = middleware.first(where: { $0.name == dependency }) {
             transitiveDependencies.insert(.firstParty(module))
@@ -97,7 +97,7 @@ public class ModuleResolver {
         var result: [String: [String]] = [:]
 
         for (flavour, dependencies) in module.dependencies {
-            var transitiveDependencies: Set<Dependency> = []
+            var transitiveDependencies: Set<TransitiveDependency> = []
 
             for dependency in dependencies {
                 try getTransitiveDependencies(dependency, middleware, thirdParty).forEach {
@@ -127,7 +127,7 @@ public class ModuleResolver {
 
 // MARK: Dependency. Used to sort the transitive dependencies
 
-private enum Dependency: Module {
+private enum TransitiveDependency: ModuleProtocol {
     case firstParty(FirstPartyModule.Input)
     case thirdParty(ThirdPartyModule.Output)
 
@@ -152,7 +152,7 @@ private enum Dependency: Module {
     }
 }
 
-extension Dependency: Hashable {
+extension TransitiveDependency: Hashable {
     public var hashValue: Int {
         name.hashValue
     }
@@ -162,7 +162,7 @@ extension Dependency: Hashable {
     }
 }
 
-private extension Array where Element == Dependency {
+private extension Array where Element == TransitiveDependency {
     func sorted() -> [Element] {
         return self
             .sorted { $0.name < $1.name }
@@ -172,16 +172,16 @@ private extension Array where Element == Dependency {
 
 // MARK: Module protocol. Used to ensure unique module names
 
-private protocol Module {
+private protocol ModuleProtocol {
     var name: String { get }
     var kind: ModuleKind { get }
 }
 
-extension FirstPartyModule.Input: Module {
+extension FirstPartyModule.Input: ModuleProtocol {
     var kind: ModuleKind { .firstParty }
 }
 
-extension ThirdPartyModule.Input: Module {
+extension ThirdPartyModule.Input: ModuleProtocol {
     var name: String { _element1.name }
     var kind: ModuleKind { .thirdParty }
 }

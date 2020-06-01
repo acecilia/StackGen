@@ -28,11 +28,7 @@ extension TemplateEngine {
                 path: .init(path.string),
                 prefix: """
                 import Foundation
-                import Path
                 import RuntimeCode
-
-                let contextData = try Data(contentsOf: Path(ProcessInfo().arguments[1])!)
-                let context = try JSONDecoder().decode(Context.Middleware.self, from: contextData)
                 """,
                 runtimeFiles: stackgenRuntimeFiles,
                 manifestCode: """

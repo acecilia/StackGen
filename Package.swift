@@ -26,21 +26,6 @@ let package = Package(
     ],
     targets: [
         // ################################
-        // Sourcery
-        // ################################
-
-        .target(
-            name: "SourceryUtils",
-            dependencies: ["PathKit"],
-            path: "submodules/sourcery/Sources/SourceryUtils"
-        ),
-        .target(
-            name: "SwiftTemplateEngine",
-            dependencies: ["SourceryUtils"],
-            path: "submodules/sourcery/Sources/SwiftTemplateEngine"
-        ),
-
-        // ################################
         // Main
         // ################################
 
@@ -73,6 +58,32 @@ let package = Package(
                 "StackGenCLI",
                 "RuntimeTestCase",
             ]
-        )
+        ),
+
+        // ################################
+        // Sourcery
+        // ################################
+
+        .target(
+            name: "SourceryUtils",
+            dependencies: ["PathKit"],
+            path: "submodules/sourcery/Sources/SourceryUtils"
+        ),
+        .target(
+            name: "SwiftTemplateEngine",
+            dependencies: ["SourceryUtils"],
+            path: "submodules/sourcery/Sources/SwiftTemplateEngine"
+        ),
+
+        // ################################
+        // Swift template
+        // ################################
+
+        .target(
+            name: "SwiftTemplateRuntime",
+            dependencies: [
+                "StackGenKit",
+            ]
+        ),
     ]
 )
