@@ -7,14 +7,8 @@ final class ContextTests: XCTestCase {
     func testContext() throws {
         let contextString = """
         env:
-          output:
-            basename: outputBasename
-            parent: outputParent
-            path: outputParent/outputBasename
-          root:
-            basename: rootBasename
-            parent: rootParent
-            path: rootParent/rootBasename
+          output: outputParent/outputBasename
+          root: rootParent/rootBasename
         global:
           aGlobalVariable: something
           anotherGlobalVariable: somethingElse
@@ -23,11 +17,8 @@ final class ContextTests: XCTestCase {
             main:
             - FileKit
             - Module2
-          location:
-            basename: Module1
-            parent: parentModule1
-            path: parentModule1/Module1
           name: Module1
+          path: parentModule1/Module1
           transitiveDependencies:
             main:
             - FileKit
@@ -35,11 +26,8 @@ final class ContextTests: XCTestCase {
         modules:
         - dependencies: {}
           kind: firstParty
-          location:
-            basename: Module1Basename
-            parent: Module1Parent
-            path: Module1Parent/Module1Basename
           name: Module1
+          path: parentModule1/Module1
           transitiveDependencies: {}
         - kind: thirdParty
           name: FileKit
