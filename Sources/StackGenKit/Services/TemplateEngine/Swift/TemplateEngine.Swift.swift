@@ -79,10 +79,12 @@ extension TemplateEngine.Swift {
         import Foundation
         import RuntimeCode
 
+        extension String: Error { }
+
         do {
         \(template)
         } catch {
-            fatalError(error.finalDescription)
+            throw error.finalDescription
         }
         """
     }

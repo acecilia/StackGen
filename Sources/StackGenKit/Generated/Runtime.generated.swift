@@ -295,7 +295,7 @@ public enum Constant {
     /// The version of the current StackGen binary
     public static let version = "0.0.2"
     /// The temporary directory to use
-    public static let tempDir: Path = Path(NSTemporaryDirectory())!.join("stackgen-\\(version)")
+    public static let tmpDir: Path = Path(NSTemporaryDirectory())!.join("stackgen-\\(version)")
 }
 """
     ),
@@ -487,10 +487,7 @@ import Foundation
 public extension Error {
     /// The final form to be presented to the user when an error happens
     var finalDescription: String {
-        return \"\"\"
-        \\(localizedDescription)
-        \\(self)
-        \"\"\"
+        return localizedDescription
     }
 }
 """
