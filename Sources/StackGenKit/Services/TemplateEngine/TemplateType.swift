@@ -1,6 +1,7 @@
 import Foundation
 
-public enum TemplateKind {
+/// The supported template types
+public enum TemplateType {
     public static let stencilTemplateDelimiters = ["{%", "{{"]
     public static let swiftTemplateDelimiters = ["<%"]
 

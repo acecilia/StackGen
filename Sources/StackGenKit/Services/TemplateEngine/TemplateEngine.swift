@@ -18,7 +18,7 @@ public class TemplateEngine: TemplateEngineInterface {
     }
 
     public func render(templateContent: String, context: Context.Output) throws -> String {
-        switch TemplateKind(templateContent) {
+        switch TemplateType(templateContent) {
         case .stencil:
             return try stencil.unwrap(fallback: Stencil(env))
                 .render(templateContent: templateContent, context: context)

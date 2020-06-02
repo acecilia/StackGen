@@ -49,6 +49,7 @@ extension StackGenError {
 
         // Runtime
         case unknownModuleName(_ name: String, _ modules: [Module])
+        case dictionaryKeyNotFound(_ key: String)
 
         public var errorDescription: String {
             switch self {
@@ -104,6 +105,9 @@ extension StackGenError {
                 Module '\(name)' could not be found among the known modules.
                 Modules: '\(modules)'
                 """
+
+            case let .dictionaryKeyNotFound(key):
+                return "The key '\(key)' was not found inside the dictionary"
             }
         }
     }

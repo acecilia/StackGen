@@ -318,6 +318,7 @@ extension Path {
         name: "Constant.swift",
         content: """
 import Foundation
+import Path
 
 /// Constants used across the codebase
 public enum Constant {
@@ -325,6 +326,8 @@ public enum Constant {
     public static let stackGenFileName = "stackgen.yml"
     /// The version of the current StackGen binary
     public static let version = "0.0.2"
+    /// The temporary directory to use
+    public static let tempDir: Path = Path(NSTemporaryDirectory())!.join("stackgen-\\(version)")
 }
 """
     ),
@@ -382,6 +385,7 @@ extension StackGenError {
 
         // Runtime
         case unknownModuleName(_ name: String, _ modules: [Module])
+        case dictionaryKeyNotFound(_ key: String)
 
         public var errorDescription: String {
             switch self {
@@ -437,6 +441,9 @@ extension StackGenError {
                 Module '\\(name)' could not be found among the known modules.
                 Modules: '\\(modules)'
                 \"\"\"
+
+            case let .dictionaryKeyNotFound(key):
+                return "The key '\\(key)' was not found inside the dictionary"
             }
         }
     }
@@ -485,6 +492,31 @@ public extension Error {
         \"\"\"
     }
 }
+"""
+    ),
+    .init(
+        name: "Dictionary+dynamicMemberLookup.swift",
+        content: """
+import Foundation
+
+@dynamicMemberLookup
+protocol DictionaryDynamicLookup {
+    associatedtype Key
+    associatedtype Value
+    subscript(key: Key) -> Value? { get }
+}
+
+extension DictionaryDynamicLookup where Key == String {
+    subscript(dynamicMember key: String) -> Value {
+        guard let value = self[key] else {
+            let error = StackGenError(.dictionaryKeyNotFound(key))
+            fatalError(error.finalDescription)
+        }
+        return value
+    }
+}
+
+extension Dictionary: DictionaryDynamicLookup { }
 """
     ),
     .init(
