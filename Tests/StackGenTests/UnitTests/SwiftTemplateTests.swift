@@ -27,7 +27,7 @@ private class Builder {
 
     func makeContext() -> Context.Output {
         let outputContext = Context.Output(
-            env: Context.Env(root: env.root.output, output: Path(Path.cwd).output),
+            env: Context.Env(root: env.root, output: Path(Path.cwd)),
             global: ["contextId": .init(contextId)],
             modules: [],
             module: nil

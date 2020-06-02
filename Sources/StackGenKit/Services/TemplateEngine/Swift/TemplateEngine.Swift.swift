@@ -5,7 +5,7 @@ import Path
 extension TemplateEngine {
     /// A wrapper to render Swit templates
     public class Swift: TemplateEngineInterface {
-        static let tmpDir: Path = Constant.tempDir.join("swift_template")
+        static let tmpDir: Path = Constant.tmpDir.join("swift_template")
         static let cacheDir: Path = tmpDir.join("cache")
         static let buildDir: Path = tmpDir.join("build")
         static let tmpTemplatesDir: Path = tmpDir.join("tmp_templates")
@@ -15,8 +15,7 @@ extension TemplateEngine {
         }
 
         deinit {
-            // Do not remove cache path in order to speed up swift builds
-            try? Self.buildDir.delete()
+            // Do not remove cache path or buildDir in order to speed up swift builds
             try? Self.tmpTemplatesDir.delete()
         }
 
@@ -30,15 +29,12 @@ extension TemplateEngine {
             let cachePath = Self.cacheDir.join(path.string)
             try cachePath.mkdir(.p)
 
-            let buildPath = Self.buildDir.join(path.string)
-            try buildPath.mkdir(.p)
-
             let swiftTemplate = try SwiftTemplate(
                 path: .init(path.string),
                 makeMain: Self.makeMain,
                 runtimeFiles: stackgenRuntimeFiles,
                 manifestCode: Self.manifestCode,
-                buildDir: .init(buildPath.string),
+                buildDir: .init(Self.buildDir.string), // Sharing the buildDir speeds up swift builds
                 cachePath: .init(cachePath.string)
             )
             return try swiftTemplate.render(context)
@@ -58,7 +54,6 @@ extension TemplateEngine.Swift {
             ],
             dependencies: [
                 .package(url: "https://github.com/mxcl/Path.swift.git", .exact("1.0.1")),
-                .package(url: "https://github.com/acecilia/Compose.git", .exact("0.0.4")),
                 .package(url: "https://github.com/acecilia/StringCodable.git", .revision("b7d46cd32791753df1fe13b0b6ecdd9a19fbabcc")),
             ],
             targets: [
@@ -66,7 +61,6 @@ extension TemplateEngine.Swift {
                     name: "RuntimeCode",
                     dependencies: [
                         "Path",
-                        "Compose",
                         "StringCodable",
                     ]
                 ),

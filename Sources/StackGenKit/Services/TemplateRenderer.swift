@@ -30,7 +30,7 @@ public class TemplateRenderer {
             switch mode {
             case let .module(filter):
                 for module in firstPartyModules where filter.wrappedValue.matches(module.name) {
-                    let destinationPath = module.location.path/relativePath
+                    let destinationPath = module.path/relativePath
                     try _render(template: template, to: destinationPath, posixPermissions, module)
                 }
 
@@ -81,7 +81,7 @@ public class TemplateRenderer {
         outputPath: Path
     ) throws -> Context.Output {
         let outputContext = Context.Output(
-            env: Context.Env(root: env.root.output, output: outputPath.output),
+            env: Context.Env(root: env.root, output: outputPath),
             global: inputContext.global,
             modules: inputContext.modules,
             module: module

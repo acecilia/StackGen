@@ -1,14 +1,15 @@
 import Foundation
+import StringCodable
 
 @dynamicMemberLookup
-protocol DictionaryDynamicLookup {
+public protocol DictionaryDynamicLookup {
     associatedtype Key
     associatedtype Value
     subscript(key: Key) -> Value? { get }
 }
 
 extension DictionaryDynamicLookup where Key == String {
-    subscript(dynamicMember key: String) -> Value {
+    public subscript(dynamicMember key: String) -> Value {
         guard let value = self[key] else {
             let error = StackGenError(.dictionaryKeyNotFound(key))
             fatalError(error.finalDescription)
@@ -18,3 +19,17 @@ extension DictionaryDynamicLookup where Key == String {
 }
 
 extension Dictionary: DictionaryDynamicLookup { }
+
+@dynamicMemberLookup
+public protocol ThirdPartyDynamicLookup {
+    var untyped: [String: StringCodable] { get }
+}
+
+extension ThirdPartyDynamicLookup {
+    public subscript(dynamicMember key: String) -> StringCodable {
+        return untyped[dynamicMember: key]
+    }
+}
+
+
+extension ThirdPartyModule.Output: ThirdPartyDynamicLookup { }

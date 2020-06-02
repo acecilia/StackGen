@@ -42,7 +42,7 @@ public enum FirstPartyModule {
         /// The name of the first party module
         public let name: String
         /// The location of the first party module
-        public let location: Path.Output
+        public let path: Path
         /// The dependencies of the first party module
         public let dependencies: [String: [String]]
         /// The transitive dependencies of the first party module
@@ -50,12 +50,12 @@ public enum FirstPartyModule {
 
         public init(
             name: String,
-            location: Path.Output,
+            path: Path,
             dependencies: [String: [String]],
             transitiveDependencies: [String: [String]]
         ) {
             self.name = name
-            self.location = location
+            self.path = path
             self.dependencies = dependencies
             self.transitiveDependencies = transitiveDependencies
         }

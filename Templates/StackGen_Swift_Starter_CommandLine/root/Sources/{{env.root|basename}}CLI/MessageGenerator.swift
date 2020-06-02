@@ -1,6 +1,6 @@
 import Foundation
 import SwiftCLI
-import {{env.root.basename}}Kit
+import {{env.root|basename}}Kit
 
 public class MessageGenerator: HelpMessageGenerator {
     public func writeUnrecognizedErrorMessage(for error: Error, to out: WritableStream) {

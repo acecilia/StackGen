@@ -14,7 +14,7 @@ typealias GeneratorTestCase = XCTestCase
 final class AAA_Generator: GeneratorTestCase {
     func test_01_Clean() throws {
         // It is faster to move the files than to remove them
-        let trash = Path(NSTemporaryDirectory())!/"StackGen"/UUID().uuidString
+        let trash = Constant.tmpDir.join("trash").join(UUID().uuidString)
         if fixturesPath.exists { try fixturesPath.move(into: trash) }
         if testsOutputPath.exists { try testsOutputPath.move(into: trash) }
     }
@@ -28,16 +28,7 @@ final class AAA_Generator: GeneratorTestCase {
         XCTAssertEqual(exitCode, 0)
     }
 
-    func test_03_GenerateFixtures() throws {
-        Snapshot.recording = true
-        for testSpec in GenerateTests.testSpecs() {
-            let test = GenerateTests()
-            try testSpec.implementation(test)
-        }
-        Snapshot.recording = false
-    }
-
-    func test_04_GenerateSwiftRuntime() throws {
+    func test_03_GenerateSwiftRuntime() throws {
         func escapingSwiftTokens(_ string: String) -> String {
             let replacements = [
                 #"\("#: #"\\("#,
@@ -57,8 +48,8 @@ final class AAA_Generator: GeneratorTestCase {
             rootPath.join("Sources/StackGenKit/Entities/FirstPartyModule.swift"),
             rootPath.join("Sources/StackGenKit/Entities/ThirdPartyModule.swift"),
             rootPath.join("Sources/StackGenKit/Entities/ModuleKind.swift"),
-            rootPath.join("Sources/StackGenKit/Entities/Path+Output.swift"),
             rootPath.join("Sources/StackGenKit/Entities/Constant.swift"),
+            rootPath.join("Sources/StackGenKit/Entities/PartiallyTyped.swift"),
             rootPath.join("Sources/StackGenKit/Errors/StackGenError.swift"),
             rootPath.join("Sources/StackGenKit/Sourcery/AutoCodable.swift"),
             ]
@@ -91,5 +82,14 @@ final class AAA_Generator: GeneratorTestCase {
         try output
             .joined(separator: "\n")
             .write(to: outputPath)
+    }
+
+    func test_04_GenerateFixtures() throws {
+        Snapshot.recording = true
+        for testSpec in GenerateTests.testSpecs() {
+            let test = GenerateTests()
+            try testSpec.implementation(test)
+        }
+        Snapshot.recording = false
     }
 }

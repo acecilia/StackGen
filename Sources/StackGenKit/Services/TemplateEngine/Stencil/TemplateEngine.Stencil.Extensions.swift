@@ -10,6 +10,8 @@ extension TemplateEngine.Stencil {
             Filter.RelativeToRoot(),
             Filter.RelativeToModule(),
             Filter.Absolut(),
+            Filter.Basename(),
+            Filter.Parent(),
             Filter.ExpandDependencies()
         ]
 

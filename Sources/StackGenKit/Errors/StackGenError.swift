@@ -65,7 +65,7 @@ extension StackGenError {
 
             case let .unknownModule(name, firstParty, thirdParty):
                 let firstPartyList = firstParty.map { $0.name }.joined(separator: ", ")
-                let thirdPartyList = thirdParty.map { $0.name }.joined(separator: ", ")
+                let thirdPartyList = thirdParty.map { $0.typed.name }.joined(separator: ", ")
                 return """
                 Module '\(name)' could not be found among the specified modules.
                 First party modules: '\(firstPartyList)'

@@ -20,7 +20,7 @@ public enum Module: Codable {
             return module.name
 
         case let .thirdParty(module):
-            return module.name
+            return module.typed.name
         }
     }
 
@@ -155,13 +155,13 @@ public enum Context {
     /// The environment for a Context
     public struct Env: Codable, Hashable {
         /// The root path from where the tool runs
-        public let root: Path.Output
+        public let root: Path
         /// The output path of the file resulting from rendering a template with a context
-        public let output: Path.Output
+        public let output: Path
 
         public init(
-            root: Path.Output,
-            output: Path.Output
+            root: Path,
+            output: Path
         ) {
             self.root = root
             self.output = output
@@ -217,7 +217,7 @@ public enum FirstPartyModule {
         /// The name of the first party module
         public let name: String
         /// The location of the first party module
-        public let location: Path.Output
+        public let path: Path
         /// The dependencies of the first party module
         public let dependencies: [String: [String]]
         /// The transitive dependencies of the first party module
@@ -225,12 +225,12 @@ public enum FirstPartyModule {
 
         public init(
             name: String,
-            location: Path.Output,
+            path: Path,
             dependencies: [String: [String]],
             transitiveDependencies: [String: [String]]
         ) {
             self.name = name
-            self.location = location
+            self.path = path
             self.dependencies = dependencies
             self.transitiveDependencies = transitiveDependencies
         }
@@ -244,7 +244,6 @@ public enum FirstPartyModule {
 import Foundation
 import Path
 import StringCodable
-import Compose
 
 /// A namespace grouping the entities representing a third party module
 public enum ThirdPartyModule {
@@ -252,22 +251,18 @@ public enum ThirdPartyModule {
     /// This allows to include custom keys-values in the third party modules, on top of the mandatory ones
     /// required by the typed representation. For example, you may want to add the following
     /// custom key-value: `repository: https://github.com/somebody/myThirdPartyModule`
-    public typealias Input = Compose<_Input, [String: StringCodable]>
+    public typealias Input = PartiallyTyped<_Input, [String: StringCodable]>
     /// The typed representation of a third party module
     public struct _Input: Codable {
         public let name: String
     }
 
     /// The representation of a third party module. Used in the context rendered by the templates
-    public typealias Output = Compose<_Output, [String: StringCodable]>
+    public typealias Output = PartiallyTyped<_Output, [String: StringCodable]>
     /// The typed representation of a third party module. Used in the context rendered by the templates
     public struct _Output: Codable, Hashable {
         public let name: String
     }
-}
-
-public extension Compose where Element2 == [String: StringCodable] {
-    var dictionary: [String: StringCodable] { _element2 }
 }
 """
     ),
@@ -288,33 +283,6 @@ public enum ModuleKind: String, Codable, CaseIterable, Comparable {
 """
     ),
     .init(
-        name: "Path+Output.swift",
-        content: """
-import Foundation
-import Path
-
-extension Path {
-    /// A path representation to be used when a path is needed inside the context
-    public struct Output: Codable, Hashable {
-        /// The absolut path to the file
-        public let path: Path
-        /// The corresponding basename
-        public let basename: String
-        /// The parent path
-        public let parent: Path
-    }
-
-    public var output: Output {
-        return Output(
-            path: self,
-            basename: self.basename(),
-            parent: self.parent
-        )
-    }
-}
-"""
-    ),
-    .init(
         name: "Constant.swift",
         content: """
 import Foundation
@@ -329,6 +297,39 @@ public enum Constant {
     /// The temporary directory to use
     public static let tempDir: Path = Path(NSTemporaryDirectory())!.join("stackgen-\\(version)")
 }
+"""
+    ),
+    .init(
+        name: "PartiallyTyped.swift",
+        content: """
+import Foundation
+
+/// An object that is type safe, while at the same time keeps its non type safe representation
+public struct PartiallyTyped<Typed, Untyped> {
+    public var typed: Typed
+    public var untyped: Untyped
+
+    public init(_ typed: Typed, _ untyped: Untyped) {
+        self.typed = typed
+        self.untyped = untyped
+    }
+}
+
+extension PartiallyTyped: Encodable where Typed: Encodable, Untyped: Encodable {
+    public func encode(to encoder: Encoder) throws {
+        try untyped.encode(to: encoder)
+        try typed.encode(to: encoder)
+    }
+}
+
+extension PartiallyTyped: Decodable where Typed: Decodable, Untyped: Decodable {
+    public init(from decoder: Decoder) throws {
+        self.typed = try Typed(from: decoder)
+        self.untyped = try Untyped(from: decoder)
+    }
+}
+
+extension PartiallyTyped: Equatable where Typed: Equatable, Untyped: Equatable { }
 """
     ),
     .init(
@@ -401,7 +402,7 @@ extension StackGenError {
 
             case let .unknownModule(name, firstParty, thirdParty):
                 let firstPartyList = firstParty.map { $0.name }.joined(separator: ", ")
-                let thirdPartyList = thirdParty.map { $0.name }.joined(separator: ", ")
+                let thirdPartyList = thirdParty.map { $0.typed.name }.joined(separator: ", ")
                 return \"\"\"
                 Module '\\(name)' could not be found among the specified modules.
                 First party modules: '\\(firstPartyList)'
@@ -498,16 +499,17 @@ public extension Error {
         name: "Dictionary+dynamicMemberLookup.swift",
         content: """
 import Foundation
+import StringCodable
 
 @dynamicMemberLookup
-protocol DictionaryDynamicLookup {
+public protocol DictionaryDynamicLookup {
     associatedtype Key
     associatedtype Value
     subscript(key: Key) -> Value? { get }
 }
 
 extension DictionaryDynamicLookup where Key == String {
-    subscript(dynamicMember key: String) -> Value {
+    public subscript(dynamicMember key: String) -> Value {
         guard let value = self[key] else {
             let error = StackGenError(.dictionaryKeyNotFound(key))
             fatalError(error.finalDescription)
@@ -517,6 +519,20 @@ extension DictionaryDynamicLookup where Key == String {
 }
 
 extension Dictionary: DictionaryDynamicLookup { }
+
+@dynamicMemberLookup
+public protocol ThirdPartyDynamicLookup {
+    var untyped: [String: StringCodable] { get }
+}
+
+extension ThirdPartyDynamicLookup {
+    public subscript(dynamicMember key: String) -> StringCodable {
+        return untyped[dynamicMember: key]
+    }
+}
+
+
+extension ThirdPartyModule.Output: ThirdPartyDynamicLookup { }
 """
     ),
     .init(

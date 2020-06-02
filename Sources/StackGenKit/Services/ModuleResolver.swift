@@ -50,7 +50,7 @@ public class ModuleResolver {
     }
 
     private func resolve(_ module: ThirdPartyModule.Input) -> ThirdPartyModule.Output {
-        return ThirdPartyModule.Output(.init(name: module.name), module.dictionary)
+        return ThirdPartyModule.Output(.init(name: module.name), module.untyped)
     }
 
     /// Prefill dependency keys that do not have any dependency with empty arrays, so accessing them in the template is cleaner and safer
@@ -84,7 +84,7 @@ public class ModuleResolver {
                     transitiveDependencies.insert($0)
                 }
             }
-        } else if let module = thirdParty.first(where: { $0.name == dependency }) {
+        } else if let module = thirdParty.first(where: { $0.typed.name == dependency }) {
             transitiveDependencies.insert(.thirdParty(module))
         } else {
             throw StackGenError(.unknownModule(dependency, middleware, thirdParty))
@@ -114,7 +114,7 @@ public class ModuleResolver {
     private func resolve(_ module: FirstPartyModule.Input, _ middleware: [FirstPartyModule.Input], _ thirdParty: [ThirdPartyModule.Output]) throws -> FirstPartyModule.Output {
         let module = FirstPartyModule.Output(
             name: module.name,
-            location: module.path.output,
+            path: module.path,
             dependencies: module.dependencies,
             transitiveDependencies: try getTransitiveDependencies(module, middleware, thirdParty)
         )
@@ -137,7 +137,7 @@ private enum TransitiveDependency: ModuleProtocol {
             return module.name
 
         case let .thirdParty(module):
-            return module.name
+            return module.typed.name
         }
     }
 
@@ -182,7 +182,7 @@ extension FirstPartyModule.Input: ModuleProtocol {
 }
 
 extension ThirdPartyModule.Input: ModuleProtocol {
-    var name: String { _element1.name }
+    var name: String { typed.name }
     var kind: ModuleKind { .thirdParty }
 }
 

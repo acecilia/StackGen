@@ -4,15 +4,9 @@ options:
   xcodeGenVersion: {{global.xcodeGenVersion}}
 
 projectReferences:
-  Pods:
-    path: Pods/Pods.xcodeproj
 {% for module in modules where module.kind == "firstParty" %}
   {{module.name}}:
-    {% if "App" in module.name %}
     path: {{module.path}}/{{module.name}}.xcodeproj
-    {% else %}
-    path: Pods/{{module.name}}.xcodeproj
-    {% endif %}
 {% endfor %}
 
 schemes:
@@ -20,20 +14,12 @@ schemes:
     build:
       targets:
         {% for module in modules where module.kind == "firstParty" %}
-        {% if "App" in module.name %}
         {{module.name}}/{{module.name}}Tests: all
-        {% else %}
-        {{module.name}}/{{module.name}}-Unit-Tests: all
-        {% endif %}
         {% endfor %}
     test:
       gatherCoverageData: true
       targets:
       {% for module in modules where module.kind == "firstParty" %}
-      {% if "App" in module.name %}
-      - name: {{module.name}}/{{module.name}}Tests
-      {% else %}
-      - name: {{module.name}}/{{module.name}}-Unit-Tests
-      {% endif %}
-        randomExecutionOrder: true
+        - name: {{module.name}}/{{module.name}}Tests
+          randomExecutionOrder: true
       {% endfor %}

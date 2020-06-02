@@ -100,7 +100,7 @@ private class Builder {
         {{custom.something}}
         """
         let context = Context.Output(
-            env: Context.Env(root: env.cwd.output, output: env.cwd.output),
+            env: Context.Env(root: env.cwd, output: env.cwd),
             global: [:],
             modules: [],
             module: nil

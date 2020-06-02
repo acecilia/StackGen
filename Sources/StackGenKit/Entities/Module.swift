@@ -14,7 +14,7 @@ public enum Module: Codable {
             return module.name
 
         case let .thirdParty(module):
-            return module.name
+            return module.typed.name
         }
     }
 

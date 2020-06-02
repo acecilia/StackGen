@@ -21,9 +21,8 @@ extension TemplateEngine.Stencil.Filter {
         public var context: Context.Output?
 
         public func run(_ value: Any?) throws -> Any {
-            let string = try value.asString(Self.filterName)
             let context = try self.context.unwrap(Self.filterName)
-            let path = Path(string) ?? context.env.output.path.parent.join(string)
+            let path = try value.asPath(context, Self.filterName)
             return path.exists
         }
     }
@@ -35,10 +34,9 @@ extension TemplateEngine.Stencil.Filter {
         public var context: Context.Output?
 
         public func run(_ value: Any?) throws -> Any {
-            let string = try value.asString(Self.filterName)
             let context = try self.context.unwrap(Self.filterName)
-            let path = Path(string) ?? context.env.output.path.parent.join(string)
-            return path.relative(to: context.env.root.path)
+            let path = try value.asPath(context, Self.filterName)
+            return path.relative(to: context.env.root)
         }
     }
 
@@ -49,11 +47,10 @@ extension TemplateEngine.Stencil.Filter {
         public var context: Context.Output?
 
         public func run(_ value: Any?) throws -> Any {
-            let string = try value.asString(Self.filterName)
             let context = try self.context.unwrap(Self.filterName)
-            let path = Path(string) ?? context.env.output.path.parent.join(string)
+            let path = try value.asPath(context, Self.filterName)
             let module = try context.module.unwrap(Self.filterName)
-            return path.relative(to: module.location.path)
+            return path.relative(to: module.path)
         }
     }
 
@@ -64,9 +61,35 @@ extension TemplateEngine.Stencil.Filter {
         public var context: Context.Output?
 
         public func run(_ value: Any?) throws -> Any {
-            let string = try value.asString(Self.filterName)
-            let path = try Path(string) ?? context.unwrap(Self.filterName).env.output.path.parent.join(string)
+            let context = try self.context.unwrap(Self.filterName)
+            let path = try value.asPath(context, Self.filterName)
             return path.relative(to: Path.root)
+        }
+    }
+
+    /// An stencil filter that returns the basename of a path
+    public class Basename: StencilFilterInterface {
+        public static let filterName = "basename"
+
+        public var context: Context.Output?
+
+        public func run(_ value: Any?) throws -> Any {
+            let context = try self.context.unwrap(Self.filterName)
+            let path = try value.asPath(context, Self.filterName)
+            return path.basename()
+        }
+    }
+
+    /// An stencil filter that returns the parent of a path
+    public class Parent: StencilFilterInterface {
+        public static let filterName = "parent"
+
+        public var context: Context.Output?
+
+        public func run(_ value: Any?) throws -> Any {
+            let context = try self.context.unwrap(Self.filterName)
+            let path = try value.asPath(context, Self.filterName)
+            return path.parent.relative(to: context.env.output.parent)
         }
     }
 
@@ -84,7 +107,7 @@ extension TemplateEngine.Stencil.Filter {
                 let dependency: Codable = try context.modules
                     .first { $0.name == dependency }
                     .unwrap(onFailure: .unknownModuleName(dependency, context.modules))
-                return try dependency.asDictionary(context.env.output.path.parent)
+                return try dependency.asDictionary(context.env.output.parent)
             }
 
             return expandedDependencies
@@ -105,6 +128,11 @@ private extension Optional where Wrapped == Any {
             throw StackGenError(.filterFailed(filter: filterName, reason: "The value passed to the filter is not a valid string array"))
         }
         return unwrapped
+    }
+
+    func asPath(_ context: Context.Output, _ filterName: String, file: String = #file, line: Int = #line) throws -> Path {
+        let string = try self.asString(filterName, file: file, line: line)
+        return Path(string) ?? context.env.output.parent.join(string)
     }
 }
 

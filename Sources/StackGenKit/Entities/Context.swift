@@ -45,13 +45,13 @@ public enum Context {
     /// The environment for a Context
     public struct Env: Codable, Hashable {
         /// The root path from where the tool runs
-        public let root: Path.Output
+        public let root: Path
         /// The output path of the file resulting from rendering a template with a context
-        public let output: Path.Output
+        public let output: Path
 
         public init(
-            root: Path.Output,
-            output: Path.Output
+            root: Path,
+            output: Path
         ) {
             self.root = root
             self.output = output
