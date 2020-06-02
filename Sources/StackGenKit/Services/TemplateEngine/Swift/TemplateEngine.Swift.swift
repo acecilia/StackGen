@@ -19,13 +19,21 @@ extension TemplateEngine {
             try? Self.tmpTemplatesDir.delete()
         }
 
-        public func render(templateContent: String, context: Context.Output) throws -> String {
+        public func render(template: TemplateEngine.Template, context: Context.Output) throws -> String {
+            if let path = template.path {
+                return try render(path: path, context: context)
+            } else {
+                return try render(templateContent: template.content(), context: context)
+            }
+        }
+
+        private func render(templateContent: String, context: Context.Output) throws -> String {
             let tmpFile = Self.tmpTemplatesDir/"template_content_\(templateContent.sha1()).txt"
             try templateContent.write(to: tmpFile)
             return try render(path: tmpFile, context: context)
         }
 
-        public func render(path: Path, context: Context.Output) throws -> String {
+        private func render(path: Path, context: Context.Output) throws -> String {
             let cachePath = Self.cacheDir.join(path.string)
             try cachePath.mkdir(.p)
 

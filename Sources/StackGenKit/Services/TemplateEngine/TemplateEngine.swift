@@ -3,7 +3,7 @@ import Foundation
 import Path
 
 public protocol TemplateEngineInterface {
-    func render(templateContent: String, context: Context.Output) throws -> String
+    func render(template: TemplateEngine.Template, context: Context.Output) throws -> String
 }
 
 public class TemplateEngine: TemplateEngineInterface {
@@ -17,18 +17,18 @@ public class TemplateEngine: TemplateEngineInterface {
         self.env = env
     }
 
-    public func render(templateContent: String, context: Context.Output) throws -> String {
-        switch TemplateType(templateContent) {
+    public func render(template: TemplateEngine.Template, context: Context.Output) throws -> String {
+        switch try TemplateType(template) {
         case .stencil:
             return try stencil.unwrap(fallback: Stencil(env))
-                .render(templateContent: templateContent, context: context)
+                .render(template: template, context: context)
 
         case .swift:
             return try swift.unwrap(fallback: Swift(env))
-                .render(templateContent: templateContent, context: context)
+                .render(template: template, context: context)
 
         case .plainText:
-            return templateContent
+            return try template.content()
         }
     }
 }

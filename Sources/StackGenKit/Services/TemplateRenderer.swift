@@ -24,7 +24,7 @@ public class TemplateRenderer {
         mode: TemplateSpec.Mode
     ) throws {
         do {
-            let template = try String(contentsOf: templatePath)
+            let template = TemplateEngine.Template(templatePath)
             let posixPermissions = try FileManager.default.attributesOfItem(atPath: templatePath.string)[.posixPermissions]
 
             switch mode {
@@ -55,7 +55,7 @@ public class TemplateRenderer {
     }
 
     private func _render(
-        template: String,
+        template: TemplateEngine.Template,
         to outputPath: Path,
         _ posixPermissions: Any?,
         _ module: FirstPartyModule.Output?
@@ -67,7 +67,7 @@ public class TemplateRenderer {
         let rendered: String = try {
             let context = try createContext(module: module, outputPath: outputPath)
             return try templateEngine.render(
-                templateContent: template,
+                template: template,
                 context: context
             )
         }()
@@ -94,7 +94,7 @@ public class TemplateRenderer {
         let context = try createContext(module: module, outputPath: env.root)
 
         let pathString = try templateEngine.render(
-            templateContent: outputPath.string,
+            template: .init(outputPath.string),
             context: context
         )
         return Path.root/pathString

@@ -11,7 +11,7 @@ final class SwiftTemplateTests: XCTestCase {
 
         do {
             let result = try swiftTemplateEngine.render(
-                templateContent: #"<%= global["contextId"]! %>"#,
+                template: .init(#"<%= global["contextId"]! %>"#),
                 context: context
             )
             XCTAssertEqual(result, builder.contextId)
