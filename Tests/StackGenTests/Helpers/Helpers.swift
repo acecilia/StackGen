@@ -50,7 +50,7 @@ func prefill(_ destination: Path, using template: Template) throws {
 func generate(in destination: Path, using template: Template) throws -> Int32 {
     let generateCmd: [String]
 
-    let stackgenFilePath = destination/StackGenFile.fileName
+    let stackgenFilePath = destination/Constant.stackGenFileName
     if stackgenFilePath.exists {
         try patchTemplate(at: stackgenFilePath, using: template)
         generateCmd = [Generate.name]
@@ -81,7 +81,7 @@ func clean(using template: Template) -> Int32 {
     let cli = CLI()
 
     let cmd: [String]
-    let stackgenFilePath = Path.cwd/StackGenFile.fileName
+    let stackgenFilePath = Path.cwd/Constant.stackGenFileName
     if stackgenFilePath.exists {
         cmd = [Clean.name]
     } else {

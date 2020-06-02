@@ -2,6 +2,7 @@ import StackGenKit
 
 public typealias ModuleKind = StackGenKit.ModuleKind
 public typealias Module = StackGenKit.Module
+public typealias StackGenError = StackGenKit.StackGenError
 
 public enum FirstPartyModule {
     public typealias Output = StackGenKit.FirstPartyModule.Output

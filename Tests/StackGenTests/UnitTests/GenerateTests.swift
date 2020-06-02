@@ -22,7 +22,7 @@ final class GenerateTests: RuntimeTestCase {
         let cleanExitCode = clean(using: template)
         XCTAssertEqual(cleanExitCode, 0)
         if let prefillPath = template.prefillPath {
-            assert(reference: prefillPath, equals: testPath, exclude: [StackGenFile.fileName])
+            assert(reference: prefillPath, equals: testPath, exclude: [Constant.stackGenFileName])
         } else {
             XCTAssertTrue(testPath.find().type(.file).map { $0 }.isEmpty)
         }
@@ -34,11 +34,11 @@ final class GenerateTests: RuntimeTestCase {
         let destinationA = try tmp("destinationA")
         let destinationB = try tmp("destinationB")
         try prefill(destinationA, using: template)
-        try (destinationA/StackGenFile.fileName).move(into: destinationB)
-        try patchTopLevel(at: destinationB/StackGenFile.fileName, using: destinationA)
+        try (destinationA/Constant.stackGenFileName).move(into: destinationB)
+        try patchTopLevel(at: destinationB/Constant.stackGenFileName, using: destinationA)
 
         let exitCode = try generate(in: destinationB, using: template)
         XCTAssertEqual(exitCode, 0)
-        assert(reference: fixturesPath/template.rawValue, equals: destinationA, exclude: [StackGenFile.fileName])
+        assert(reference: fixturesPath/template.rawValue, equals: destinationA, exclude: [Constant.stackGenFileName])
     }
 }

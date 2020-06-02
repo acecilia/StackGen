@@ -25,10 +25,17 @@ extension TemplateEngine {
         public func render(path: Path, context: Context.Output) throws -> String {
             let swiftTemplate = try SwiftTemplate(
                 path: .init(path.string),
-                prefix: """
+                makeMain: { """
                 import Foundation
                 import RuntimeCode
-                """,
+
+                do {
+                \($0)
+                } catch {
+                    fatalError(error.finalDescription)
+                }
+                """
+                },
                 runtimeFiles: stackgenRuntimeFiles,
                 manifestCode: """
                 // swift-tools-version:4.0

@@ -40,9 +40,9 @@ final class AAA_Generator: GeneratorTestCase {
     func test_04_GenerateSwiftRuntime() throws {
         func escapingSwiftTokens(_ string: String) -> String {
             let replacements = [
-              "\\(": "\\\\(",
-              "\\\"": "\\\\\"",
-              "\\n": "\\\\n",
+                #"\("#: #"\\("#,
+                "\"\"\"": "\\\"\\\"\\\"",
+                #"\n"#: #"\\n"#,
             ]
             var escapedString = string
             replacements.forEach {
@@ -58,6 +58,8 @@ final class AAA_Generator: GeneratorTestCase {
             rootPath.join("Sources/StackGenKit/Entities/ThirdPartyModule.swift"),
             rootPath.join("Sources/StackGenKit/Entities/ModuleKind.swift"),
             rootPath.join("Sources/StackGenKit/Entities/Path+Output.swift"),
+            rootPath.join("Sources/StackGenKit/Entities/Constant.swift"),
+            rootPath.join("Sources/StackGenKit/Errors/StackGenError.swift"),
             rootPath.join("Sources/StackGenKit/Sourcery/AutoCodable.swift"),
             ]
         let runtimeFiles = rootPath.join("Sources/SwiftTemplateRuntime/RuntimeCode").find().type(.file).map { $0 }
@@ -77,11 +79,11 @@ final class AAA_Generator: GeneratorTestCase {
                 .init(
                     name: "\(file.basename())",
                     content: \"""
-            \(content)
+            \(escapingSwiftTokens(content))
             \"""
                 ),
             """
-            output.append(escapingSwiftTokens(string))
+            output.append(string)
         }
         output.append("]")
 

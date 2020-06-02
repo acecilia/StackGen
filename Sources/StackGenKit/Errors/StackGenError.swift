@@ -21,9 +21,9 @@ public struct StackGenError: LocalizedError {
     }
 }
 
-public extension StackGenError {
+extension StackGenError {
     /// The kind of errors that the tool is expecing
-    enum Kind {
+    public enum Kind {
         // Version
         case stackgenFileVersionNotMatching(_ version: String)
 
@@ -46,14 +46,17 @@ public extension StackGenError {
 
         // Unexpected
         case unexpected(_ description: String)
-    
+
+        // Runtime
+        case unknownModuleName(_ name: String, _ modules: [Module])
+
         public var errorDescription: String {
             switch self {
             case let .stackgenFileVersionNotMatching(version):
                 return """
-                The version of the binary did not match the version specified inside the '\(StackGenFile.fileName)' file.
-                Version of the binary: '\(VERSION)'.
-                Version inside the '\(StackGenFile.fileName)' file: '\(version)'.
+                The version of the binary did not match the version specified inside the '\(Constant.stackGenFileName)' file.
+                Version of the binary: '\(Constant.version)'.
+                Version inside the '\(Constant.stackGenFileName)' file: '\(version)'.
                 """
 
             case .moduleNotFoundInFilesystem(let moduleId):
@@ -63,7 +66,7 @@ public extension StackGenError {
                 let firstPartyList = firstParty.map { $0.name }.joined(separator: ", ")
                 let thirdPartyList = thirdParty.map { $0.name }.joined(separator: ", ")
                 return """
-                Module '\(name)' could not be found among the first or third party specified modules.
+                Module '\(name)' could not be found among the specified modules.
                 First party modules: '\(firstPartyList)'
                 Third party modules: '\(thirdPartyList)'
                 """
@@ -78,7 +81,7 @@ public extension StackGenError {
                 return "Multiple modules with the same name ('\(moduleName)') were found among the detected modules: '\(detectedModules)'"
 
             case let .requiredParameterNotFound(name):
-                return "Required parameter not passed as command line argument neither found in the '\(StackGenFile.fileName)' file. Parameter: '\(name)'"
+                return "Required parameter not passed as command line argument neither found in the '\(Constant.stackGenFileName)' file. Parameter: '\(name)'"
 
             case let .templateGroupNotFound(identifier):
                 return "Templates group not found for identifier '\(identifier)'"
@@ -94,6 +97,13 @@ public extension StackGenError {
 
             case let .unexpected(description):
                 return "An unexpected error occurred. \(description)"
+
+            case let .unknownModuleName(name, modules):
+                let modules = modules.map { $0.name }.joined(separator: ", ")
+                return """
+                Module '\(name)' could not be found among the known modules.
+                Modules: '\(modules)'
+                """
             }
         }
     }

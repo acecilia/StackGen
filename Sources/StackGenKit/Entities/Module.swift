@@ -1,13 +1,13 @@
 import Foundation
 
+/// A wrapper around the supported modules
 public enum Module: Codable {
+    /// A first party module
     case firstParty(FirstPartyModule.Output)
+    /// A third party module
     case thirdParty(ThirdPartyModule.Output)
 
-    private enum CodingKeys: String, CodingKey {
-        case kind
-    }
-
+    /// The name of the module
     public var name: String {
         switch self {
         case let .firstParty(module):
@@ -18,6 +18,7 @@ public enum Module: Codable {
         }
     }
 
+    /// The kind of the module
     public var kind: ModuleKind {
         switch self {
         case .firstParty:
@@ -26,6 +27,14 @@ public enum Module: Codable {
         case .thirdParty:
             return .thirdParty
         }
+    }
+}
+
+// MARK: Codable related
+
+extension Module {
+    private enum CodingKeys: String, CodingKey {
+        case kind
     }
 
     private var underlyingValue: Codable {
@@ -55,6 +64,36 @@ public enum Module: Codable {
         case .thirdParty:
             let module = try ThirdPartyModule.Output(from: decoder)
             self = .thirdParty(module)
+        }
+    }
+}
+
+// MARK: Convenience
+
+extension Array where Element == Module {
+    /// Convenient property to filter and map the first party modules
+    public var firstParty: [FirstPartyModule.Output] {
+        self.compactMap {
+            switch $0 {
+            case let .firstParty(module):
+                return module
+
+            case .thirdParty:
+                return nil
+            }
+        }
+    }
+
+    /// Convenient property to filter and map the third party modules
+    public var thirdParty: [ThirdPartyModule.Output] {
+        self.compactMap {
+            switch $0 {
+            case let .thirdParty(module):
+                return module
+
+            case .firstParty:
+                return nil
+            }
         }
     }
 }

@@ -13,15 +13,7 @@ public class TemplateRenderer {
 
     public init(_ inputContext: Context.Input, _ env: Env) {
         self.inputContext = inputContext
-        self.firstPartyModules = inputContext.modules.compactMap {
-            switch $0 {
-            case let .firstParty(module):
-                return module
-
-            case .thirdParty:
-                return nil
-            }
-        }
+        self.firstPartyModules = inputContext.modules.firstParty
         self.templateEngine = TemplateEngine(env)
         self.env = env
     }

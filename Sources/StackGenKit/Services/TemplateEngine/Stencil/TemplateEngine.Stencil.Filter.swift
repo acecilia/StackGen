@@ -81,10 +81,9 @@ extension TemplateEngine.Stencil.Filter {
             let context = try self.context.unwrap(Self.filterName)
 
             let expandedDependencies: [[String: Any]] = try dependencies.map { dependency in
-                let dependency: Codable = try (
-                    context.modules.first { $0.name == dependency }
-                    )
-                    .unwrap(onFailure: "A module with name '\(dependency)' could not be found")
+                let dependency: Codable = try context.modules
+                    .first { $0.name == dependency }
+                    .unwrap(onFailure: .unknownModuleName(dependency, context.modules))
                 return try dependency.asDictionary(context.env.output.path.parent)
             }
 
