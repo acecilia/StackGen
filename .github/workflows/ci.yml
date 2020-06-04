@@ -33,7 +33,9 @@ jobs:
         swift package --version
       
     - name: Setup
-      run: ./taskfile setup
+      run: |
+        brew uninstall carthage # Allow custom installation of carthage
+        ./taskfile setup
 
     - name: Check links
       run: ./taskfile checkLinks ${{ github.sha }}
