@@ -3,7 +3,7 @@
 # `StackGenError.Kind`
 
 ```swift
-enum Kind
+public enum Kind
 ```
 
 > The kind of errors that the tool is expecing
@@ -73,6 +73,18 @@ case filterFailed(filter: String, reason: String)
 
 ```swift
 case unexpected(_ description: String)
+```
+
+### `unknownModuleName(_:_:)`
+
+```swift
+case unknownModuleName(_ name: String, _ modules: [Module])
+```
+
+### `dictionaryKeyNotFound(_:)`
+
+```swift
+case dictionaryKeyNotFound(_ key: String)
 ```
 
 ## Properties

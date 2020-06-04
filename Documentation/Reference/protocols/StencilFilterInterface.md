@@ -12,7 +12,7 @@ public protocol StencilFilterInterface: class
 ### `context`
 
 ```swift
-var context: Context.Middleware?
+var context: Context.Output?
 ```
 
 ## Methods

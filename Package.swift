@@ -24,6 +24,10 @@ let package = Package(
         // .package(path: "../RuntimeTestCaseSwift"),
     ],
     targets: [
+        // ################################
+        // Main
+        // ################################
+
         .target(
             name: "StackGen",
             dependencies: ["StackGenCLI"]

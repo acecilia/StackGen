@@ -22,10 +22,10 @@ end
 # Config
 #################
 
-{% for module in firstPartyModules|expand where "App" in module.name %}
+{% for module in modules where (module.kind == "firstParty") and ("App" in module.name) %}
 target '{{module.name}}' do
   platform :ios, '{{global.minimumDeploymentTarget}}'
-  project '{{module.location.path}}/{{module.name}}.xcodeproj'
+  project '{{module.path}}/{{module.name}}.xcodeproj'
   {% for dependency in module.transitiveDependencies.main|expand %}
   {% if dependency.kind == "firstParty" %}
   pod '{{dependency.name}}', :path => '.', :testspecs => ['Tests']

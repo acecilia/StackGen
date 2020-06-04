@@ -15,37 +15,22 @@ public struct Input
 public let global: [String: StringCodable]
 ```
 
-### `firstPartyModules`
+> The global values defined in the stackgen.yml file
+
+### `modules`
 
 ```swift
-public let firstPartyModules: [FirstPartyModule.Output]
+public let modules: [Module]
 ```
 
-### `firstPartyModuleNames`
-
-```swift
-public let firstPartyModuleNames: [String]
-```
-
-### `thirdPartyModules`
-
-```swift
-public let thirdPartyModules: [ThirdPartyModule.Output]
-```
-
-### `thirdPartyModuleNames`
-
-```swift
-public let thirdPartyModuleNames: [String]
-```
+> A list of the modules defined in the stackgen.yml file
 
 ## Methods
-### `init(global:firstPartyModules:thirdPartyModules:)`
+### `init(global:modules:)`
 
 ```swift
 public init(
     global: [String: StringCodable],
-    firstPartyModules: [FirstPartyModule.Output],
-    thirdPartyModules: [ThirdPartyModule.Output]
+    modules: [Module]
 )
 ```

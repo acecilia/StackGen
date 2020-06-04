@@ -3,11 +3,11 @@ import StackGenCLI
 import StackGenKit
 import Path
 
-let rootPath = Path(#file)!/".."/".."/".."/".."
-let examplesPath = rootPath/"Examples"/"swift"
-let templatesPath = rootPath/"Templates"
-let testsOutputPath = rootPath/".testsOutput"
-let fixturesPath = rootPath/".fixtures"
+let rootPath = Path(#file)!.join("../../../..")
+let examplesPath = rootPath.join("Examples/swift")
+let templatesPath = rootPath.join("Templates")
+let testsOutputPath = rootPath.join(".testsOutput")
+let fixturesPath = rootPath.join(".fixtures")
 
 func tmp(
     _ suffix: String,
@@ -16,7 +16,7 @@ func tmp(
 ) throws -> Path {
     let fileName = URL(fileURLWithPath: file).lastPathComponent
     let functionName = function.components(separatedBy: "(")[0]
-    let outputPath = testsOutputPath/fileName/functionName/suffix
+    let outputPath = testsOutputPath.join(fileName).join(functionName).join(suffix)
     try outputPath.delete()
     try outputPath.mkdir(.p)
     return outputPath
@@ -50,7 +50,7 @@ func prefill(_ destination: Path, using template: Template) throws {
 func generate(in destination: Path, using template: Template) throws -> Int32 {
     let generateCmd: [String]
 
-    let stackgenFilePath = destination/StackGenFile.fileName
+    let stackgenFilePath = destination.join(Constant.stackGenFileName)
     if stackgenFilePath.exists {
         try patchTemplate(at: stackgenFilePath, using: template)
         generateCmd = [Generate.name]
@@ -81,7 +81,7 @@ func clean(using template: Template) -> Int32 {
     let cli = CLI()
 
     let cmd: [String]
-    let stackgenFilePath = Path.cwd/StackGenFile.fileName
+    let stackgenFilePath = Path.cwd.join(Constant.stackGenFileName)
     if stackgenFilePath.exists {
         cmd = [Clean.name]
     } else {

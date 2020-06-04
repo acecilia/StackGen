@@ -6,10 +6,10 @@ options:
 projectReferences:
   Pods:
     path: Pods/Pods.xcodeproj
-{% for module in firstPartyModules|expand %}
+{% for module in modules where module.kind == "firstParty" %}
   {{module.name}}:
     {% if "App" in module.name %}
-    path: {{module.location.path}}/{{module.name}}.xcodeproj
+    path: {{module.path}}/{{module.name}}.xcodeproj
     {% else %}
     path: Pods/{{module.name}}.xcodeproj
     {% endif %}
@@ -19,7 +19,7 @@ schemes:
   All:
     build:
       targets:
-        {% for module in firstPartyModules|expand %}
+        {% for module in modules where module.kind == "firstParty" %}
         {% if "App" in module.name %}
         {{module.name}}/{{module.name}}Tests: all
         {% else %}
@@ -29,7 +29,7 @@ schemes:
     test:
       gatherCoverageData: true
       targets:
-      {% for module in firstPartyModules|expand %}
+      {% for module in modules where module.kind == "firstParty" %}
       {% if "App" in module.name %}
       - name: {{module.name}}/{{module.name}}Tests
       {% else %}

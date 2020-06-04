@@ -33,7 +33,7 @@ targets:
       implicit: true
       # embed: false # Bring this back when https://github.com/yonaskolb/XcodeGen/pull/820 is merged and released
     {% elif dependency.kind == "thirdParty" %}
-    - framework: {{env.root.path}}/Carthage/Build/iOS/{{dependency.name}}.framework
+    - framework: {{env.root}}/Carthage/Build/iOS/{{dependency.name}}.framework
     {% endif %}
     {% endfor %}
     {% endif %}
@@ -71,7 +71,7 @@ targets:
       implicit: true
       # embed: false # Bring this back when https://github.com/yonaskolb/XcodeGen/pull/820 is merged and released
     {% elif dependency.kind == "thirdParty" %}
-    - framework: {{env.root.path}}/Carthage/Build/iOS/{{dependency.name}}.framework
+    - framework: {{env.root}}/Carthage/Build/iOS/{{dependency.name}}.framework
     {% endif %}
     {% endfor %}
     info:

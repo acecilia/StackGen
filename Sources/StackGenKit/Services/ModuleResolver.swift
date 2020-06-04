@@ -5,7 +5,7 @@ import Path
 public class ModuleResolver {
     private let stackgenFile: StackGenFile
     /// A cache used to speed up module resolution
-    private var transitiveDependenciesCache: [String: [Dependency]] = [:]
+    private var transitiveDependenciesCache: [String: [TransitiveDependency]] = [:]
     private let env: Env
 
     public init(_ stackgenFile: StackGenFile, _ env: Env) throws {
@@ -14,7 +14,7 @@ public class ModuleResolver {
     }
 
     /// The entry point used to resolve the modules
-    public func resolve() throws -> (firstPartyModules: [FirstPartyModule.Output], thirdPartyModules: [ThirdPartyModule.Output]) {
+    public func resolve() throws -> [Module] {
         // Perform prechecks on the modules
         try ensureUniqueModuleNames(stackgenFile)
 
@@ -24,11 +24,11 @@ public class ModuleResolver {
         // Get modules
         let thirdPartyModules = stackgenFile.thirdPartyModules.map { resolve($0) }
         let firstPartyModules = try inputModules.map { try resolve($0, inputModules, thirdPartyModules) }
-        return (firstPartyModules, thirdPartyModules)
+        return firstPartyModules.map { .firstParty($0) } + thirdPartyModules.map { .thirdParty($0) }
     }
 
     private func ensureUniqueModuleNames(_ stackgenFile: StackGenFile) throws {
-        let allModules: [Module] = stackgenFile.firstPartyModules + stackgenFile.thirdPartyModules
+        let allModules: [ModuleProtocol] = stackgenFile.firstPartyModules + stackgenFile.thirdPartyModules
         let duplicates = Dictionary(grouping: allModules) { $0.name }
             .filter { $1.count > 1 }
             .map { $0.key }
@@ -50,7 +50,7 @@ public class ModuleResolver {
     }
 
     private func resolve(_ module: ThirdPartyModule.Input) -> ThirdPartyModule.Output {
-        return ThirdPartyModule.Output(.init(name: module.name), module.dictionary)
+        return ThirdPartyModule.Output(.init(name: module.name), module.untyped)
     }
 
     /// Prefill dependency keys that do not have any dependency with empty arrays, so accessing them in the template is cleaner and safer
@@ -69,12 +69,12 @@ public class ModuleResolver {
         }
     }
 
-    private func getTransitiveDependencies(_ dependency: String, _ middleware: [FirstPartyModule.Input], _ thirdParty: [ThirdPartyModule.Output]) throws -> [Dependency] {
+    private func getTransitiveDependencies(_ dependency: String, _ middleware: [FirstPartyModule.Input], _ thirdParty: [ThirdPartyModule.Output]) throws -> [TransitiveDependency] {
         if let transitiveDependencies = transitiveDependenciesCache[dependency] {
             return transitiveDependencies
         }
 
-        var transitiveDependencies: Set<Dependency> = []
+        var transitiveDependencies: Set<TransitiveDependency> = []
 
         if let module = middleware.first(where: { $0.name == dependency }) {
             transitiveDependencies.insert(.firstParty(module))
@@ -84,7 +84,7 @@ public class ModuleResolver {
                     transitiveDependencies.insert($0)
                 }
             }
-        } else if let module = thirdParty.first(where: { $0.name == dependency }) {
+        } else if let module = thirdParty.first(where: { $0.typed.name == dependency }) {
             transitiveDependencies.insert(.thirdParty(module))
         } else {
             throw StackGenError(.unknownModule(dependency, middleware, thirdParty))
@@ -97,7 +97,7 @@ public class ModuleResolver {
         var result: [String: [String]] = [:]
 
         for (flavour, dependencies) in module.dependencies {
-            var transitiveDependencies: Set<Dependency> = []
+            var transitiveDependencies: Set<TransitiveDependency> = []
 
             for dependency in dependencies {
                 try getTransitiveDependencies(dependency, middleware, thirdParty).forEach {
@@ -114,7 +114,7 @@ public class ModuleResolver {
     private func resolve(_ module: FirstPartyModule.Input, _ middleware: [FirstPartyModule.Input], _ thirdParty: [ThirdPartyModule.Output]) throws -> FirstPartyModule.Output {
         let module = FirstPartyModule.Output(
             name: module.name,
-            location: module.path.output,
+            path: module.path,
             dependencies: module.dependencies,
             transitiveDependencies: try getTransitiveDependencies(module, middleware, thirdParty)
         )
@@ -127,7 +127,7 @@ public class ModuleResolver {
 
 // MARK: Dependency. Used to sort the transitive dependencies
 
-private enum Dependency: Module {
+private enum TransitiveDependency: ModuleProtocol {
     case firstParty(FirstPartyModule.Input)
     case thirdParty(ThirdPartyModule.Output)
 
@@ -137,32 +137,32 @@ private enum Dependency: Module {
             return module.name
 
         case let .thirdParty(module):
-            return module.name
+            return module.typed.name
         }
     }
 
     var kind: ModuleKind {
         switch self {
-        case let .firstParty(module):
-            return module.kind
+        case .firstParty:
+            return .firstParty
 
-        case let .thirdParty(module):
-            return module.kind
+        case .thirdParty:
+            return .thirdParty
         }
     }
 }
 
-extension Dependency: Hashable {
-    public var hashValue: Int {
+extension TransitiveDependency: Hashable {
+    var hashValue: Int {
         name.hashValue
     }
 
-    public func hash(into hasher: inout Hasher) {
+    func hash(into hasher: inout Hasher) {
         name.hash(into: &hasher)
     }
 }
 
-private extension Array where Element == Dependency {
+private extension Array where Element == TransitiveDependency {
     func sorted() -> [Element] {
         return self
             .sorted { $0.name < $1.name }
@@ -172,17 +172,17 @@ private extension Array where Element == Dependency {
 
 // MARK: Module protocol. Used to ensure unique module names
 
-private protocol Module {
+private protocol ModuleProtocol {
     var name: String { get }
     var kind: ModuleKind { get }
 }
 
-extension FirstPartyModule.Input: Module {
+extension FirstPartyModule.Input: ModuleProtocol {
     var kind: ModuleKind { .firstParty }
 }
 
-extension ThirdPartyModule.Input: Module {
-    var name: String { _element1.name }
+extension ThirdPartyModule.Input: ModuleProtocol {
+    var name: String { typed.name }
     var kind: ModuleKind { .thirdParty }
 }
 
