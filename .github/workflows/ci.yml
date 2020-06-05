@@ -62,7 +62,7 @@ jobs:
         rm -rf ".build"
         rm -rf "~/Library/Developer/Xcode/DerivedData"
 
-        bash <(curl https://codecov.io/bash)
+        bash <(curl https://codecov.io/bash) -X gcov
 
     ###########################################
     # Below some deprecated steps that may be useful to keep around
