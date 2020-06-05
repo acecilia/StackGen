@@ -58,10 +58,8 @@ jobs:
         # Filter which files to add to the report when using llvm-cov: https://stackoverflow.com/questions/44207548/how-to-filter-files-in-llvm-cov-code-coverage-report
         xcrun llvm-cov export -format="lcov" -instr-profile=".build/debug/codecov/default.profdata" "$object" "Sources/StackGenKit/" > info.lcov
         
-        # Parameters:
-        # -X gcov: disable detecting other test coverage that is not the one at root
-        # -X coveragepy: disable python tests
-        bash <(curl https://codecov.io/bash) -c -X gcov -X coveragepy
+        rm -rf ".build" # Remove other build artifacts, to avoid codecov detecting unwanted coverage data
+        bash <(curl https://codecov.io/bash) -c
 
     ###########################################
     # Below some deprecated steps that may be useful to keep around
