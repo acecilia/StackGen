@@ -58,8 +58,11 @@ jobs:
         # Filter which files to add to the report when using llvm-cov: https://stackoverflow.com/questions/44207548/how-to-filter-files-in-llvm-cov-code-coverage-report
         xcrun llvm-cov export -format="lcov" -instr-profile=".build/debug/codecov/default.profdata" "$object" "Sources/StackGenKit/" > info.lcov
         
-        rm -rf ".build" # Remove other build artifacts, to avoid codecov detecting unwanted coverage data
-        bash <(curl https://codecov.io/bash) -c
+        # Remove other build artifacts, to avoid codecov detecting unwanted coverage data
+        rm -rf ".build"
+        rm -rf "~/Library/Developer/Xcode/DerivedData"
+
+        bash <(curl https://codecov.io/bash)
 
     ###########################################
     # Below some deprecated steps that may be useful to keep around
