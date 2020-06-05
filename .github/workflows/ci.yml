@@ -56,7 +56,7 @@ jobs:
       run: |
         object=".build/debug/StackGenPackageTests.xctest/Contents/MacOS/StackGenPackageTests"
         # Filter which files to add to the report when using llvm-cov: https://stackoverflow.com/questions/44207548/how-to-filter-files-in-llvm-cov-code-coverage-report
-        # xcrun llvm-cov export -format="lcov" -instr-profile=".build/debug/codecov/default.profdata" "$object" "Sources/StackGenKit/" > info.lcov
+        xcrun llvm-cov export -format="lcov" -instr-profile=".build/debug/codecov/default.profdata" "$object" "Sources/StackGenKit/" > info.lcov
         bash <(curl https://codecov.io/bash) -c -J '^StackGenKit$'
 
     ###########################################
