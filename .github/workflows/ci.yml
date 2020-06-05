@@ -50,14 +50,14 @@ jobs:
     - name: Tests
       run: |
         xcrun simctl boot "iPhone 8" # Boot simulator in advance, to maybe avoid it randomly freezing during bazel tests
-        swift test --enable-code-coverage -Xswiftc -D -Xswiftc DISABLE_GENERATOR -Xswiftc -D -Xswiftc DISABLE_INTEGRATION_TESTS
+        swift test --enable-code-coverage -Xswiftc -D -Xswiftc DISABLE_GENERATOR # -Xswiftc -D -Xswiftc DISABLE_INTEGRATION_TESTS
   
     - name: codecov
       run: |
         object=".build/debug/StackGenPackageTests.xctest/Contents/MacOS/StackGenPackageTests"
         # Filter which files to add to the report when using llvm-cov: https://stackoverflow.com/questions/44207548/how-to-filter-files-in-llvm-cov-code-coverage-report
-        xcrun llvm-cov export -format="lcov" -instr-profile=".build/debug/codecov/default.profdata" "$object" > info.lcov
-        bash <(curl https://codecov.io/bash) -c -g '**/*' -G 'Sources/StackGenKit'
+        xcrun llvm-cov export -format="lcov" -instr-profile=".build/debug/codecov/default.profdata" "$object" "Sources/StackGenKit/" > info.lcov
+        bash <(curl https://codecov.io/bash) -c
 
     ###########################################
     # Below some deprecated steps that may be useful to keep around
