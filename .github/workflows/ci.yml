@@ -50,8 +50,7 @@ jobs:
     - name: Tests
       run: |
         xcrun simctl boot "iPhone 8" # Boot simulator in advance, to maybe avoid it randomly freezing during bazel tests
-        # swift test --enable-code-coverage -Xswiftc -D -Xswiftc DISABLE_GENERATOR
-        swift build --enable-code-coverage -Xswiftc -D -Xswiftc DISABLE_GENERATOR
+        swift test --enable-code-coverage -Xswiftc -D -Xswiftc DISABLE_GENERATOR -Xswiftc -D -Xswiftc DISABLE_INTEGRATION_TESTS
   
     - name: codecov
       run: |
