@@ -60,8 +60,8 @@ jobs:
         
         # Parameters:
         # -c: move discovered coverage reports to the trash
-        # -X search -f info.lcov: disable search and pass the previously exported report, to avoid codecov autodetecting other coverage information
-        bash <(curl https://codecov.io/bash) -X search -f info.lcov
+        # -f info.lcov: pass the previously exported report, to avoid codecov autodetecting other coverage information
+        bash <(curl https://codecov.io/bash) -c -f info.lcov
 
     ###########################################
     # Below some deprecated steps that may be useful to keep around
