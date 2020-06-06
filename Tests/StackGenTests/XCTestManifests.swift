@@ -39,6 +39,7 @@ extension IntegrationTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__IntegrationTests = [
+        ("test_StackGen_Swift_Starter_CommandLine", test_StackGen_Swift_Starter_CommandLine),
         ("StackGen_Swift_BuildSystem_Bazel", StackGen_Swift_BuildSystem_Bazel),
         ("StackGen_Swift_BuildSystem_Cocoapods", StackGen_Swift_BuildSystem_Cocoapods),
         ("StackGen_Swift_BuildSystem_Xcodegen", StackGen_Swift_BuildSystem_Xcodegen),

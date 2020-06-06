@@ -28,7 +28,7 @@ final class IntegrationTests: IntegrationTestCase {
         assertLefthook()
     }
 
-    func xtest_StackGen_Swift_Starter_CommandLine() throws {
+    func test_StackGen_Swift_Starter_CommandLine() throws {
         try assertGenerate(.StackGen_Swift_Starter_CommandLine)
         try assertSPMBuild()
     }

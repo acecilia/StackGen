@@ -3,7 +3,7 @@
 # `ThirdPartyModule.Input`
 
 ```swift
-public typealias Input = Compose<_Input, [String: StringCodable]>
+public typealias Input = PartiallyTyped<_Input, [String: StringCodable]>
 ```
 
 > The representation of a third party module, containing the typed and untyped properties.

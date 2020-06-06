@@ -1,5 +1,5 @@
 options:
-  version: 0.0.2
+  version: 0.0.3
   templateGroups: [StackGen_Swift_BuildSystem_Cocoapods]
 
 global:
@@ -11,6 +11,7 @@ global:
   cocoapodsBinaryVersion: 0.4.4
   lefthookVersion: 0.7.1
   swiftlintVersion: 0.39.2
+  carthageVersion: 0.34.0
 
   # Code
   moduleVersion: 0.0.1

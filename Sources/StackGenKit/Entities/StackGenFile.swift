@@ -5,8 +5,6 @@ import Yams
 
 /// The representation of the stackgen.yml file
 public struct StackGenFile: AutoDecodable {
-    public static let fileName = "stackgen.yml"
-
     public static let defaultGlobal: [String: StringCodable] = [:]
     public static let defaultFirstPartyModules: [FirstPartyModule.Input] = []
     public static let defaultThirdPartyModules: [ThirdPartyModule.Input] = []
@@ -24,7 +22,7 @@ public struct StackGenFile: AutoDecodable {
     public let availableTemplateGroups: [String: [TemplateSpec.Input]]
 
     public init(
-        options: Options.StackGenFile = Options.StackGenFile(version: VERSION),
+        options: Options.StackGenFile = Options.StackGenFile(version: Constant.version),
         global: [String: StringCodable] = defaultGlobal,
         firstPartyModules: [FirstPartyModule.Input] = defaultFirstPartyModules,
         thirdPartyModules: [ThirdPartyModule.Input] = defaultThirdPartyModules,
@@ -38,7 +36,7 @@ public struct StackGenFile: AutoDecodable {
     }
 
     static func resolve(_ env: Env) throws -> StackGenFile {
-        let stackgenFilePath = env.cwd/StackGenFile.fileName
+        let stackgenFilePath = env.cwd/Constant.stackGenFileName
 
         if stackgenFilePath.exists {
             let stackgenFileContent = try String(contentsOf: stackgenFilePath)

@@ -13,7 +13,7 @@ public class GenerateAction: Action {
     }
 
     public func execute() throws {
-        env.reporter.info(.wrench, "resolving \(StackGenFile.fileName)")
+        env.reporter.info(.wrench, "resolving \(Constant.stackGenFileName)")
 
         let stackgenFile: StackGenFile = try {
             let stackgenFile = try StackGenFile.resolve(env)
@@ -27,7 +27,7 @@ public class GenerateAction: Action {
                 return stackgenFile
             }
         }()
-        guard stackgenFile.options.version == VERSION else {
+        guard stackgenFile.options.version == Constant.version else {
             throw StackGenError(.stackgenFileVersionNotMatching(stackgenFile.options.version))
         }
 
@@ -41,14 +41,13 @@ public class GenerateAction: Action {
 
         env.reporter.info(.wrench, "resolving modules")
 
-        let (firstPartyModules, thirdPartyModules) = try ModuleResolver(stackgenFile, env).resolve()
+        let modules = try ModuleResolver(stackgenFile, env).resolve()
 
         env.reporter.info(.wrench, "generating files")
 
         let inputContext = Context.Input(
             global: stackgenFile.global,
-            firstPartyModules: firstPartyModules,
-            thirdPartyModules: thirdPartyModules
+            modules: modules
         )
         let templateRenderer = TemplateRenderer(inputContext, env)
 

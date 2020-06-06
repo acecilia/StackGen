@@ -4,7 +4,7 @@ import StackGenKit
 
 /// A base class used to share command line options among different commands
 public class BaseCommand {
-    @Key("-t", "--templateGroups", description: "A list of comma separated values that identify the template groups to use. They can either be: a) template groups already included with stackgen, or b) custom template groups declared in the \(StackGenFile.fileName)")
+    @Key("-t", "--templateGroups", description: "A list of comma separated values that identify the template groups to use. They can either be: a) template groups already included with stackgen, or b) custom template groups declared in the \(Constant.stackGenFileName)")
     var templateGroups: [String]?
 
     private let arguments: [String]

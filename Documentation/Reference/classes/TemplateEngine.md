@@ -3,10 +3,8 @@
 # `TemplateEngine`
 
 ```swift
-public class TemplateEngine
+public class TemplateEngine: TemplateEngineInterface
 ```
-
-> A wrapper around the template engine to use
 
 ## Methods
 ### `init(_:)`
@@ -15,8 +13,8 @@ public class TemplateEngine
 public init(_ env: Env)
 ```
 
-### `render(templateContent:context:)`
+### `render(template:context:)`
 
 ```swift
-public func render(templateContent: String, context: Context.Middleware) throws -> String
+public func render(template: TemplateEngine.Template, context: Context.Output) throws -> String
 ```

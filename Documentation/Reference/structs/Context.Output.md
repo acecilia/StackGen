@@ -25,21 +25,13 @@ public let global: [String: StringCodable]
 
 > The global values defined in the stackgen.yml file
 
-### `firstPartyModules`
+### `modules`
 
 ```swift
-public let firstPartyModules: [String]
+public let modules: [Module]
 ```
 
-> A list of the first party modules defined in the stackgen.yml file
-
-### `thirdPartyModules`
-
-```swift
-public let thirdPartyModules: [String]
-```
-
-> A list of the third party modules defined in the stackgen.yml file
+> A list of the modules defined in the stackgen.yml file
 
 ### `module`
 
@@ -50,14 +42,13 @@ public let module: FirstPartyModule.Output?
 > The current module that is passed to the template, if any
 
 ## Methods
-### `init(env:global:firstPartyModules:thirdPartyModules:module:)`
+### `init(env:global:modules:module:)`
 
 ```swift
 public init(
     env: Env,
     global: [String: StringCodable],
-    firstPartyModules: [String],
-    thirdPartyModules: [String],
+    modules: [Module],
     module: FirstPartyModule.Output?
 )
 ```

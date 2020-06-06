@@ -12,7 +12,7 @@ public struct Env: Codable, Hashable
 ### `root`
 
 ```swift
-public let root: Path.Output
+public let root: Path
 ```
 
 > The root path from where the tool runs
@@ -20,7 +20,7 @@ public let root: Path.Output
 ### `output`
 
 ```swift
-public let output: Path.Output
+public let output: Path
 ```
 
 > The output path of the file resulting from rendering a template with a context
@@ -30,7 +30,7 @@ public let output: Path.Output
 
 ```swift
 public init(
-    root: Path.Output,
-    output: Path.Output
+    root: Path,
+    output: Path
 )
 ```

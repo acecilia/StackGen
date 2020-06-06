@@ -14,9 +14,3 @@ public struct _Output: Codable, Hashable
 ```swift
 public let name: String
 ```
-
-### `kind`
-
-```swift
-public let kind: ModuleKind = .thirdParty
-```

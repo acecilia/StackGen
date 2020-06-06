@@ -4,22 +4,22 @@ options:
   xcodeGenVersion: {{global.xcodeGenVersion}}
 
 projectReferences:
-{% for module in firstPartyModules|expand %}
+{% for module in modules where module.kind == "firstParty" %}
   {{module.name}}:
-    path: {{module.location.path}}/{{module.name}}.xcodeproj
+    path: {{module.path}}/{{module.name}}.xcodeproj
 {% endfor %}
 
 schemes:
   All:
     build:
       targets:
-        {% for module in firstPartyModules|expand %}
+        {% for module in modules where module.kind == "firstParty" %}
         {{module.name}}/{{module.name}}Tests: all
         {% endfor %}
     test:
       gatherCoverageData: true
       targets:
-      {% for module in firstPartyModules|expand %}
+      {% for module in modules where module.kind == "firstParty" %}
         - name: {{module.name}}/{{module.name}}Tests
           randomExecutionOrder: true
       {% endfor %}

@@ -18,10 +18,10 @@ public let name: String
 
 > The name of the first party module
 
-### `location`
+### `path`
 
 ```swift
-public let location: Path.Output
+public let path: Path
 ```
 
 > The location of the first party module
@@ -42,21 +42,13 @@ public let transitiveDependencies: [String: [String]]
 
 > The transitive dependencies of the first party module
 
-### `kind`
-
-```swift
-public let kind: ModuleKind = .firstParty
-```
-
-> The kind of dependency that this module represents
-
 ## Methods
-### `init(name:location:dependencies:transitiveDependencies:)`
+### `init(name:path:dependencies:transitiveDependencies:)`
 
 ```swift
 public init(
     name: String,
-    location: Path.Output,
+    path: Path,
     dependencies: [String: [String]],
     transitiveDependencies: [String: [String]]
 )

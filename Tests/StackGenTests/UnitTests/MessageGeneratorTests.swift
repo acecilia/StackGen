@@ -96,22 +96,14 @@ private class Builder {
 
     func makeStencilError() -> Error {
         let templateEngine = TemplateEngine(env)
-        let templateContent = """
-        {{custom.something}}
-        """
-        let context = Context.Middleware(
-            firstPartyModules: [],
-            thirdPartyModules: [],
-            output: Context.Output(
-                env: Context.Env(root: env.cwd.output, output: env.cwd.output),
-                global: [:],
-                firstPartyModules: [],
-                thirdPartyModules: [],
-                module: nil
-            )
+        let context = Context.Output(
+            env: Context.Env(root: env.cwd, output: env.cwd),
+            global: [:],
+            modules: [],
+            module: nil
         )
         do {
-            _ = try templateEngine.render(templateContent: templateContent, context: context)
+            _ = try templateEngine.render(template: .init("{{custom.something}}"), context: context)
             fatalError("This should have thrown")
         } catch {
             return error

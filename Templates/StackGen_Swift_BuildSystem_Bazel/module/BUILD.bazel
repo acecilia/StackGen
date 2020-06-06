@@ -14,7 +14,7 @@ swift_library(
   deps = [
     {% for dependency in module.dependencies.main|expand %}
     {% if dependency.kind == "firstParty" %}
-    "//{{dependency.location.path|rr}}:{{dependency.name}}",
+    "//{{dependency.path|rr}}:{{dependency.name}}",
     {% elif dependency.kind == "thirdParty" %}
     "//:{{dependency.name}}",
     {% endif %}
@@ -47,7 +47,7 @@ swift_library(
     ":{{module.name}}",
     {% for dependency in module.dependencies.test|expand %}
     {% if dependency.kind == "firstParty" %}
-    "//{{dependency.location.path|rr}}:{{dependency.name}}",
+    "//{{dependency.path|rr}}:{{dependency.name}}",
     {% elif dependency.kind == "thirdParty" %}
     "//:{{dependency.name}}",
     {% endif %}

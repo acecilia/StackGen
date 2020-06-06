@@ -2,4 +2,6 @@ realm/SwiftLint@{{'{{'}}global.swiftlintVersion}}
 {% if module.name == "StackGen_Swift_BuildSystem_Xcodegen" or module.name == "StackGen_Swift_BuildSystem_Cocoapods" %}
 yonaskolb/XcodeGen@{{'{{'}}global.xcodeGenVersion}}
 thii/xcbeautify@{{'{{'}}global.xcbeautifyVersion}}
+{% elif module.name == "StackGen_Swift_BuildSystem_Bazel" %}
+carthage/carthage@{{'{{'}}global.carthageVersion}}
 {% endif %}

@@ -8,7 +8,7 @@ on:
 jobs:
   test:
     runs-on: macos-10.15
-    name: Xcode ${{ matrix.xcode }}
+    name: test - Xcode ${{ matrix.xcode }}
     strategy:
       matrix:
         xcode: 
@@ -19,6 +19,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+      with:
+        submodules: recursive
 
     - name: Select Xcode version
       run: |
@@ -31,7 +33,9 @@ jobs:
         swift package --version
       
     - name: Setup
-      run: ./taskfile setup
+      run: |
+        brew uninstall carthage # Allow custom installation of carthage
+        ./taskfile setup
 
     - name: Check links
       run: ./taskfile checkLinks ${{ github.sha }}
@@ -46,14 +50,83 @@ jobs:
     - name: Tests
       run: |
         xcrun simctl boot "iPhone 8" # Boot simulator in advance, to maybe avoid it randomly freezing during bazel tests
-        swift test --enable-code-coverage -Xswiftc -D -Xswiftc DISABLE_GENERATOR
+        swift test --enable-code-coverage -Xswiftc -D -Xswiftc DISABLE_GENERATOR # -Xswiftc -D -Xswiftc DISABLE_INTEGRATION_TESTS
   
     - name: codecov
       run: |
         object=".build/debug/StackGenPackageTests.xctest/Contents/MacOS/StackGenPackageTests"
         # Filter which files to add to the report when using llvm-cov: https://stackoverflow.com/questions/44207548/how-to-filter-files-in-llvm-cov-code-coverage-report
         xcrun llvm-cov export -format="lcov" -instr-profile=".build/debug/codecov/default.profdata" "$object" "Sources/StackGenKit/" > info.lcov
-        bash <(curl https://codecov.io/bash) -c
+        
+        # Parameters:
+        # -c: move discovered coverage reports to the trash
+        # -f info.lcov: pass the previously exported report, to avoid codecov autodetecting other coverage information
+        bash <(curl https://codecov.io/bash) -c -f info.lcov
+
+  update_release_draft:
+    if: github.ref == 'refs/heads/master'
+    needs: [test]
+    outputs:
+      upload_url: ${{ steps.draft_release.outputs.upload_url }}
+    runs-on: ubuntu-latest
+    name: Update release draft
+    steps:
+    # Removing the previously created draft release is a workaround for the fact that
+    # actions/upload-release-asset does not support overriding the existing release
+    # asset. See: https://github.com/actions/upload-release-asset/pull/22
+    - name: Remove existing draft releases
+      uses: hugo19941994/delete-draft-releases@v0.1.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Draft release
+      id: draft_release
+      uses: release-drafter/release-drafter@v5
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  upload_release_artifact:
+    needs: [update_release_draft]
+    runs-on: macos-10.15
+    name: Upload release artifact - Xcode ${{ matrix.xcode }}
+    strategy:
+      matrix:
+        xcode: 
+        - 11.5
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Select Xcode version
+      run: |
+        echo "Available Xcode versions:"
+        ls /Applications | grep Xcode
+        echo "Choosing $DEVELOPER_DIR"
+        sudo xcode-select -s "$DEVELOPER_DIR"
+        xcodebuild -version
+        swift --version
+        swift package --version
+
+    - name: Build for release
+      run: |
+        swift package clean
+        swift build -c release
+        zip --junk-paths stackgen .build/release/stackgen
+
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.update_release_draft.outputs.upload_url }}
+        asset_path: ./stackgen.zip
+        asset_name: stackgen.zip
+        asset_content_type: application/zip
 
     ###########################################
     # Below some deprecated steps that may be useful to keep around
