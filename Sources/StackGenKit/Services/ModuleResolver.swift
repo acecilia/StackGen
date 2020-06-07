@@ -83,7 +83,7 @@ public class ModuleResolver {
         let duplicates = Dictionary(grouping: modules) { $0.name }
             .filter { $1.count > 1 }
             .map { $0.key }
-            .sorted()
+            .sortedAlphabetically()
         if duplicates.isEmpty == false {
             throw StackGenError(.foundDuplicatedModules(duplicates))
         }
@@ -95,7 +95,7 @@ public class ModuleResolver {
                 let duplicates = Dictionary(grouping: dependencies) { $0 }
                     .filter { $1.count > 1 }
                     .map { $0.key }
-                    .sorted()
+                    .sortedAlphabetically()
                 if duplicates.isEmpty == false {
                     throw StackGenError(.foundDuplicatedDependencies(duplicates, module.name))
                 }
@@ -107,7 +107,7 @@ public class ModuleResolver {
         switch stackgenFile.options.checks.modulesSorting {
         case .alphabetically:
             func checkSorting(_ modules: [String]) throws {
-                let sortedModules = modules.sorted()
+                let sortedModules = modules.sortedAlphabetically()
                 if modules != sortedModules {
                     throw StackGenError(.modulesSorting(modules, sortedModules))
                 }

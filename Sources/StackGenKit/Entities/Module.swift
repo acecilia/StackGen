@@ -14,7 +14,7 @@ extension Array where Element == Module.Input {
     /// Sort the modules by name and kind
     func sortedByNameAndKind() -> [Element] {
         return self
-            .sorted { $0.name < $1.name }
+            .sortedAlphabetically(\.name)
             .sorted { $0.kind < $1.kind }
     }
 }

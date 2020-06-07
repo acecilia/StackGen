@@ -121,15 +121,15 @@ extension StackGenError {
             case let .modulesSorting(modules, sortedModules):
                 return """
                 The modules sorting is incorrect:
-                Current:  \(modules.joined(separator: " ,"))
-                Expected: \(sortedModules.joined(separator: " ,"))
+                Current:  \(modules.joined(separator: ", "))
+                Expected: \(sortedModules.joined(separator: ", "))
                 """
 
             case let .dependenciesSorting(module, dependencyGroup, dependencies, sortedDependencies):
                 return """
                 The dependencies sorting for the module '\(module)' and dependencyGroup '\(dependencyGroup)' is incorrect:
-                Current:  \(dependencies.joined(separator: " ,"))
-                Expected: \(sortedDependencies.joined(separator: " ,"))
+                Current:  \(dependencies.joined(separator: ", "))
+                Expected: \(sortedDependencies.joined(separator: ", "))
                 """
 
             case let .transitiveDependencyDuplication(module, name):
