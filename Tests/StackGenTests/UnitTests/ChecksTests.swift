@@ -6,7 +6,7 @@ final class ChecksTests: XCTestCase {
     func testModuleSorting() throws {
         do {
             let builder = Builder()
-            builder.thirdPartyModules = ["A", "B"]
+            builder.thirdPartyModules = ["A", "b", "C"]
             XCTAssertEqual(try builder.makeError(), nil)
         }
 
@@ -39,20 +39,18 @@ final class ChecksTests: XCTestCase {
         do {
             let builder = Builder()
             builder.firstPartyModules = [
-                .init(path: "A", dependencies: ["main": ["B", "C"]]),
-                .init(path: "B", dependencies: [:]),
-                .init(path: "C", dependencies: [:])
+                .init(path: "A", dependencies: ["main": ["B", "c", "D"]])
             ]
+            builder.thirdPartyModules = ["B", "c", "D"]
             XCTAssertEqual(try builder.makeError(), nil)
         }
 
         do {
             let builder = Builder()
             builder.firstPartyModules = [
-                .init(path: "A", dependencies: ["main": ["C", "B"]]),
-                .init(path: "B", dependencies: [:]),
-                .init(path: "C", dependencies: [:])
+                .init(path: "A", dependencies: ["main": ["C", "B"]])
             ]
+            builder.thirdPartyModules = ["B", "C"]
 
             XCTAssertEqual(
                 try builder.makeError(),
