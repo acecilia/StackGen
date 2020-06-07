@@ -3,7 +3,7 @@
 # `StackGenError.Kind`
 
 ```swift
-public enum Kind
+public enum Kind: Equatable
 ```
 
 > The kind of errors that the tool is expecing
@@ -24,7 +24,7 @@ case moduleNotFoundInFilesystem(_ moduleId: String)
 ### `unknownModule(_:_:_:)`
 
 ```swift
-case unknownModule(_ name: String, _ firstParty: [FirstPartyModule.Input], _ thirdParty: [ThirdPartyModule.Output])
+case unknownModule(_ name: String, _ firstParty: [String], _ thirdParty: [String])
 ```
 
 ### `foundDuplicatedModules(_:)`
@@ -37,6 +37,12 @@ case foundDuplicatedModules(_ modules: [String])
 
 ```swift
 case foundDuplicatedDependencies(_ dependencies: [String], _ module: String)
+```
+
+### `foundDependencyCycle(_:)`
+
+```swift
+case foundDependencyCycle(_ modules: [String])
 ```
 
 ### `multipleModulesWithSameNameFoundAmongDetectedModules(_:_:)`
@@ -60,7 +66,7 @@ case templateGroupNotFound(identifier: String)
 ### `errorThrownWhileRendering(templatePath:error:)`
 
 ```swift
-case errorThrownWhileRendering(templatePath: String, error: Error)
+case errorThrownWhileRendering(templatePath: String, error: String)
 ```
 
 ### `filterFailed(filter:reason:)`
@@ -78,13 +84,31 @@ case unexpected(_ description: String)
 ### `unknownModuleName(_:_:)`
 
 ```swift
-case unknownModuleName(_ name: String, _ modules: [Module])
+case unknownModuleName(_ name: String, _ modules: [String])
 ```
 
 ### `dictionaryKeyNotFound(_:)`
 
 ```swift
 case dictionaryKeyNotFound(_ key: String)
+```
+
+### `modulesSorting(_:_:)`
+
+```swift
+case modulesSorting(_ modules: [String], _ sortedModules: [String])
+```
+
+### `dependenciesSorting(_:_:_:_:)`
+
+```swift
+case dependenciesSorting(_ module: String, _ dependencyGroup: String, _ dependencies: [String], _ sortedDependencies: [String])
+```
+
+### `transitiveDependencyDuplication(_:_:)`
+
+```swift
+case transitiveDependencyDuplication(_ module: String, _ dependency: String)
 ```
 
 ## Properties

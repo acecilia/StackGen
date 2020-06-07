@@ -3,11 +3,13 @@
 ## Protocols
 
 -   [Action](protocols/Action.md)
+-   [ModuleProtocol](protocols/ModuleProtocol.md)
 -   [StencilFilterInterface](protocols/StencilFilterInterface.md)
 -   [TemplateEngineInterface](protocols/TemplateEngineInterface.md)
 
 ## Structs
 
+-   [Checks](structs/Checks.md)
 -   [Context.Env](structs/Context.Env.md)
 -   [Context.Input](structs/Context.Input.md)
 -   [Context.Output](structs/Context.Output.md)
@@ -24,7 +26,6 @@
 -   [TemplateSpec._Input](structs/TemplateSpec._Input.md)
 -   [TemplatesFileResolver](structs/TemplatesFileResolver.md)
 -   [ThirdPartyModule._Input](structs/ThirdPartyModule._Input.md)
--   [ThirdPartyModule._Output](structs/ThirdPartyModule._Output.md)
 
 ## Classes
 
@@ -51,9 +52,12 @@
 -   [BundledTemplateGroup](enums/BundledTemplateGroup.md)
 -   [Constant](enums/Constant.md)
 -   [Context](enums/Context.md)
+-   [DependencySorting](enums/DependencySorting.md)
 -   [FirstPartyModule](enums/FirstPartyModule.md)
 -   [Module](enums/Module.md)
+-   [Module.Wrapper](enums/Module.Wrapper.md)
 -   [ModuleKind](enums/ModuleKind.md)
+-   [ModuleSorting](enums/ModuleSorting.md)
 -   [Options](enums/Options.md)
 -   [Reporter.Emoji](enums/Reporter.Emoji.md)
 -   [StackGenError.Kind](enums/StackGenError.Kind.md)
@@ -65,11 +69,11 @@
 
 ## Extensions
 
--   [Array](extensions/Array.md)
+-   [Checks](extensions/Checks.md)
 -   [Encodable](extensions/Encodable.md)
 -   [Error](extensions/Error.md)
 -   [FirstPartyModule.Input](extensions/FirstPartyModule.Input.md)
--   [Module](extensions/Module.md)
+-   [Module.Wrapper](extensions/Module.Wrapper.md)
 -   [NSRegularExpression](extensions/NSRegularExpression.md)
 -   [Optional](extensions/Optional.md)
 -   [Options.StackGenFile](extensions/Options.StackGenFile.md)
@@ -77,9 +81,12 @@
 -   [StackGenFile](extensions/StackGenFile.md)
 -   [TemplateSpec.Input](extensions/TemplateSpec.Input.md)
 -   [TemplateSpec.Mode](extensions/TemplateSpec.Mode.md)
+-   [ThirdPartyModule.Input](extensions/ThirdPartyModule.Input.md)
 
 ## Typealiases
 
+-   [Module.Input](typealiases/Module.Input.md)
+-   [Module.Output](typealiases/Module.Output.md)
 -   [TemplateSpec.Input](typealiases/TemplateSpec.Input.md)
 -   [ThirdPartyModule.Input](typealiases/ThirdPartyModule.Input.md)
 -   [ThirdPartyModule.Output](typealiases/ThirdPartyModule.Output.md)

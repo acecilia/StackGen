@@ -26,3 +26,4 @@ extension PartiallyTyped: Decodable where Typed: Decodable, Untyped: Decodable {
 }
 
 extension PartiallyTyped: Equatable where Typed: Equatable, Untyped: Equatable { }
+extension PartiallyTyped: Hashable where Typed: Hashable, Untyped: Hashable { }

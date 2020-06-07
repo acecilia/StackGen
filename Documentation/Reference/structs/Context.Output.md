@@ -28,7 +28,7 @@ public let global: [String: StringCodable]
 ### `modules`
 
 ```swift
-public let modules: [Module]
+public let modules: [Module.Output]
 ```
 
 > A list of the modules defined in the stackgen.yml file
@@ -48,7 +48,7 @@ public let module: FirstPartyModule.Output?
 public init(
     env: Env,
     global: [String: StringCodable],
-    modules: [Module],
+    modules: [Module.Output],
     module: FirstPartyModule.Output?
 )
 ```

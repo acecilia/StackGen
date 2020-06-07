@@ -22,7 +22,7 @@ public struct StackGenFile: AutoDecodable {
     public let availableTemplateGroups: [String: [TemplateSpec.Input]]
 
     public init(
-        options: Options.StackGenFile = Options.StackGenFile(version: Constant.version),
+        options: Options.StackGenFile = Options.StackGenFile(),
         global: [String: StringCodable] = defaultGlobal,
         firstPartyModules: [FirstPartyModule.Input] = defaultFirstPartyModules,
         thirdPartyModules: [ThirdPartyModule.Input] = defaultThirdPartyModules,

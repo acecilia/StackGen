@@ -33,13 +33,22 @@ public let root: String?
 
 > A custom repository root to be used, if it is not the cwd
 
+### `checks`
+
+```swift
+public let checks: Checks
+```
+
+> The checks to perform when executing the tool
+
 ## Methods
-### `init(version:templateGroups:root:)`
+### `init(version:templateGroups:root:checks:)`
 
 ```swift
 public init(
-    version: String,
+    version: String = Constant.version,
     templateGroups: [String] = defaultTemplateGroups,
-    root: String? = nil
+    root: String? = nil,
+    checks: Checks = defaultChecks
 )
 ```

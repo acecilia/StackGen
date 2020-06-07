@@ -48,7 +48,7 @@ public class TemplateRenderer {
             throw StackGenError(
                 .errorThrownWhileRendering(
                     templatePath: templatePath.relative(to: env.cwd),
-                    error: error
+                    error: error.finalDescription
                 )
             )
         }
