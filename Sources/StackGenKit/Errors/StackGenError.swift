@@ -49,7 +49,6 @@ extension StackGenError {
         case unexpected(_ description: String)
 
         // Runtime
-        case unknownModuleName(_ name: String, _ modules: [String])
         case dictionaryKeyNotFound(_ key: String)
 
         // Optional checks
@@ -107,13 +106,6 @@ extension StackGenError {
 
             case let .unexpected(description):
                 return "An unexpected error occurred. \(description)"
-
-            case let .unknownModuleName(name, modules):
-                let modules = modules.joined(separator: ", ")
-                return """
-                Module '\(name)' could not be found among the known modules.
-                Modules: '\(modules)'
-                """
 
             case let .dictionaryKeyNotFound(key):
                 return "The key '\(key)' was not found inside the dictionary"
