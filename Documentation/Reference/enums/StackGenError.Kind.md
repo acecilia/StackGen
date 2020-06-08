@@ -81,12 +81,6 @@ case filterFailed(filter: String, reason: String)
 case unexpected(_ description: String)
 ```
 
-### `unknownModuleName(_:_:)`
-
-```swift
-case unknownModuleName(_ name: String, _ modules: [String])
-```
-
 ### `dictionaryKeyNotFound(_:)`
 
 ```swift
