@@ -159,6 +159,18 @@ final class ChecksTests: XCTestCase {
         do {
             let builder = Builder()
             builder.firstPartyModules = [
+                .init(path: "A", dependencies: ["test": ["A"]]),
+            ]
+
+            XCTAssertEqual(
+                try builder.makeError(),
+                nil
+            )
+        }
+
+        do {
+            let builder = Builder()
+            builder.firstPartyModules = [
                 .init(path: "A", dependencies: ["main": ["B"]]),
                 .init(path: "B", dependencies: ["main": ["C"]]),
                 .init(path: "C", dependencies: ["main": ["A"]]),

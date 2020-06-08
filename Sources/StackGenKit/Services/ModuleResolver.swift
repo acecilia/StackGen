@@ -188,11 +188,13 @@ public class ModuleResolver {
     ) throws -> [String: [String]] {
         var result: [String: [String]] = [:]
 
-        for (flavour, dependencies) in module.dependencies {
+        for (dependencyGroup, dependencies) in module.dependencies {
             var transitiveDependencies: Set<Module.Input> = []
+            // Allow the dependencyGroups that are not main to depend on main
+            let dependenciesTree = dependencyGroup == "main" ? [module.name] : []
 
             for dependency in dependencies {
-                try getTransitiveDependencies(dependency, modules, [module.name]).forEach {
+                try getTransitiveDependencies(dependency, modules, dependenciesTree).forEach {
                     transitiveDependencies.insert($0)
                 }
             }
@@ -206,7 +208,7 @@ public class ModuleResolver {
                 transitiveDependencies.insert(dependency)
             }
 
-            result[flavour] = Array(transitiveDependencies)
+            result[dependencyGroup] = Array(transitiveDependencies)
                 .sortedByNameAndKind()
                 .map { $0.name }
         }
