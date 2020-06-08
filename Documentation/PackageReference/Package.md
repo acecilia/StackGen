@@ -19,7 +19,7 @@ _Libraries denoted 'automatic' can be both static or dynamic._
 | ------ | ---- | ------------ |
 | StackGen | Regular | StackGenCLI |
 | StackGenCLI | Regular | StackGenKit, SwiftCLI |
-| StackGenKit | Regular | Compose, Path, Stencil, StringCodable, SwiftCLI, Yams |
+| StackGenKit | Regular | Compose, Path, Stencil, StringCodable, Yams |
 
 ### Test Modules
 

@@ -46,7 +46,6 @@ let package = Package(
                 "Yams",
                 "Path",
                 "StringCodable",
-                "SwiftCLI",
                 "Compose",
             ]
         ),
