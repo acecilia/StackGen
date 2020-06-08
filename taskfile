@@ -14,6 +14,12 @@
 # See: https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
 set -euo pipefail
 
+zip() {
+  swift build -c release
+  zip -j stackgen .build/release/stackgen
+  zip -ur stackgen StackGenTemplates
+}
+
 docs() {
   echo "✨ Intalling sourcedocs"
   curl -Ls https://github.com/eneko/SourceDocs/releases/download/1.2.0/sourcedocs.macos.zip -o /tmp/sourcedocs.macos.zip

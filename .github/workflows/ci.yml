@@ -116,12 +116,8 @@ jobs:
         swift --version
         swift package --version
 
-    - name: Build for release
-      run: |
-        swift package clean
-        swift build -c release
-        zip -j stackgen .build/release/stackgen
-        zip -ur stackgen StackGenTemplates
+    - name: Build for release and zip
+      run: ./taskfile zip
 
     - name: Upload Release Asset
       id: upload-release-asset 
