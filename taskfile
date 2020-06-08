@@ -14,7 +14,37 @@
 # See: https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
 set -euo pipefail
 
-zip() {
+checkGitDiff() { git diff --exit-code }
+checkLinuxMain() { swiftTest && checkGitDiff }
+checkDocs() { docs && checkGitDiff }
+
+checkLinks() {
+  revision=$1
+  cmd="bundle exec awesome_bot \
+    --allow-redirect \
+    --skip-save-results \
+    --set-timeout 5 \
+    --base-url https://github.com/acecilia/StackGen/tree/$revision/"
+  
+  eval "${cmd} README.md"
+}
+
+selectXcode() {
+  echo "Available Xcode versions:"
+  ls /Applications | grep Xcode
+  echo "Choosing $DEVELOPER_DIR"
+  sudo xcode-select -s "$DEVELOPER_DIR"
+  xcodebuild -version
+  swift --version
+  swift package --version
+}
+
+test() {
+  xcrun simctl boot "iPhone 8" # Boot simulator in advance, to avoid it randomly freezing during bazel tests
+  swift test --enable-code-coverage -Xswiftc -D -Xswiftc DISABLE_GENERATOR # -Xswiftc -D -Xswiftc DISABLE_INTEGRATION_TESTS
+}
+
+buildReleaseAndZip() {
   swift build -c release
   zip -j stackgen .build/release/stackgen
   zip -ur stackgen StackGenTemplates
@@ -37,22 +67,25 @@ docs() {
   rm -rf Documentation/PackageReference/*.dot
 }
 
-checkLinks() {
-  revision=${1:=master}
-  cmd="bundle exec awesome_bot \
-    --allow-redirect \
-    --skip-save-results \
-    --set-timeout 5 \
-    --base-url https://github.com/acecilia/StackGen/tree/$revision/"
-  
-  eval "${cmd} README.md"
-}
-
 linuxTest() {
   swift test --generate-linuxmain
 }
 
+codecov() {
+  object=".build/debug/StackGenPackageTests.xctest/Contents/MacOS/StackGenPackageTests"
+  # Filter which files to add to the report when using llvm-cov: https://stackoverflow.com/questions/44207548/how-to-filter-files-in-llvm-cov-code-coverage-report
+  xcrun llvm-cov export -format="lcov" -instr-profile=".build/debug/codecov/default.profdata" "$object" "Sources/StackGenKit/" > info.lcov
+  
+  # Parameters:
+  # -c: move discovered coverage reports to the trash
+  # -f info.lcov: pass the previously exported report, to avoid codecov autodetecting other coverage information
+  bash <(curl https://codecov.io/bash) -c -f info.lcov
+}
+
 setup() {
+  echo "✨ Uninstalling carthage"
+  brew uninstall carthage # Temporary: allow custom installation of carthage, needed by the bazel templates
+
   echo "✨ Intalling mint 0.14.2"
   brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/577bc4f3ac6301a3b6b634bd4bac9c5367a667e5/Formula/mint.rb
 

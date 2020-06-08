@@ -1,0 +1,73 @@
+    ###########################################
+    # Below some deprecated steps that may be useful to keep around
+    ###########################################
+
+    # - uses: ruby/setup-ruby@v1
+    #   with:
+    #     ruby-version: '2.7'
+
+    # - uses: actions/cache@v1
+    #   with:
+    #     path: /usr/local/lib/mint
+    #     key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-mint-${{ github.sha }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-mint-
+
+    # - uses: actions/cache@v1
+    #   with:
+    #     path: Examples/swift/Carthage
+    #     # Force to create a new cache every build: https://github.com/actions/cache/issues/109#issuecomment-558771281
+    #     key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-carthage-${{ github.sha }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-carthage-
+
+    # - uses: actions/cache@v1
+    #   with:
+    #     path: /private/var/tmp/_bazel_runner
+    #     key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-bazel-${{ github.sha }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-bazel-
+
+    ###########################################
+    # The following caching step is disabled because it can lead to random build errors, for example:
+    # * In swift: https://stackoverflow.com/questions/15463179/how-to-fix-pch-error
+    ###########################################
+    # - uses: actions/cache@v1
+    #   with:
+    #     path: .build
+    #     key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-spm-${{ github.sha }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-spm-
+
+    # - name: Limit cache
+    #   run: |
+    #     cache_paths="Examples/swift/Carthage /private/var/tmp/_bazel_runner"
+    #     echo "Cache sizes:"
+    #     echo "$(du -sch $cache_paths)"
+    #     total_cache_size=$(du -smc $cache_paths | grep total | cut -f1)
+    #     # Github cache limit is 5GB at the time of writing (31/03/2020)
+    #     # The cache limit should be divided by the number of matrices
+    #     if [ "$total_cache_size" -gt 2500 ]; then 
+    #       echo "Cache size is over the limit: reseting it..."
+    #       rm -rf $cache_paths
+    #       echo "Done"
+    #     else
+    #       echo "Cache size is under the limit: nothing to be done"
+    #     fi
+
+    # - name: Tests
+    #   run: |
+    #     cmd='swift test --enable-code-coverage -Xswiftc -D -Xswiftc DISABLE_GENERATOR'
+    #     # Diff when pushing a commit
+    #     diff=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})
+    #     # Diff when on a PR
+    #     if [ -n "${{ github.base_ref }}" ]; then
+    #       diff+=$(git diff origin/${{ github.base_ref }} HEAD)
+    #     fi
+
+    #     # Only run integration tests if the fixtures changed
+    #     if [[ $diff == *".fixtures/"* ]]; then
+    #       cmd += ' -Xswiftc -D -Xswiftc DISABLE_INTEGRATION_TESTS'
+    #     fi
+
+    #     eval $cmd

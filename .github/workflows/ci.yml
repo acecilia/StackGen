@@ -1,24 +1,12 @@
 name: CI
 on:
   push:
-    branches: ['**']
+    branches-ignore:
+      - 'master'
   pull_request:
     branches: ['**']
 
 jobs:
-  remove_release_draft:
-    if: github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
-    name: Remove release draft
-    steps:
-    # Removing the previously created draft release is a workaround for the fact that
-    # actions/upload-release-asset does not support overriding the existing release
-    # asset. See: https://github.com/actions/upload-release-asset/pull/22
-    - name: Remove existing draft releases
-      uses: hugo19941994/delete-draft-releases@v0.1.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   test:
     runs-on: macos-10.15
     name: test - Xcode ${{ matrix.xcode }}
@@ -30,176 +18,11 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        submodules: recursive
-
-    - name: Select Xcode version
-      run: |
-        echo "Available Xcode versions:"
-        ls /Applications | grep Xcode
-        echo "Choosing $DEVELOPER_DIR"
-        sudo xcode-select -s "$DEVELOPER_DIR"
-        xcodebuild -version
-        swift --version
-        swift package --version
-      
-    - name: Setup
-      run: |
-        brew uninstall carthage # Allow custom installation of carthage
-        ./taskfile setup
-
-    - name: Check links
-      run: ./taskfile checkLinks ${{ github.sha }}
-
-    - name: Check linux main
-      run: swift test --generate-linuxmain && git diff --exit-code Tests
-
-    - name: Check docs
-      run: |
-        ./taskfile docs && git diff --exit-code Documentation/Reference
-
-    - name: Tests
-      run: |
-        xcrun simctl boot "iPhone 8" # Boot simulator in advance, to maybe avoid it randomly freezing during bazel tests
-        swift test --enable-code-coverage -Xswiftc -D -Xswiftc DISABLE_GENERATOR # -Xswiftc -D -Xswiftc DISABLE_INTEGRATION_TESTS
-  
-    - name: codecov
-      run: |
-        object=".build/debug/StackGenPackageTests.xctest/Contents/MacOS/StackGenPackageTests"
-        # Filter which files to add to the report when using llvm-cov: https://stackoverflow.com/questions/44207548/how-to-filter-files-in-llvm-cov-code-coverage-report
-        xcrun llvm-cov export -format="lcov" -instr-profile=".build/debug/codecov/default.profdata" "$object" "Sources/StackGenKit/" > info.lcov
-        
-        # Parameters:
-        # -c: move discovered coverage reports to the trash
-        # -f info.lcov: pass the previously exported report, to avoid codecov autodetecting other coverage information
-        bash <(curl https://codecov.io/bash) -c -f info.lcov
-
-  update_release_draft:
-    if: github.ref == 'refs/heads/master'
-    needs: [test]
-    outputs:
-      upload_url: ${{ steps.draft_release.outputs.upload_url }}
-    runs-on: ubuntu-latest
-    name: Update release draft
-    steps:
-    - name: Draft release
-      id: draft_release
-      uses: release-drafter/release-drafter@v5
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  upload_release_artifact:
-    needs: [update_release_draft]
-    runs-on: macos-10.15
-    name: Upload release artifact - Xcode ${{ matrix.xcode }}
-    strategy:
-      matrix:
-        xcode: 
-        - 11.5
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        submodules: recursive
-
-    - name: Select Xcode version
-      run: |
-        echo "Available Xcode versions:"
-        ls /Applications | grep Xcode
-        echo "Choosing $DEVELOPER_DIR"
-        sudo xcode-select -s "$DEVELOPER_DIR"
-        xcodebuild -version
-        swift --version
-        swift package --version
-
-    - name: Build for release and zip
-      run: ./taskfile zip
-
-    - name: Upload Release Asset
-      id: upload-release-asset 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ needs.update_release_draft.outputs.upload_url }}
-        asset_path: ./stackgen.zip
-        asset_name: stackgen.zip
-        asset_content_type: application/zip
-
-    ###########################################
-    # Below some deprecated steps that may be useful to keep around
-    ###########################################
-
-    # - uses: ruby/setup-ruby@v1
-    #   with:
-    #     ruby-version: '2.7'
-
-    # - uses: actions/cache@v1
-    #   with:
-    #     path: /usr/local/lib/mint
-    #     key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-mint-${{ github.sha }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-mint-
-
-    # - uses: actions/cache@v1
-    #   with:
-    #     path: Examples/swift/Carthage
-    #     # Force to create a new cache every build: https://github.com/actions/cache/issues/109#issuecomment-558771281
-    #     key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-carthage-${{ github.sha }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-carthage-
-
-    # - uses: actions/cache@v1
-    #   with:
-    #     path: /private/var/tmp/_bazel_runner
-    #     key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-bazel-${{ github.sha }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-bazel-
-
-    ###########################################
-    # The following caching step is disabled because it can lead to random build errors, for example:
-    # * In swift: https://stackoverflow.com/questions/15463179/how-to-fix-pch-error
-    ###########################################
-    # - uses: actions/cache@v1
-    #   with:
-    #     path: .build
-    #     key: ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-spm-${{ github.sha }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-${{ env.DEVELOPER_DIR }}-spm-
-
-    # - name: Limit cache
-    #   run: |
-    #     cache_paths="Examples/swift/Carthage /private/var/tmp/_bazel_runner"
-    #     echo "Cache sizes:"
-    #     echo "$(du -sch $cache_paths)"
-    #     total_cache_size=$(du -smc $cache_paths | grep total | cut -f1)
-    #     # Github cache limit is 5GB at the time of writing (31/03/2020)
-    #     # The cache limit should be divided by the number of matrices
-    #     if [ "$total_cache_size" -gt 2500 ]; then 
-    #       echo "Cache size is over the limit: reseting it..."
-    #       rm -rf $cache_paths
-    #       echo "Done"
-    #     else
-    #       echo "Cache size is under the limit: nothing to be done"
-    #     fi
-
-    # - name: Tests
-    #   run: |
-    #     cmd='swift test --enable-code-coverage -Xswiftc -D -Xswiftc DISABLE_GENERATOR'
-    #     # Diff when pushing a commit
-    #     diff=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})
-    #     # Diff when on a PR
-    #     if [ -n "${{ github.base_ref }}" ]; then
-    #       diff+=$(git diff origin/${{ github.base_ref }} HEAD)
-    #     fi
-
-    #     # Only run integration tests if the fixtures changed
-    #     if [[ $diff == *".fixtures/"* ]]; then
-    #       cmd += ' -Xswiftc -D -Xswiftc DISABLE_INTEGRATION_TESTS'
-    #     fi
-
-    #     eval $cmd
+    - uses: actions/checkout@v2
+    - run: ./taskfile selectXcode
+    - run: ./taskfile setup
+    - run: ./taskfile checkLinks ${{ github.sha }}
+    - run: ./taskfile checkLinuxMain
+    - run: ./taskfile checkDocs
+    - run: ./taskfile test
+    - run: ./taskfile codecov
