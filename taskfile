@@ -25,10 +25,16 @@ docs() {
   curl -Ls https://github.com/eneko/SourceDocs/releases/download/1.2.0/sourcedocs.macos.zip -o /tmp/sourcedocs.macos.zip
   unzip -j -o -d /usr/local/bin /tmp/sourcedocs.macos.zip
   rm /tmp/sourcedocs.macos.zip
-  # brew install graphviz # Optional dependency of sourcedocs: needed for generating the dependency graph
+  brew install graphviz # Optional dependency of sourcedocs: needed for generating the dependency graph
+
+  echo "✨ Building package"
+  swift build
 
   echo "✨ Running sourcedocs"
-  sourcedocs generate --clean --reproducible-docs --spm-module StackGenKit
+  rm -rf Documentation
+  sourcedocs generate --reproducible-docs --spm-module StackGenKit --output-folder Documentation/Reference
+  sourcedocs package --reproducible-docs --output-folder Documentation/PackageReference
+  rm -rf Documentation/PackageReference/*.dot
 }
 
 checkLinks() {
