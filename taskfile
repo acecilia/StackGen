@@ -15,7 +15,7 @@
 set -euo pipefail
 
 checkGitDiff() { git diff --exit-code }
-checkLinuxMain() { swiftTest && checkGitDiff }
+checkLinuxMain() { linuxMain && checkGitDiff }
 checkDocs() { docs && checkGitDiff }
 
 checkLinks() {
@@ -67,7 +67,7 @@ docs() {
   rm -rf Documentation/PackageReference/*.dot
 }
 
-linuxTest() {
+linuxMain() {
   swift test --generate-linuxmain
 }
 
