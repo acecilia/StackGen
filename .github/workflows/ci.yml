@@ -115,7 +115,8 @@ jobs:
       run: |
         swift package clean
         swift build -c release
-        zip --junk-paths stackgen .build/release/stackgen
+        zip -j stackgen .build/release/stackgen
+        zip -ur stackgen StackGenTemplates
 
     - name: Upload Release Asset
       id: upload-release-asset 

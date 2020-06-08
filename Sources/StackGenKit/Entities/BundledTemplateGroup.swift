@@ -3,7 +3,7 @@ import Path
 
 /// The template groups bundled with the tool
 public enum BundledTemplateGroup: String, CaseIterable {
-    public static let bundledTemplatesParentDirectoryName = "Templates"
+    public static let bundledTemplatesParentDirectoryName = "StackGenTemplates"
 
     case StackGen_Swift_BuildSystem_Bazel
     case StackGen_Swift_BuildSystem_Cocoapods

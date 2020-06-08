@@ -41,13 +41,22 @@ In order to start using `StackGen` you will need two things:
 
 ## Installation
 
-### Mint
-
-Install the latest version globally by running the following command:
+### Using [Mint](https://github.com/yonaskolb/Mint)
 
 ```shell
 mint install acecilia/StackGen
 ```
+
+### As a prebuilt binary
+
+```shell
+curl -Ls https://github.com/acecilia/StackGen/releases/latest/download/stackgen.zip -o /tmp/stackgen.zip
+unzip -j -d /usr/local/bin /tmp/stackgen.zip && rm /tmp/stackgen.zip
+```
+
+## Versioning
+
+Until version `1.0.0` is reached, minor versions may be breaking.
 
 ## License
 

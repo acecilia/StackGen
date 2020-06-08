@@ -5,7 +5,7 @@ import Path
 
 let rootPath = Path(#file)!.join("../../../..")
 let examplesPath = rootPath.join("Examples/swift")
-let templatesPath = rootPath.join("Templates")
+let templatesPath = rootPath.join("StackGenTemplates")
 let testsOutputPath = rootPath.join(".testsOutput")
 let fixturesPath = rootPath.join(".fixtures")
 
