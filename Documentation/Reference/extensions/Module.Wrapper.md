@@ -1,11 +1,30 @@
 **EXTENSION**
 
-# `Module`
+# `Module.Wrapper`
 ```swift
-extension Module
+extension Module.Wrapper: Hashable
+```
+
+## Properties
+### `hashValue`
+
+```swift
+public var hashValue: Int
 ```
 
 ## Methods
+### `hash(into:)`
+
+```swift
+public func hash(into hasher: inout Hasher)
+```
+
+#### Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| hasher | The hasher to use when combining the components of this instance. |
+
 ### `encode(to:)`
 
 ```swift

@@ -10,15 +10,14 @@ public enum ThirdPartyModule {
     /// custom key-value: `repository: https://github.com/somebody/myThirdPartyModule`
     public typealias Input = PartiallyTyped<_Input, [String: StringCodable]>
     /// The typed representation of a third party module
-    public struct _Input: Codable {
+    public struct _Input: Codable, Hashable {
         public let name: String
+
+        public init(name: String) {
+            self.name = name
+        }
     }
 
-    /// The representation of a third party module. Used in the context rendered by the templates
-    public typealias Output = PartiallyTyped<_Output, [String: StringCodable]>
-    /// The typed representation of a third party module. Used in the context rendered by the templates
-    public struct _Output: Codable, Hashable {
-        public let name: String
-    }
+    public typealias Output = Input
 }
 

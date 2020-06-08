@@ -20,7 +20,7 @@ public var name: String
 ### `path`
 
 ```swift
-public let path: Path
+public let path: String
 ```
 
 > The path of the module
@@ -49,7 +49,7 @@ public let dependencies: [String: [String]]
 
 ```swift
 public init(
-    path: Path,
+    path: String,
     dependencies: [String: [String]]
 )
 ```

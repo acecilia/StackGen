@@ -9,11 +9,11 @@ public enum Context {
         /// The global values defined in the stackgen.yml file
         public let global: [String: StringCodable]
         /// A list of the modules defined in the stackgen.yml file
-        public let modules: [Module]
+        public let modules: [Module.Output]
 
         public init(
             global: [String: StringCodable],
-            modules: [Module]
+            modules: [Module.Output]
         ) {
             self.global = global
             self.modules = modules
@@ -27,14 +27,14 @@ public enum Context {
         /// The global values defined in the stackgen.yml file
         public let global: [String: StringCodable]
         /// A list of the modules defined in the stackgen.yml file
-        public let modules: [Module]
+        public let modules: [Module.Output]
         /// The current module that is passed to the template, if any
         public let module: FirstPartyModule.Output?
 
         public init(
             env: Env,
             global: [String: StringCodable],
-            modules: [Module],
+            modules: [Module.Output],
             module: FirstPartyModule.Output?
         ) {
             self.env = env

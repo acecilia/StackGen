@@ -8,9 +8,9 @@ public enum FirstPartyModule {
         static let defaultDependencies: [String: [String]] = [:]
 
         /// The name of the module
-        public var name: String { path.basename() }
+        public var name: String { URL(fileURLWithPath: path).lastPathComponent }
         /// The path of the module
-        public let path: Path
+        public let path: String
         /**
          A dictionary representing the dependencies of the module
 
@@ -28,7 +28,7 @@ public enum FirstPartyModule {
         public let dependencies: [String: [String]]
 
         public init(
-            path: Path,
+            path: String,
             dependencies: [String: [String]]
         ) {
             self.path = path

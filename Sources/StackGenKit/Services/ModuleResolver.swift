@@ -5,7 +5,7 @@ import Path
 public class ModuleResolver {
     private let stackgenFile: StackGenFile
     /// A cache used to speed up module resolution
-    private var transitiveDependenciesCache: [String: [TransitiveDependency]] = [:]
+    private var transitiveDependenciesCache: [String: Set<Module.Input>] = [:]
     private let env: Env
 
     public init(_ stackgenFile: StackGenFile, _ env: Env) throws {
@@ -14,182 +14,205 @@ public class ModuleResolver {
     }
 
     /// The entry point used to resolve the modules
-    public func resolve() throws -> [Module] {
-        // Perform prechecks on the modules
-        try ensureUniqueModuleNames(stackgenFile)
+    public func resolve() throws -> [Module.Output] {
+        let modules = try getModules()
 
-        // Prepare
-        let inputModules = populateDependencyKeys(stackgenFile.firstPartyModules)
+        // Perform checks on the modules
+        try checkUniqueModuleNames(modules)
+        try checkDuplicatedDependencies()
+        try checkModulesSorting()
+        try checkDependenciesSorting(modules)
 
-        // Get modules
-        let thirdPartyModules = stackgenFile.thirdPartyModules.map { resolve($0) }
-        let firstPartyModules = try inputModules.map { try resolve($0, inputModules, thirdPartyModules) }
-        return firstPartyModules.map { .firstParty($0) } + thirdPartyModules.map { .thirdParty($0) }
-    }
+        let resolvedModules: [Module.Output] = try modules.map {
+            switch $0 {
+            case let .firstParty(module):
+                return .firstParty(try resolve(module, modules))
 
-    private func ensureUniqueModuleNames(_ stackgenFile: StackGenFile) throws {
-        let allModules: [ModuleProtocol] = stackgenFile.firstPartyModules + stackgenFile.thirdPartyModules
-        let duplicates = Dictionary(grouping: allModules) { $0.name }
-            .filter { $1.count > 1 }
-            .map { $0.key }
-        if duplicates.isEmpty == false {
-            throw StackGenError(.foundDuplicatedModules(duplicates))
-        }
-
-        for module in stackgenFile.firstPartyModules {
-            for (_, dependencies) in module.dependencies {
-                let duplicates = Dictionary(grouping: dependencies) { $0 }
-                    .filter { $1.count > 1 }
-                    .map { $0.key }
-                if duplicates.isEmpty == false {
-                    throw StackGenError(.foundDuplicatedDependencies(duplicates, module.name))
-                }
+            case let .thirdParty(module):
+                return .thirdParty(resolve(module))
             }
         }
-
+        return resolvedModules
     }
 
     private func resolve(_ module: ThirdPartyModule.Input) -> ThirdPartyModule.Output {
         return ThirdPartyModule.Output(.init(name: module.name), module.untyped)
     }
 
-    /// Prefill dependency keys that do not have any dependency with empty arrays, so accessing them in the template is cleaner and safer
-    /// Instead of having to do: `{% for dependency in module.transitiveDependencies.main|default:"" %}`
-    /// We allow to just do: `{% for dependency in module.transitiveDependencies.main %}`
-    private func populateDependencyKeys(_ modules: [FirstPartyModule.Input]) -> [FirstPartyModule.Input] {
-        var dict: [String: [String]] = [:]
-        modules.forEach {
-            $0.dependencies.keys.forEach {
-                dict[$0] = []
-            }
-        }
-        return modules.map {
-            let newDependenciesDict = $0.dependencies.merging(dict) { current, _ in current }
-            return FirstPartyModule.Input(path: $0.path, dependencies: newDependenciesDict)
-        }
-    }
-
-    private func getTransitiveDependencies(_ dependency: String, _ middleware: [FirstPartyModule.Input], _ thirdParty: [ThirdPartyModule.Output]) throws -> [TransitiveDependency] {
-        if let transitiveDependencies = transitiveDependenciesCache[dependency] {
-            return transitiveDependencies
-        }
-
-        var transitiveDependencies: Set<TransitiveDependency> = []
-
-        if let module = middleware.first(where: { $0.name == dependency }) {
-            transitiveDependencies.insert(.firstParty(module))
-
-            try module.dependencies.main.forEach {
-                try getTransitiveDependencies($0, middleware, thirdParty).forEach {
-                    transitiveDependencies.insert($0)
+    private func getModules() throws -> [Module.Input] {
+        /// Prefill dependency groups that do not have any dependency with empty arrays, so accessing them in the template is cleaner and safer
+        /// Instead of having to do: `{% for dependency in module.transitiveDependencies.main|default:"" %}`
+        /// We allow to just do: `{% for dependency in module.transitiveDependencies.main %}`
+        func populateDependencyGroups(_ modules: [FirstPartyModule.Input]) -> [FirstPartyModule.Input] {
+            var dict: [String: [String]] = [:]
+            modules.forEach {
+                $0.dependencies.keys.forEach {
+                    dict[$0] = []
                 }
             }
-        } else if let module = thirdParty.first(where: { $0.typed.name == dependency }) {
-            transitiveDependencies.insert(.thirdParty(module))
-        } else {
-            throw StackGenError(.unknownModule(dependency, middleware, thirdParty))
-        }
-
-        return Array(transitiveDependencies)
-    }
-
-    private func getTransitiveDependencies(_ module: FirstPartyModule.Input, _ middleware: [FirstPartyModule.Input], _ thirdParty: [ThirdPartyModule.Output]) throws -> [String: [String]] {
-        var result: [String: [String]] = [:]
-
-        for (flavour, dependencies) in module.dependencies {
-            var transitiveDependencies: Set<TransitiveDependency> = []
-
-            for dependency in dependencies {
-                try getTransitiveDependencies(dependency, middleware, thirdParty).forEach {
-                    transitiveDependencies.insert($0)
-                }
+            return modules.map {
+                let newDependenciesDict = $0.dependencies.merging(dict) { current, _ in current }
+                return FirstPartyModule.Input(path: $0.path, dependencies: newDependenciesDict)
             }
-
-            result[flavour] = Array(transitiveDependencies).sorted().map { $0.name }
         }
 
-        return result
+        let firstPartyModules = populateDependencyGroups(stackgenFile.firstPartyModules)
+        let allModules: [Module.Input] =
+            firstPartyModules.map { .firstParty($0) } +
+            stackgenFile.thirdPartyModules.map { .thirdParty($0) }
+        return allModules
     }
 
-    private func resolve(_ module: FirstPartyModule.Input, _ middleware: [FirstPartyModule.Input], _ thirdParty: [ThirdPartyModule.Output]) throws -> FirstPartyModule.Output {
+    private func resolve(
+        _ module: FirstPartyModule.Input,
+        _ modules: [Module.Input]
+    ) throws -> FirstPartyModule.Output {
         let module = FirstPartyModule.Output(
             name: module.name,
-            path: module.path,
+            path: env.root.join(module.path),
             dependencies: module.dependencies,
-            transitiveDependencies: try getTransitiveDependencies(module, middleware, thirdParty)
+            transitiveDependencies: try getTransitiveDependencies(module, modules)
         )
 
         env.reporter.info(.books, "resolved module \(module.name)")
 
         return module
     }
-}
 
-// MARK: Dependency. Used to sort the transitive dependencies
-
-private enum TransitiveDependency: ModuleProtocol {
-    case firstParty(FirstPartyModule.Input)
-    case thirdParty(ThirdPartyModule.Output)
-
-    var name: String {
-        switch self {
-        case let .firstParty(module):
-            return module.name
-
-        case let .thirdParty(module):
-            return module.typed.name
+    private func checkUniqueModuleNames(_ modules: [Module.Input]) throws {
+        let duplicates = Dictionary(grouping: modules) { $0.name }
+            .filter { $1.count > 1 }
+            .map { $0.key }
+            .sortedAlphabetically()
+        if duplicates.isEmpty == false {
+            throw StackGenError(.foundDuplicatedModules(duplicates))
         }
     }
 
-    var kind: ModuleKind {
-        switch self {
-        case .firstParty:
-            return .firstParty
+    private func checkDuplicatedDependencies() throws {
+        for module in stackgenFile.firstPartyModules {
+            for (_, dependencies) in module.dependencies {
+                let duplicates = Dictionary(grouping: dependencies) { $0 }
+                    .filter { $1.count > 1 }
+                    .map { $0.key }
+                    .sortedAlphabetically()
+                if duplicates.isEmpty == false {
+                    throw StackGenError(.foundDuplicatedDependencies(duplicates, module.name))
+                }
+            }
+        }
+    }
+
+    private func checkModulesSorting() throws {
+        switch stackgenFile.options.checks.modulesSorting {
+        case .alphabetically:
+            func checkSorting(_ modules: [String]) throws {
+                let sortedModules = modules.sortedAlphabetically()
+                if modules != sortedModules {
+                    throw StackGenError(.modulesSorting(modules, sortedModules))
+                }
+            }
+            try checkSorting(stackgenFile.firstPartyModules.map { $0.name })
+            try checkSorting(stackgenFile.thirdPartyModules.map { $0.name })
+
+        case .none:
+            break
+        }
+    }
+
+    private func checkDependenciesSorting(_ modules: [Module.Input]) throws {
+        switch stackgenFile.options.checks.dependenciesSorting {
+        case .alphabeticallyAndByKind:
+            for module in stackgenFile.firstPartyModules {
+                for (dependencyGroup, dependencies) in module.dependencies {
+                    let modules = try dependencies.map { try modules.get(named: $0) }
+                    let sortedModules = modules.sortedByNameAndKind()
+                    if modules != sortedModules {
+                        throw StackGenError(
+                            .dependenciesSorting(
+                                module.name,
+                                dependencyGroup,
+                                modules.map { $0.name },
+                                sortedModules.map { $0.name }
+                            )
+                        )
+                    }
+                }
+            }
+
+        case .none:
+            break
+        }
+    }
+
+    private func getTransitiveDependencies(
+        _ name: String,
+        _ modules: [Module.Input],
+        _ dependenciesTree: [String]
+    ) throws -> Set<Module.Input> {
+        if dependenciesTree.contains(name) {
+            throw StackGenError(.foundDependencyCycle(dependenciesTree + [name]))
+        }
+
+        if let transitiveDependencies = transitiveDependenciesCache[name] {
+            return transitiveDependencies
+        }
+
+        let module = try modules.get(named: name)
+        let dependenciesTree = dependenciesTree + [name]
+
+        var transitiveDependencies: Set<Module.Input> = []
+        switch module {
+        case let .firstParty(module):
+            try module.dependencies.main.forEach {
+                let dependency = try modules.get(named: $0)
+                transitiveDependencies.insert(dependency)
+
+                try getTransitiveDependencies($0, modules, dependenciesTree).forEach {
+                    transitiveDependencies.insert($0)
+                }
+            }
 
         case .thirdParty:
-            return .thirdParty
+            // Third party modules do not specify dependencies
+            break
         }
-    }
-}
 
-extension TransitiveDependency: Hashable {
-    var hashValue: Int {
-        name.hashValue
+        transitiveDependenciesCache[name] = transitiveDependencies
+        return transitiveDependencies
     }
 
-    func hash(into hasher: inout Hasher) {
-        name.hash(into: &hasher)
-    }
-}
+    private func getTransitiveDependencies(
+        _ module: FirstPartyModule.Input,
+        _ modules: [Module.Input]
+    ) throws -> [String: [String]] {
+        var result: [String: [String]] = [:]
 
-private extension Array where Element == TransitiveDependency {
-    func sorted() -> [Element] {
-        return self
-            .sorted { $0.name < $1.name }
-            .sorted { $0.kind < $1.kind }
-    }
-}
+        for (dependencyGroup, dependencies) in module.dependencies {
+            var transitiveDependencies: Set<Module.Input> = []
+            // Allow the dependencyGroups that are not main to depend on main
+            let dependenciesTree = dependencyGroup == "main" ? [module.name] : []
 
-// MARK: Module protocol. Used to ensure unique module names
+            for dependency in dependencies {
+                try getTransitiveDependencies(dependency, modules, dependenciesTree).forEach {
+                    transitiveDependencies.insert($0)
+                }
+            }
 
-private protocol ModuleProtocol {
-    var name: String { get }
-    var kind: ModuleKind { get }
-}
+            for dependency in dependencies {
+                let dependency = try modules.get(named: dependency)
+                if stackgenFile.options.checks.transitiveDependenciesDuplication,
+                    transitiveDependencies.contains(dependency) {
+                    throw StackGenError(.transitiveDependencyDuplication(module.name, dependency.name))
+                }
+                transitiveDependencies.insert(dependency)
+            }
 
-extension FirstPartyModule.Input: ModuleProtocol {
-    var kind: ModuleKind { .firstParty }
-}
+            result[dependencyGroup] = Array(transitiveDependencies)
+                .sortedByNameAndKind()
+                .map { $0.name }
+        }
 
-extension ThirdPartyModule.Input: ModuleProtocol {
-    var name: String { typed.name }
-    var kind: ModuleKind { .thirdParty }
-}
-
-// MARK: Dictionary extension. Used to obtain the transitive dependencies
-
-private extension Dictionary where Key == String, Value == [String] {
-    var main: [String] {
-        return self["main"] ?? []
+        return result
     }
 }

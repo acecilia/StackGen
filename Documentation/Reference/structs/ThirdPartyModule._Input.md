@@ -3,7 +3,7 @@
 # `ThirdPartyModule._Input`
 
 ```swift
-public struct _Input: Codable
+public struct _Input: Codable, Hashable
 ```
 
 > The typed representation of a third party module
@@ -13,4 +13,11 @@ public struct _Input: Codable
 
 ```swift
 public let name: String
+```
+
+## Methods
+### `init(name:)`
+
+```swift
+public init(name: String)
 ```

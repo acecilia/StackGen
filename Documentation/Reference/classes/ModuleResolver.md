@@ -18,7 +18,7 @@ public init(_ stackgenFile: StackGenFile, _ env: Env) throws
 ### `resolve()`
 
 ```swift
-public func resolve() throws -> [Module]
+public func resolve() throws -> [Module.Output]
 ```
 
 > The entry point used to resolve the modules

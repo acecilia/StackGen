@@ -4,6 +4,24 @@
 import Path
 import StringCodable
 
+extension Checks {
+
+    enum CodingKeys: String, CodingKey {
+        case modulesSorting
+        case dependenciesSorting
+        case transitiveDependenciesDuplication
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        modulesSorting = (try? container.decode(ModuleSorting.self, forKey: .modulesSorting)) ?? Checks.defaultModulesSorting
+        dependenciesSorting = (try? container.decode(DependencySorting.self, forKey: .dependenciesSorting)) ?? Checks.defaultDependenciesSorting
+        transitiveDependenciesDuplication = (try? container.decode(Bool.self, forKey: .transitiveDependenciesDuplication)) ?? Checks.defaultTransitiveDependenciesDuplication
+    }
+
+}
+
 extension FirstPartyModule.Input {
 
     enum CodingKeys: String, CodingKey {
@@ -14,7 +32,7 @@ extension FirstPartyModule.Input {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        path = try container.decode(Path.self, forKey: .path)
+        path = try container.decode(String.self, forKey: .path)
         dependencies = (try? container.decode([String: [String]].self, forKey: .dependencies)) ?? FirstPartyModule.Input.defaultDependencies
     }
 
@@ -26,6 +44,7 @@ extension Options.StackGenFile {
         case version
         case templateGroups
         case root
+        case checks
     }
 
     public init(from decoder: Decoder) throws {
@@ -34,6 +53,7 @@ extension Options.StackGenFile {
         version = try container.decode(String.self, forKey: .version)
         templateGroups = (try? container.decode([String].self, forKey: .templateGroups)) ?? Options.StackGenFile.defaultTemplateGroups
         root = try container.decodeIfPresent(String.self, forKey: .root)
+        checks = (try? container.decode(Checks.self, forKey: .checks)) ?? Options.StackGenFile.defaultChecks
     }
 
 }
