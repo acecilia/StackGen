@@ -6,7 +6,7 @@
 public class Stencil: TemplateEngineInterface
 ```
 
-> A wrapper to render stencil templates
+A wrapper to render stencil templates
 
 ## Methods
 ### `init(_:)`

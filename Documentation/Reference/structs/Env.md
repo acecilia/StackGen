@@ -6,8 +6,8 @@
 public struct Env
 ```
 
-> An environment wrapper used to inject dependencies around without
-> polluting the function signatures with multiple parameters
+An environment wrapper used to inject dependencies around without
+polluting the function signatures with multiple parameters
 
 ## Properties
 ### `cwd`
@@ -16,7 +16,7 @@ public struct Env
 public let cwd: Path
 ```
 
-> The current working directory
+The current working directory
 
 ### `root`
 
@@ -24,7 +24,7 @@ public let cwd: Path
 public var root: Path
 ```
 
-> The root of the repository to use
+The root of the repository to use
 
 ### `reporter`
 
@@ -32,7 +32,7 @@ public var root: Path
 public var reporter: Reporter
 ```
 
-> The reporter used to format the output
+The reporter used to format the output
 
 ### `writer`
 
@@ -40,7 +40,7 @@ public var reporter: Reporter
 public var writer: Writer
 ```
 
-> The type used to write files to disk
+The type used to write files to disk
 
 ## Methods
 ### `init(cwd:root:reporter:writer:)`

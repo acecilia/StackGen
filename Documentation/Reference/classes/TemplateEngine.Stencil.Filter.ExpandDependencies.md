@@ -6,7 +6,7 @@
 public class ExpandDependencies: StencilFilterInterface
 ```
 
-> A stencil filter that expands a list of dependency names to their corresponding module dictionaries
+A stencil filter that expands a list of dependency names to their corresponding module dictionaries
 
 ## Properties
 ### `context`

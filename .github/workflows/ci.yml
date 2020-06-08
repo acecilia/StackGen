@@ -6,6 +6,19 @@ on:
     branches: ['**']
 
 jobs:
+  remove_release_draft:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    name: Remove release draft
+    steps:
+    # Removing the previously created draft release is a workaround for the fact that
+    # actions/upload-release-asset does not support overriding the existing release
+    # asset. See: https://github.com/actions/upload-release-asset/pull/22
+    - name: Remove existing draft releases
+      uses: hugo19941994/delete-draft-releases@v0.1.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   test:
     runs-on: macos-10.15
     name: test - Xcode ${{ matrix.xcode }}
@@ -71,14 +84,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Update release draft
     steps:
-    # Removing the previously created draft release is a workaround for the fact that
-    # actions/upload-release-asset does not support overriding the existing release
-    # asset. See: https://github.com/actions/upload-release-asset/pull/22
-    - name: Remove existing draft releases
-      uses: hugo19941994/delete-draft-releases@v0.1.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Draft release
       id: draft_release
       uses: release-drafter/release-drafter@v5

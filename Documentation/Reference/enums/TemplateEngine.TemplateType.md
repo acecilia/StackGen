@@ -6,7 +6,7 @@
 public enum TemplateType
 ```
 
-> The supported template types
+The supported template types
 
 ## Cases
 ### `stencil`
@@ -28,4 +28,4 @@ case plainText
 public init(_ template: Template) throws
 ```
 
-> Detect the template kind. The first delimiter that appears will determine which kind it is
+Detect the template kind. The first delimiter that appears will determine which kind it is

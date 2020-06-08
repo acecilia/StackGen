@@ -6,7 +6,7 @@
 public struct StackGenError: LocalizedError
 ```
 
-> The errors thrown by the tool
+The errors thrown by the tool
 
 ## Properties
 ### `kind`

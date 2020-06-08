@@ -6,7 +6,7 @@
 public enum Kind: Equatable
 ```
 
-> The kind of errors that the tool is expecing
+The kind of errors that the tool is expecing
 
 ## Cases
 ### `stackgenFileVersionNotMatching(_:)`

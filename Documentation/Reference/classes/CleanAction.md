@@ -6,7 +6,7 @@
 public class CleanAction: Action
 ```
 
-> The action corresponting to the `clean` subcommand
+The action corresponting to the `clean` subcommand
 
 ## Methods
 ### `init(_:_:)`

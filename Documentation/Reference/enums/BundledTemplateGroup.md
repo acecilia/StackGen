@@ -6,7 +6,7 @@
 public enum BundledTemplateGroup: String, CaseIterable
 ```
 
-> The template groups bundled with the tool
+The template groups bundled with the tool
 
 ## Cases
 ### `StackGen_Swift_BuildSystem_Bazel`
@@ -40,7 +40,7 @@ case StackGen_Swift_Starter_CommandLine
 public var templates: [String: TemplateSpec.Mode]
 ```
 
-> The templates that each template group contains
+The templates that each template group contains
 
 ## Methods
 ### `convert()`
@@ -49,7 +49,7 @@ public var templates: [String: TemplateSpec.Mode]
 public func convert() throws -> [TemplateSpec.Input]
 ```
 
-> Obtain the template specification for the templates inside the template group
+Obtain the template specification for the templates inside the template group
 
 ### `getRootPath()`
 
@@ -57,4 +57,4 @@ public func convert() throws -> [TemplateSpec.Input]
 public func getRootPath() throws -> Path
 ```
 
-> Obtain the root path of the template group
+Obtain the root path of the template group

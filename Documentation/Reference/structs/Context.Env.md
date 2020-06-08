@@ -6,7 +6,7 @@
 public struct Env: Codable, Hashable
 ```
 
-> The environment for a Context
+The environment for a Context
 
 ## Properties
 ### `root`
@@ -15,7 +15,7 @@ public struct Env: Codable, Hashable
 public let root: Path
 ```
 
-> The root path from where the tool runs
+The root path from where the tool runs
 
 ### `output`
 
@@ -23,7 +23,7 @@ public let root: Path
 public let output: Path
 ```
 
-> The output path of the file resulting from rendering a template with a context
+The output path of the file resulting from rendering a template with a context
 
 ## Methods
 ### `init(root:output:)`

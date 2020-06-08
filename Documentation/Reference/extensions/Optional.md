@@ -12,5 +12,5 @@ extension Optional
 public func unwrap(onFailure description: String, file: String = #file, line: Int = #line) throws -> Wrapped
 ```
 
-> Unwrap or throw
-> From: https://ericasadun.com/2016/10/07/converting-optionals-to-thrown-errors/
+Unwrap or throw
+From: https://ericasadun.com/2016/10/07/converting-optionals-to-thrown-errors/

@@ -6,7 +6,7 @@
 public struct Resolved
 ```
 
-> The final options to be used during execution
+The final options to be used during execution
 
 ## Properties
 ### `templateGroups`
@@ -15,7 +15,7 @@ public struct Resolved
 public let templateGroups: [String]
 ```
 
-> The template groups to use
+The template groups to use
 
 ## Methods
 ### `init(_:_:)`

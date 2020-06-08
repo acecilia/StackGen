@@ -6,8 +6,8 @@
 public class TemplateRenderer
 ```
 
-> The service in charge of passing the context to the templates, render them
-> and write them to disk
+The service in charge of passing the context to the templates, render them
+and write them to disk
 
 ## Methods
 ### `init(_:_:)`

@@ -6,4 +6,4 @@
 public enum Options
 ```
 
-> A namespace grouping the options passed to the tool
+A namespace grouping the options passed to the tool

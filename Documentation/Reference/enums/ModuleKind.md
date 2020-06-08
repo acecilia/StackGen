@@ -6,7 +6,7 @@
 public enum ModuleKind: String, Codable, CaseIterable, Comparable
 ```
 
-> The kind of module
+The kind of module
 
 ## Cases
 ### `firstParty`

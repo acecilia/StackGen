@@ -6,7 +6,7 @@
 public class Writer
 ```
 
-> The service used to write files to disk
+The service used to write files to disk
 
 ## Properties
 ### `writtenFiles`

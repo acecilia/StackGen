@@ -6,7 +6,7 @@
 public class GenerateAction: Action
 ```
 
-> The action corresponting to the `generate` subcommand
+The action corresponting to the `generate` subcommand
 
 ## Methods
 ### `init(_:_:)`

@@ -6,7 +6,7 @@
 public struct _Input: Codable, Hashable
 ```
 
-> The typed representation of a third party module
+The typed representation of a third party module
 
 ## Properties
 ### `name`

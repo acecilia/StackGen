@@ -6,4 +6,4 @@
 public enum Filter
 ```
 
-> A namespace grouping the stencil filters
+A namespace grouping the stencil filters

@@ -6,7 +6,7 @@
 public class Basename: StencilFilterInterface
 ```
 
-> A stencil filter that returns the basename of a path
+A stencil filter that returns the basename of a path
 
 ## Properties
 ### `context`

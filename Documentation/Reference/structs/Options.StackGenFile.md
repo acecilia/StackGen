@@ -6,7 +6,7 @@
 public struct StackGenFile: AutoCodable
 ```
 
-> The options that the tool accepts through the stackgen.yml file
+The options that the tool accepts through the stackgen.yml file
 
 ## Properties
 ### `version`
@@ -15,7 +15,7 @@ public struct StackGenFile: AutoCodable
 public let version: String
 ```
 
-> The version of StackGen to be used with this stackgen.yml file
+The version of StackGen to be used with this stackgen.yml file
 
 ### `templateGroups`
 
@@ -23,7 +23,7 @@ public let version: String
 public let templateGroups: [String]
 ```
 
-> The template groups to use
+The template groups to use
 
 ### `root`
 
@@ -31,7 +31,7 @@ public let templateGroups: [String]
 public let root: String?
 ```
 
-> A custom repository root to be used, if it is not the cwd
+A custom repository root to be used, if it is not the cwd
 
 ### `checks`
 
@@ -39,7 +39,7 @@ public let root: String?
 public let checks: Checks
 ```
 
-> The checks to perform when executing the tool
+The checks to perform when executing the tool
 
 ## Methods
 ### `init(version:templateGroups:root:checks:)`

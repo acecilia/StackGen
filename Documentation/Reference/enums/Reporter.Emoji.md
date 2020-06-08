@@ -6,7 +6,7 @@
 public enum Emoji
 ```
 
-> The emojis to be used when printing
+The emojis to be used when printing
 
 ## Cases
 ### `sparkles`

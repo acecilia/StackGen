@@ -6,4 +6,4 @@
 public enum Module
 ```
 
-> A namespace grouping the entities use to represent a module
+A namespace grouping the entities use to represent a module

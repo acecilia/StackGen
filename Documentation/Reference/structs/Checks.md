@@ -13,7 +13,7 @@ public struct Checks: AutoCodable
 public let modulesSorting: ModuleSorting
 ```
 
-> The sorting of first and third party modules inside the stackgen.yml file
+The sorting of first and third party modules inside the stackgen.yml file
 
 ### `dependenciesSorting`
 
@@ -21,7 +21,7 @@ public let modulesSorting: ModuleSorting
 public let dependenciesSorting: DependencySorting
 ```
 
-> The sorting of the module dependencies inside the stackgen.yml file
+The sorting of the module dependencies inside the stackgen.yml file
 
 ### `transitiveDependenciesDuplication`
 
@@ -29,7 +29,7 @@ public let dependenciesSorting: DependencySorting
 public let transitiveDependenciesDuplication: Bool
 ```
 
-> To check for duplication of transitive dependencies
+To check for duplication of transitive dependencies
 
 ## Methods
 ### `init(modulesSorting:dependenciesSorting:transitiveDependenciesDuplication:)`
