@@ -51,7 +51,7 @@ mint install acecilia/StackGen
 
 ```shell
 curl -Ls https://github.com/acecilia/StackGen/releases/latest/download/stackgen.zip -o /tmp/stackgen.zip
-unzip -j -d /usr/local/bin /tmp/stackgen.zip && rm /tmp/stackgen.zip
+unzip -d /usr/local/bin /tmp/stackgen.zip && rm /tmp/stackgen.zip
 ```
 
 ## Versioning
