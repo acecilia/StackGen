@@ -6,7 +6,7 @@
 public class Absolut: StencilFilterInterface
 ```
 
-> A stencil filter that returns the corresponding absolut path
+A stencil filter that returns the corresponding absolut path
 
 ## Properties
 ### `context`

@@ -6,7 +6,7 @@
 public struct TemplatesFileResolver
 ```
 
-> The service in charge of resolving which templates file to use
+The service in charge of resolving which templates file to use
 
 ## Methods
 ### `init(_:_:)`

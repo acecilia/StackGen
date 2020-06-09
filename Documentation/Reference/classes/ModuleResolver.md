@@ -6,7 +6,7 @@
 public class ModuleResolver
 ```
 
-> The service that resolves the modules specified in the stackgen.yml file
+The service that resolves the modules specified in the stackgen.yml file
 
 ## Methods
 ### `init(_:_:)`
@@ -21,4 +21,4 @@ public init(_ stackgenFile: StackGenFile, _ env: Env) throws
 public func resolve() throws -> [Module.Output]
 ```
 
-> The entry point used to resolve the modules
+The entry point used to resolve the modules

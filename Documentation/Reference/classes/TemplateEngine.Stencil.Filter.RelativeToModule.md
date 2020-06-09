@@ -6,7 +6,7 @@
 public class RelativeToModule: StencilFilterInterface
 ```
 
-> A stencil filter that returns the path relative to the module being processed
+A stencil filter that returns the path relative to the module being processed
 
 ## Properties
 ### `context`

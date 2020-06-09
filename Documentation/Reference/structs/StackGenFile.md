@@ -6,7 +6,7 @@
 public struct StackGenFile: AutoDecodable
 ```
 
-> The representation of the stackgen.yml file
+The representation of the stackgen.yml file
 
 ## Properties
 ### `options`
@@ -15,7 +15,7 @@ public struct StackGenFile: AutoDecodable
 public let options: Options.StackGenFile
 ```
 
-> The options passed to the tool
+The options passed to the tool
 
 ### `global`
 
@@ -23,7 +23,7 @@ public let options: Options.StackGenFile
 public let global: [String: StringCodable]
 ```
 
-> A dictionary used to declare global values that can be accessed from all the templates
+A dictionary used to declare global values that can be accessed from all the templates
 
 ### `firstPartyModules`
 
@@ -31,7 +31,7 @@ public let global: [String: StringCodable]
 public let firstPartyModules: [FirstPartyModule.Input]
 ```
 
-> The first party modules to use
+The first party modules to use
 
 ### `thirdPartyModules`
 
@@ -39,7 +39,7 @@ public let firstPartyModules: [FirstPartyModule.Input]
 public let thirdPartyModules: [ThirdPartyModule.Input]
 ```
 
-> The third party modules to use
+The third party modules to use
 
 ### `availableTemplateGroups`
 
@@ -47,7 +47,7 @@ public let thirdPartyModules: [ThirdPartyModule.Input]
 public let availableTemplateGroups: [String: [TemplateSpec.Input]]
 ```
 
-> The template groups to use
+The template groups to use
 
 ## Methods
 ### `init(options:global:firstPartyModules:thirdPartyModules:availableTemplateGroups:)`

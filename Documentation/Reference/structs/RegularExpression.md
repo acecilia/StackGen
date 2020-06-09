@@ -6,7 +6,7 @@
 public struct RegularExpression: Codable, ExpressibleByStringLiteral
 ```
 
-> A wrapper around NSRegularExpression that can be encoded and decoded
+A wrapper around NSRegularExpression that can be encoded and decoded
 
 ## Properties
 ### `wrappedValue`

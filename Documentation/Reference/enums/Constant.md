@@ -6,4 +6,4 @@
 public enum Constant
 ```
 
-> Constants used across the codebase
+Constants used across the codebase

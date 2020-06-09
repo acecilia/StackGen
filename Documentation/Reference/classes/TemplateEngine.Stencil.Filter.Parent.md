@@ -6,7 +6,7 @@
 public class Parent: StencilFilterInterface
 ```
 
-> A stencil filter that returns the parent of a path
+A stencil filter that returns the parent of a path
 
 ## Properties
 ### `context`

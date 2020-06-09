@@ -6,7 +6,7 @@
 public class RelativeToRoot: StencilFilterInterface
 ```
 
-> A stencil filter that returns the path relative to the root of the repository
+A stencil filter that returns the path relative to the root of the repository
 
 ## Properties
 ### `context`

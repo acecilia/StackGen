@@ -6,7 +6,7 @@
 public class PathExists: StencilFilterInterface
 ```
 
-> A stencil filter to check when a path exists on disk
+A stencil filter to check when a path exists on disk
 
 ## Properties
 ### `context`

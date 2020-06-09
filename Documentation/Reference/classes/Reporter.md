@@ -6,7 +6,7 @@
 public class Reporter
 ```
 
-> The service used to format the prints
+The service used to format the prints
 
 ## Properties
 ### `silent`

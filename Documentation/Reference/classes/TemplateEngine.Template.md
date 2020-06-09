@@ -6,7 +6,7 @@
 public class Template
 ```
 
-> The representation of a template, used to lazily load its content from disk
+The representation of a template, used to lazily load its content from disk
 
 ## Properties
 ### `path`

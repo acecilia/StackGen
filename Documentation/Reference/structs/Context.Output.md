@@ -6,7 +6,7 @@
 public struct Output: Codable
 ```
 
-> The final representation of the context that will be passed to the templates
+The final representation of the context that will be passed to the templates
 
 ## Properties
 ### `env`
@@ -15,7 +15,7 @@ public struct Output: Codable
 public let env: Env
 ```
 
-> The environment of the Context
+The environment of the Context
 
 ### `global`
 
@@ -23,7 +23,7 @@ public let env: Env
 public let global: [String: StringCodable]
 ```
 
-> The global values defined in the stackgen.yml file
+The global values defined in the stackgen.yml file
 
 ### `modules`
 
@@ -31,7 +31,7 @@ public let global: [String: StringCodable]
 public let modules: [Module.Output]
 ```
 
-> A list of the modules defined in the stackgen.yml file
+A list of the modules defined in the stackgen.yml file
 
 ### `module`
 
@@ -39,7 +39,7 @@ public let modules: [Module.Output]
 public let module: FirstPartyModule.Output?
 ```
 
-> The current module that is passed to the template, if any
+The current module that is passed to the template, if any
 
 ## Methods
 ### `init(env:global:modules:module:)`

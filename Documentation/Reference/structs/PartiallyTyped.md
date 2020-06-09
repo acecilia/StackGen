@@ -6,7 +6,7 @@
 public struct PartiallyTyped<Typed, Untyped>
 ```
 
-> An object that is type safe, while at the same time keeps its non type safe representation
+An object that is type safe, while at the same time keeps its non type safe representation
 
 ## Properties
 ### `typed`

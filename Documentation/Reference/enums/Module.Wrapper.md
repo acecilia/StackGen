@@ -9,7 +9,7 @@ public enum Wrapper<
 >: Codable, Equatable
 ```
 
-> A wrapper around the supported modules
+A wrapper around the supported modules
 
 ## Cases
 ### `firstParty(_:)`
@@ -18,7 +18,7 @@ public enum Wrapper<
 case firstParty(FirstParty)
 ```
 
-> A first party module
+A first party module
 
 ### `thirdParty(_:)`
 
@@ -26,7 +26,7 @@ case firstParty(FirstParty)
 case thirdParty(ThirdParty)
 ```
 
-> A third party module
+A third party module
 
 ## Properties
 ### `name`
@@ -35,7 +35,7 @@ case thirdParty(ThirdParty)
 public var name: String
 ```
 
-> The name of the module
+The name of the module
 
 ### `kind`
 
@@ -43,4 +43,4 @@ public var name: String
 public var kind: ModuleKind
 ```
 
-> The kind of the module
+The kind of the module

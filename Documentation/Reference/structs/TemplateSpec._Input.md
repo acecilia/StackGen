@@ -6,7 +6,7 @@
 public struct _Input: Decodable
 ```
 
-> A partial representation of a TemplateSpec.Input
+A partial representation of a TemplateSpec.Input
 
 ## Properties
 ### `path`
@@ -15,4 +15,4 @@ public struct _Input: Decodable
 public let path: Path
 ```
 
-> The path of the template
+The path of the template

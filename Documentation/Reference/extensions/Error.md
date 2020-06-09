@@ -12,4 +12,4 @@ public extension Error
 var finalDescription: String
 ```
 
-> The final form to be presented to the user when an error happens
+The final form to be presented to the user when an error happens

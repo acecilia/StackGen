@@ -1,9 +1,10 @@
-name-template: '$RESOLVED_VERSION'
-tag-template: '$RESOLVED_VERSION'
+# Use NEXT_PATCH_VERSION instead of RESOLVED_VERSION for now, until 1.0.0 is reached
+name-template: '$NEXT_PATCH_VERSION'
+tag-template: '$NEXT_PATCH_VERSION'
 categories:
 - title: '⚡ Breaking changes'
   label: 'breaking'
-- title: '🚀 Features'
+- title: '🚀 New features'
   label: 'feature'
 - title: '🐛 Bug fixes'
   label: 'bugfix'

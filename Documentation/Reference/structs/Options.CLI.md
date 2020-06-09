@@ -6,7 +6,7 @@
 public struct CLI: Codable
 ```
 
-> The options that the tool accepts through the command line
+The options that the tool accepts through the command line
 
 ## Properties
 ### `templateGroups`
@@ -15,7 +15,7 @@ public struct CLI: Codable
 public let templateGroups: [String]
 ```
 
-> The template groups to use
+The template groups to use
 
 ## Methods
 ### `init(templateGroups:)`

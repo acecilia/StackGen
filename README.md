@@ -37,17 +37,26 @@ StackGen is able to generate all the files in each module from a centralise plac
 In order to start using `StackGen` you will need two things:
 
 1. The `stackgen.yml` file. The contents allowed inside it can be found [here](Documentation/Reference/structs/StackGenFile.md). Examples of it can be found [here](Examples/swift/stackgen.yml) and [here](stackgen.yml).
-2. A bunch of templates. At the moment the only supported template language is [stencil](https://github.com/stencilproject/Stencil). StackGen comes with several groups of templates out of the box, which you can use as is or as a reference to create custom ones: find them [here](Templates). The context that is available from inside the templates is defined [here](Documentation/Reference/structs/Context.Output.md). In addition, there are several custom stencil filters available: [expand](Documentation/Reference/classes/TemplateEngine.Stencil.Filter.ExpandDependencies.md), [pathExists](Documentation/Reference/classes/TemplateEngine.Stencil.Filter.PathExists.md), [basename](Documentation/Reference/classes/TemplateEngine.Stencil.Filter.Basename.md), [parent](Documentation/Reference/classes/TemplateEngine.Stencil.Filter.Parent.md), [abs](Documentation/Reference/classes/TemplateEngine.Stencil.Filter.Absolut.md), [rm](Documentation/Reference/classes/TemplateEngine.Stencil.Filter.RelativeToModule.md) and [rr](Documentation/Reference/classes/TemplateEngine.Stencil.Filter.RelativeToRoot.md). Note that if the resulting file after rendering a template is empty, then the file will not be created.
+2. A bunch of templates. At the moment the only supported template language is [stencil](https://github.com/stencilproject/Stencil). StackGen comes with several groups of templates out of the box, which you can use as is or as a reference to create custom ones: find them [here](StackGenTemplates). The context that is available from inside the templates is defined [here](Documentation/Reference/structs/Context.Output.md). In addition, there are several custom stencil filters available: [expand](Documentation/Reference/classes/TemplateEngine.Stencil.Filter.ExpandDependencies.md), [pathExists](Documentation/Reference/classes/TemplateEngine.Stencil.Filter.PathExists.md), [basename](Documentation/Reference/classes/TemplateEngine.Stencil.Filter.Basename.md), [parent](Documentation/Reference/classes/TemplateEngine.Stencil.Filter.Parent.md), [abs](Documentation/Reference/classes/TemplateEngine.Stencil.Filter.Absolut.md), [rm](Documentation/Reference/classes/TemplateEngine.Stencil.Filter.RelativeToModule.md) and [rr](Documentation/Reference/classes/TemplateEngine.Stencil.Filter.RelativeToRoot.md). Note that if the resulting file after rendering a template is empty, then the file will not be created.
 
 ## Installation
 
-### Mint
-
-Install the latest version globally by running the following command:
+### Using [Mint](https://github.com/yonaskolb/Mint)
 
 ```shell
 mint install acecilia/StackGen
 ```
+
+### As a prebuilt binary
+
+```shell
+curl -Ls https://github.com/acecilia/StackGen/releases/latest/download/stackgen.zip -o /tmp/stackgen.zip
+unzip -j -d /usr/local/bin /tmp/stackgen.zip && rm /tmp/stackgen.zip
+```
+
+## Versioning
+
+Until version `1.0.0` is reached, minor versions may be breaking.
 
 ## License
 

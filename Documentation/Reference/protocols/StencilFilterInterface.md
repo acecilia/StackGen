@@ -6,7 +6,7 @@
 public protocol StencilFilterInterface: class
 ```
 
-> An interface shared between all stencil filters
+An interface shared between all stencil filters
 
 ## Properties
 ### `context`

@@ -6,8 +6,8 @@
 public struct Output: Codable, Hashable
 ```
 
-> A representation of a first party module that is used in the context
-> rendered by the templates
+A representation of a first party module that is used in the context
+rendered by the templates
 
 ## Properties
 ### `name`
@@ -16,7 +16,7 @@ public struct Output: Codable, Hashable
 public let name: String
 ```
 
-> The name of the first party module
+The name of the first party module
 
 ### `path`
 
@@ -24,7 +24,7 @@ public let name: String
 public let path: Path
 ```
 
-> The location of the first party module
+The location of the first party module
 
 ### `dependencies`
 
@@ -32,7 +32,7 @@ public let path: Path
 public let dependencies: [String: [String]]
 ```
 
-> The dependencies of the first party module
+The dependencies of the first party module
 
 ### `transitiveDependencies`
 
@@ -40,7 +40,7 @@ public let dependencies: [String: [String]]
 public let transitiveDependencies: [String: [String]]
 ```
 
-> The transitive dependencies of the first party module
+The transitive dependencies of the first party module
 
 ## Methods
 ### `init(name:path:dependencies:transitiveDependencies:)`
