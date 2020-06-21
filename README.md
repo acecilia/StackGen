@@ -5,7 +5,7 @@
 [![](http://isitmaintained.com/badge/resolution/acecilia/stackgen.svg)](https://github.com/acecilia/StackGen/issues)
 [![](https://img.shields.io/github/v/release/acecilia/stackgen?color=orange&label=latest%20release)](https://github.com/acecilia/StackGen/releases)
 
-[![](https://buildstats.info/github/chart/acecilia/stackgen?branch=master)](https://ci.github.com/project/acecilia/stackgen/history)
+[![](https://buildstats.info/github/chart/acecilia/stackgen?branch=master&buildCount=30)](https://github.com/acecilia/StackGen/actions?query=branch%3Amaster)
 
 -
 
