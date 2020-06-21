@@ -1,3 +1,0 @@
-{% for module in modules where module.kind == "thirdParty" %}
-github "{{module.repository}}" == {{module.version}}
-{% endfor %}

@@ -6,39 +6,41 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
 ###########################
 
 git_repository(
-    name = "build_bazel_rules_apple",
-    remote = "https://github.com/bazelbuild/rules_apple.git",
-    commit = "5131f3d46794bf227d296c82f30c2499c9de3c5b", # Latest on master at the time of writing (11-04-2020)
+  name = "build_bazel_rules_ios",
+  remote = "https://github.com/bazel-ios/rules_ios.git",
+  commit = "a1dc1188b12a37fa3874352f59207cf3b3293d36", # Latest on master at the time of writing (29-05-2020)
 )
 
-###########################
-# Specify versions of the dependencies, because at the time of writting (11-04-2020),
-# the rules_apple repository using the latest of master for all of them
-###########################
-
+# Specify versions of rules_apple and rules_swift until they are correct in rules_ios
+# See: https://github.com/bazel-ios/rules_ios/commit/e0255759ee5939796ed3dfc6cda4ea120cc95951
 git_repository(
-    name = "build_bazel_rules_swift",
-    remote = "https://github.com/bazelbuild/rules_swift.git",
-    commit = "111892c77efa489f56f4141d77dd817212cc31fd", # Latest on master at the time of writing (11-04-2020)
+  name = "build_bazel_rules_apple",
+  commit = "193d258479e891bf286bf884d52ac779c83be206",
+  shallow_since = "1589211273 -0700",
+  remote = "https://github.com/bazelbuild/rules_apple.git",
 )
 
 git_repository(
-    name = "build_bazel_apple_support",
-    remote = "https://github.com/bazelbuild/apple_support.git",
-    commit = "501b4afb27745c4813a88ffa28acd901408014e4", # Latest on master at the time of writing (11-04-2020)
+  name = "build_bazel_rules_swift",
+  commit = "35ef1d6ebd7adb8d20c096bb4355cf41c9a0b5cf",
+  shallow_since = "1588778892 -0700",
+  remote = "https://github.com/bazelbuild/rules_swift.git",
 )
 
 # Careful: test runner in version 0.2.11 has some issues: https://github.com/google/xctestrunner/issues/16
 http_file(
-    name = "xctestrunner",
-    executable = 1,
-    sha256 = "9e46d5782a9dc7d40bc93c99377c091886c180b8c4ffb9f79a19a58e234cdb09",
-    urls = ["https://github.com/google/xctestrunner/releases/download/0.2.10/ios_test_runner.par"]
+  name = "xctestrunner",
+  executable = 1,
+  sha256 = "8b7352f7414de4b54478563c90d55509030baa531696dfe9c4e1bf0617ee5eb0",
+  urls = ["https://github.com/google/xctestrunner/releases/download/0.2.12/ios_test_runner.par"]
 )
 
 ###########################
 # Load the rest of the dependencies
 ###########################
+
+load("@build_bazel_rules_ios//rules:repositories.bzl", "rules_ios_dependencies")
+rules_ios_dependencies()
 
 load("@build_bazel_rules_apple//apple:repositories.bzl", "apple_rules_dependencies")
 apple_rules_dependencies()
@@ -51,3 +53,14 @@ apple_support_dependencies()
 
 load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 protobuf_deps()
+
+###########################
+# Cocoapods prebuilt dependencies
+###########################
+
+load("@build_bazel_rules_ios//repository_rules:framework_builder.bzl", "build_cocoapods_frameworks")
+
+build_cocoapods_frameworks(
+  name = "cocoapods",
+  directory = "BazelConfig/ThirdParty"
+)

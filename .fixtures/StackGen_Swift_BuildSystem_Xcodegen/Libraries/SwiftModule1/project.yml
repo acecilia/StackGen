@@ -11,7 +11,7 @@ fileGroups: [project.yml]
 
 settings:
   base:
-    SWIFT_VERSION: 5.0
+    SWIFT_VERSION: 5
     DEVELOPMENT_TEAM: M7D34XPBZX
     IPHONEOS_DEPLOYMENT_TARGET: 13.0
 

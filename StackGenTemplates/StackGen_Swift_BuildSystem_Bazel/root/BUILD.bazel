@@ -1,9 +1,0 @@
-load("@build_bazel_rules_apple//apple:apple.bzl", "apple_dynamic_framework_import")
-
-{% for module in modules where module.kind == "thirdParty" %}
-apple_dynamic_framework_import(
-  name = "{{module.name}}",
-  framework_imports = glob(["Carthage/build/iOS/{{module.name}}.framework/**"]),
-  visibility = ["//visibility:public"],
-)
-{% endfor %}

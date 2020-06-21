@@ -1,12 +1,21 @@
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
-load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
-load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test", "ios_application")
+load("@build_bazel_rules_ios//rules:framework.bzl", "apple_framework")
+load("//BazelConfig:config.bzl", "swift_copts", "resource_extensions")
 
 ##########################
 # Main module rules
 ##########################
 
-swift_library(
+filegroup(
+  name = "AppResources",
+  srcs = glob(
+    ["src/main/resources"] 
+    + ["src/main/swift/**/*." + x for x in resource_extensions]
+  ),
+)
+
+apple_framework(
   name = "App",
   srcs = glob(["src/main/swift/**/*.swift"]),
   deps = [
@@ -14,22 +23,32 @@ swift_library(
     "//Libraries/SwiftModule3:SwiftModule3",
   ],
   module_name = "App",
+  swift_copts = swift_copts(),
+  data = [":AppResources"],
   visibility = ["//visibility:public"],
 )
 
 ios_application(
-    name = "AppBundle",
-    bundle_id = "com.acecilia.App",
-    families = ["iphone", "ipad",],
-    infoplists = ["SupportingFiles/Info.plist"],
-    minimum_os_version = "13.0",
-    deps = ["App"],
-    visibility = ["//visibility:public"],
+  name = "AppBundle",
+  bundle_id = "com.acecilia.App",
+  families = ["iphone", "ipad",],
+  infoplists = ["SupportingFiles/Info.plist"],
+  minimum_os_version = "13.0",
+  deps = ["App"],
+  visibility = ["//visibility:public"],
 )
 
 ##########################
 # Unit test rules
 ##########################
+
+filegroup(
+  name = "AppTestResources",
+  srcs = glob(
+    ["src/test/resources"] 
+    + ["src/test/swift/**/*." + x for x in resource_extensions]
+  ),
+)
 
 swift_library(
   name = "AppTestsLib",
@@ -37,6 +56,8 @@ swift_library(
   deps = [
     ":App",
   ],
+  data = [":AppTestResources"],
+  copts = swift_copts(),
   module_name = "AppTests",
 )
 
@@ -45,4 +66,6 @@ ios_unit_test(
   deps = [":AppTestsLib"],
   minimum_os_version = "13.0",
   test_host = ":AppBundle",
+  tags = ["no-sandbox"], # Needed for the snapshot tests to be able to access the reference images
+  runner = "//BazelConfig:test_runner",
 )

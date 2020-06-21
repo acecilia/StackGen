@@ -1,0 +1,4 @@
+source 'https://rubygems.org' do
+  gem 'cocoapods', '1.9.2'
+  gem 'cocoapods-binary', '0.4.4'
+end

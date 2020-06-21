@@ -1,24 +1,44 @@
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
-load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test", "ios_application")
+load("@build_bazel_rules_ios//rules:framework.bzl", "apple_framework")
+load("//BazelConfig:config.bzl", "swift_copts", "resource_extensions")
 
 ##########################
 # Main module rules
 ##########################
 
-swift_library(
+filegroup(
+  name = "SwiftModule1Resources",
+  srcs = glob(
+    ["src/main/resources"] 
+    + ["src/main/swift/**/*." + x for x in resource_extensions]
+  ),
+)
+
+apple_framework(
   name = "SwiftModule1",
   srcs = glob(["src/main/swift/**/*.swift"]),
   deps = [
     "//Libraries/SwiftModule2:SwiftModule2",
-    "//:SnapKit",
+    "//BazelConfig:SnapKit",
   ],
   module_name = "SwiftModule1",
+  swift_copts = swift_copts(),
+  data = [":SwiftModule1Resources"],
   visibility = ["//visibility:public"],
 )
 
 ##########################
 # Unit test rules
 ##########################
+
+filegroup(
+  name = "SwiftModule1TestResources",
+  srcs = glob(
+    ["src/test/resources"] 
+    + ["src/test/swift/**/*." + x for x in resource_extensions]
+  ),
+)
 
 swift_library(
   name = "SwiftModule1TestsLib",
@@ -27,6 +47,8 @@ swift_library(
     ":SwiftModule1",
     "//Libraries/SwiftModule3:SwiftModule3",
   ],
+  data = [":SwiftModule1TestResources"],
+  copts = swift_copts(),
   module_name = "SwiftModule1Tests",
 )
 
@@ -34,5 +56,7 @@ ios_unit_test(
   name = "SwiftModule1Tests",
   deps = [":SwiftModule1TestsLib"],
   minimum_os_version = "13.0",
-  test_host = None,
+  test_host = "//BazelConfig:HostApp", # Needed to make UIScreen available for snapshots: to be able to obtain the screen size and scale
+  tags = ["no-sandbox"], # Needed for the snapshot tests to be able to access the reference images
+  runner = "//BazelConfig:test_runner",
 )

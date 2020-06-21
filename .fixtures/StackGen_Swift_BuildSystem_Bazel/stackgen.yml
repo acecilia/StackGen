@@ -5,17 +5,20 @@ options:
 global:
   # Tools
   xcodeGenVersion: 2.15.1
-  bazelVersion: 3.0.0
+  bazelVersion: 3.3.0
   xcbeautifyVersion: 0.7.5
   cocoapodsVersion: 1.9.2
   cocoapodsBinaryVersion: 0.4.4
   lefthookVersion: 0.7.1
   swiftlintVersion: 0.39.2
-  carthageVersion: 0.34.0
+  carthageVersion: 0.35.0
+
+  # Bazel
+  bazelConfig: BazelConfig
 
   # Code
   moduleVersion: 0.0.1
-  swiftVersion: 5.0
+  swiftVersion: 5
   bundleIdPrefix: com.acecilia
   minimumDeploymentTarget: 13.0
   developmentTeam: M7D34XPBZX

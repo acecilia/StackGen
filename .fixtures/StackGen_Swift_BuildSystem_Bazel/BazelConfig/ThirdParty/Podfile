@@ -1,0 +1,37 @@
+install! 'cocoapods',
+  :integrate_targets => false,
+  :share_schemes_for_development_pods => true,
+  :disable_input_output_paths => true, # Workaround for https://github.com/CocoaPods/CocoaPods/issues/9185
+  :generate_multiple_pod_projects => true, # More perfomant, see http://blog.cocoapods.org/CocoaPods-1.7.0-beta/#multiple-xcodeproj-generation
+  :deterministic_uuids => false # To avoid the "Generated duplicate UUIDs" error. See: http://blog.cocoapods.org/CocoaPods-0.38/#deterministic-uuids-by-xcodeproj
+
+use_frameworks!
+platform :ios, '13.0'
+
+#################
+# Binary setup
+#################
+
+# Use binaries instead of source code, to speed up builds
+$useBinaries = true
+
+if $useBinaries
+    plugin 'cocoapods-binary'
+    enable_bitcode_for_prebuilt_frameworks!
+end
+
+#################
+# Third party modules
+#################
+
+pod 'SnapKit', '5.0.1', :binary => $useBinaries
+
+#################
+# Set swift versions for pods that do not specify them
+#################
+
+pre_install do |installer|
+  installer.analysis_result.specifications.each do |s|
+    s.swift_versions << '5' if s.swift_versions.empty?
+  end
+end

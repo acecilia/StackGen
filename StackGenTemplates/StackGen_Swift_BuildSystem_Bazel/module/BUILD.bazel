@@ -1,14 +1,21 @@
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
-load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
-{% if "App" in module.name %}
-load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application")
-{% endif %}
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test", "ios_application")
+load("@build_bazel_rules_ios//rules:framework.bzl", "apple_framework")
+load("//{{global.bazelConfig}}:config.bzl", "swift_copts", "resource_extensions")
 
 ##########################
 # Main module rules
 ##########################
 
-swift_library(
+filegroup(
+  name = "{{module.name}}Resources",
+  srcs = glob(
+    ["src/main/resources"] 
+    + ["src/main/swift/**/*." + x for x in resource_extensions]
+  ),
+)
+
+apple_framework(
   name = "{{module.name}}",
   srcs = glob(["src/main/swift/**/*.swift"]),
   deps = [
@@ -16,29 +23,39 @@ swift_library(
     {% if dependency.kind == "firstParty" %}
     "//{{dependency.path|rr}}:{{dependency.name}}",
     {% elif dependency.kind == "thirdParty" %}
-    "//:{{dependency.name}}",
+    "//{{global.bazelConfig}}:{{dependency.name}}",
     {% endif %}
     {% endfor %}
   ],
   module_name = "{{module.name}}",
+  swift_copts = swift_copts(),
+  data = [":{{module.name}}Resources"],
   visibility = ["//visibility:public"],
 )
 {% if "App" in module.name %}
 
 ios_application(
-    name = "{{module.name}}Bundle",
-    bundle_id = "{{global.bundleIdPrefix}}.{{module.name}}",
-    families = ["iphone", "ipad",],
-    infoplists = ["SupportingFiles/Info.plist"],
-    minimum_os_version = "{{global.minimumDeploymentTarget}}",
-    deps = ["{{module.name}}"],
-    visibility = ["//visibility:public"],
+  name = "{{module.name}}Bundle",
+  bundle_id = "{{global.bundleIdPrefix}}.{{module.name}}",
+  families = ["iphone", "ipad",],
+  infoplists = ["SupportingFiles/Info.plist"],
+  minimum_os_version = "{{global.minimumDeploymentTarget}}",
+  deps = ["{{module.name}}"],
+  visibility = ["//visibility:public"],
 )
 {% endif %}
 
 ##########################
 # Unit test rules
 ##########################
+
+filegroup(
+  name = "{{module.name}}TestResources",
+  srcs = glob(
+    ["src/test/resources"] 
+    + ["src/test/swift/**/*." + x for x in resource_extensions]
+  ),
+)
 
 swift_library(
   name = "{{module.name}}TestsLib",
@@ -49,10 +66,12 @@ swift_library(
     {% if dependency.kind == "firstParty" %}
     "//{{dependency.path|rr}}:{{dependency.name}}",
     {% elif dependency.kind == "thirdParty" %}
-    "//:{{dependency.name}}",
+    "//{{global.bazelConfig}}:{{dependency.name}}",
     {% endif %}
     {% endfor %}
   ],
+  data = [":{{module.name}}TestResources"],
+  copts = swift_copts(),
   module_name = "{{module.name}}Tests",
 )
 
@@ -63,6 +82,8 @@ ios_unit_test(
   {% if "App" in module.name %}
   test_host = ":{{module.name}}Bundle",
   {% else %}
-  test_host = None,
+  test_host = "//{{global.bazelConfig}}:HostApp", # Needed to make UIScreen available for snapshots: to be able to obtain the screen size and scale
   {% endif %}
+  tags = ["no-sandbox"], # Needed for the snapshot tests to be able to access the reference images
+  runner = "//{{global.bazelConfig}}:test_runner",
 )

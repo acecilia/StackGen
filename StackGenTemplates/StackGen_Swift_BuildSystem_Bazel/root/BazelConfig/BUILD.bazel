@@ -1,0 +1,52 @@
+load("@build_bazel_rules_ios//rules:apple_patched.bzl", "apple_dynamic_framework_import")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application")
+load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+load("@build_bazel_rules_apple//apple/testing/default_runner:ios_test_runner.bzl", "ios_test_runner")
+load("//{{global.bazelConfig}}:config.bzl", "swift_copts")
+
+##########################
+# Exported files to be used by other rules
+##########################
+
+exports_files(
+  srcs = glob(["ExportedFiles/**/*"]),
+  visibility = ["//visibility:public"],
+)
+
+##########################
+# Third party dependencies
+##########################
+
+{% for module in modules where module.kind == "thirdParty" %}
+apple_dynamic_framework_import(
+  name = "{{module.name}}",
+  framework_imports = ["@cocoapods//:{{module.name}}"],
+  visibility = ["//visibility:public"],
+)
+{% endfor %}
+
+##########################
+# Shared rules
+##########################
+
+swift_library(
+  name = "HostAppLib",
+  srcs = [":ExportedFiles/AppDelegate.swift"],
+  copts = swift_copts(),
+)
+
+ios_application(
+  name = "HostApp",
+  bundle_id = "{{global.bundleIdPrefix}}.hostapp",
+  families = ["iphone"],
+  infoplists = [":ExportedFiles/AppInfo.plist"],
+  minimum_os_version = "{{global.minimumDeploymentTarget}}",
+  deps = [":HostAppLib"],
+  visibility = ["//visibility:public"],
+)
+
+ios_test_runner(
+  name = "test_runner",
+  device_type = "iPhone 8",
+  visibility = ["//visibility:public"],
+)
