@@ -1,3 +1,4 @@
 realm/SwiftLint@0.39.2
 yonaskolb/XcodeGen@2.15.1
 thii/xcbeautify@0.7.5
+carthage/carthage@0.35.0

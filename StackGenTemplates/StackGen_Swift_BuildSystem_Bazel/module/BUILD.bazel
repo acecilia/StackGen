@@ -1,19 +1,11 @@
-load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
-load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test", "ios_application")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_application")
 load("@build_bazel_rules_ios//rules:framework.bzl", "apple_framework")
+load("@build_bazel_rules_ios//rules:test.bzl", "ios_unit_test")
 load("//{{global.bazelConfig}}:config.bzl", "swift_copts", "resource_extensions")
 
 ##########################
 # Main module rules
 ##########################
-
-filegroup(
-  name = "{{module.name}}Resources",
-  srcs = glob(
-    ["src/main/resources"] 
-    + ["src/main/swift/**/*." + x for x in resource_extensions]
-  ),
-)
 
 apple_framework(
   name = "{{module.name}}",
@@ -27,9 +19,11 @@ apple_framework(
     {% endif %}
     {% endfor %}
   ],
-  module_name = "{{module.name}}",
   swift_copts = swift_copts(),
-  data = [":{{module.name}}Resources"],
+  data = glob(
+    ["src/main/resources"]
+    + ["src/main/swift/**/*." + x for x in resource_extensions]
+  ),
   visibility = ["//visibility:public"],
 )
 {% if "App" in module.name %}
@@ -49,15 +43,7 @@ ios_application(
 # Unit test rules
 ##########################
 
-filegroup(
-  name = "{{module.name}}TestResources",
-  srcs = glob(
-    ["src/test/resources"] 
-    + ["src/test/swift/**/*." + x for x in resource_extensions]
-  ),
-)
-
-swift_library(
+apple_framework(
   name = "{{module.name}}TestsLib",
   srcs = glob(["src/test/swift/**/*.swift"]),
   deps = [
@@ -70,9 +56,11 @@ swift_library(
     {% endif %}
     {% endfor %}
   ],
-  data = [":{{module.name}}TestResources"],
-  copts = swift_copts(),
-  module_name = "{{module.name}}Tests",
+  data = glob(
+    ["src/test/resources"]
+    + ["src/test/swift/**/*." + x for x in resource_extensions]
+  ),
+  swift_copts = swift_copts(),
 )
 
 ios_unit_test(
