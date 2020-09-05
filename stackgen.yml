@@ -8,7 +8,7 @@ availableTemplateGroups:
     mode: module
 
 firstPartyModules:
-- path: Templates/StackGen_Swift_BuildSystem_Bazel
-- path: Templates/StackGen_Swift_BuildSystem_Cocoapods
-- path: Templates/StackGen_Swift_BuildSystem_Xcodegen
-# - id: Templates/StackGen_Swift_Starter_CommandLine
+- path: StackGenTemplates/StackGen_Swift_BuildSystem_Bazel
+- path: StackGenTemplates/StackGen_Swift_BuildSystem_Cocoapods
+- path: StackGenTemplates/StackGen_Swift_BuildSystem_Xcodegen
+# - id: StackGenTemplates/StackGen_Swift_Starter_CommandLine
