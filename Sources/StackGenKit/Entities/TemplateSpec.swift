@@ -7,7 +7,7 @@ public enum TemplateSpec {
     public typealias Input = Compose<_Input, TemplateSpec.Mode>
 
     /// A partial representation of a TemplateSpec.Input
-    public struct _Input: Decodable {
+    public struct _Input: Codable {
         /// The path of the template
         public let path: Path
     }

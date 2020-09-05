@@ -15,7 +15,8 @@ public class CLI {
             description: "Generates build system configurations for swift projects",
             commands: [
                 Generate(arguments, env),
-                Clean(arguments, env)
+                Clean(arguments, env),
+                Lint(arguments, env)
             ]
         )
 

@@ -2,7 +2,7 @@ import XCTest
 import StackGenKit
 import Path
 
-final class ChecksTests: XCTestCase {
+final class LinterTests: XCTestCase {
     func testModuleSorting() throws {
         do {
             let builder = Builder()

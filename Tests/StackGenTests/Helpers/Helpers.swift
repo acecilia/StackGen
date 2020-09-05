@@ -91,3 +91,8 @@ func clean(using template: Template) -> Int32 {
     return cli.execute(with: cmd)
 }
 
+func lint() -> Int32 {
+    let cli = CLI()
+    let cmd = [Lint.name]
+    return cli.execute(with: cmd)
+}
