@@ -26,7 +26,13 @@ extension FilterTests {
     //   `swift test --generate-linuxmain`
     // to regenerate.
     static let __allTests__FilterTests = [
-        ("testAbs", testAbs),
+        ("testAbsolute", testAbsolute),
+        ("testBasename", testBasename),
+        ("testExpandDependencies", testExpandDependencies),
+        ("testParent", testParent),
+        ("testPathExists", testPathExists),
+        ("testRelativeToModule", testRelativeToModule),
+        ("testRelativeToRoot", testRelativeToRoot),
     ]
 }
 

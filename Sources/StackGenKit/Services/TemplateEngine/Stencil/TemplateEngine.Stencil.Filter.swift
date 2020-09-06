@@ -58,7 +58,7 @@ extension TemplateEngine.Stencil.Filter {
     }
 
     /// A stencil filter that returns the corresponding absolut path
-    public class Absolut: Base, StencilFilterInterface {
+    public class Absolute: Base, StencilFilterInterface {
         public static let filterName = "abs"
 
         public func run(_ value: Any?) throws -> Any {

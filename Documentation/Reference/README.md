@@ -37,7 +37,7 @@
 -   [TemplateEngine](classes/TemplateEngine.md)
 -   [TemplateEngine.Stencil](classes/TemplateEngine.Stencil.md)
 -   [TemplateEngine.Stencil.Extensions](classes/TemplateEngine.Stencil.Extensions.md)
--   [TemplateEngine.Stencil.Filter.Absolut](classes/TemplateEngine.Stencil.Filter.Absolut.md)
+-   [TemplateEngine.Stencil.Filter.Absolute](classes/TemplateEngine.Stencil.Filter.Absolute.md)
 -   [TemplateEngine.Stencil.Filter.Base](classes/TemplateEngine.Stencil.Filter.Base.md)
 -   [TemplateEngine.Stencil.Filter.Basename](classes/TemplateEngine.Stencil.Filter.Basename.md)
 -   [TemplateEngine.Stencil.Filter.ExpandDependencies](classes/TemplateEngine.Stencil.Filter.ExpandDependencies.md)
