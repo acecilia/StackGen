@@ -18,7 +18,7 @@ private class Builder {
 
     func makeFilter<T: TemplateEngine.Stencil.Filter.Base>() -> T {
         let context = Context.Output(
-            env: .init(root: rootPath, output: outputPath, mergeBehaviour: .replace),
+            env: .init(root: rootPath, output: outputPath),
             global: [:],
             modules: [],
             module: nil

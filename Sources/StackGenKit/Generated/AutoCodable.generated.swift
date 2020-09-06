@@ -4,24 +4,6 @@
 import Path
 import StringCodable
 
-extension Checks {
-
-    enum CodingKeys: String, CodingKey {
-        case modulesSorting
-        case dependenciesSorting
-        case transitiveDependenciesDuplication
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        modulesSorting = (try? container.decode(ModuleSorting.self, forKey: .modulesSorting)) ?? Checks.defaultModulesSorting
-        dependenciesSorting = (try? container.decode(DependencySorting.self, forKey: .dependenciesSorting)) ?? Checks.defaultDependenciesSorting
-        transitiveDependenciesDuplication = (try? container.decode(Bool.self, forKey: .transitiveDependenciesDuplication)) ?? Checks.defaultTransitiveDependenciesDuplication
-    }
-
-}
-
 extension FirstPartyModule.Input {
 
     enum CodingKeys: String, CodingKey {
@@ -38,13 +20,30 @@ extension FirstPartyModule.Input {
 
 }
 
+extension LintOptions {
+
+    enum CodingKeys: String, CodingKey {
+        case modulesSorting
+        case dependenciesSorting
+        case transitiveDependenciesDuplication
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        modulesSorting = (try? container.decode(ModuleSorting.self, forKey: .modulesSorting)) ?? LintOptions.defaultModulesSorting
+        dependenciesSorting = (try? container.decode(DependencySorting.self, forKey: .dependenciesSorting)) ?? LintOptions.defaultDependenciesSorting
+        transitiveDependenciesDuplication = (try? container.decode(Bool.self, forKey: .transitiveDependenciesDuplication)) ?? LintOptions.defaultTransitiveDependenciesDuplication
+    }
+
+}
+
 extension Options.StackGenFile {
 
     enum CodingKeys: String, CodingKey {
         case version
         case templateGroups
         case root
-        case checks
     }
 
     public init(from decoder: Decoder) throws {
@@ -53,7 +52,6 @@ extension Options.StackGenFile {
         version = try container.decode(String.self, forKey: .version)
         templateGroups = (try? container.decode([String].self, forKey: .templateGroups)) ?? Options.StackGenFile.defaultTemplateGroups
         root = try container.decodeIfPresent(String.self, forKey: .root)
-        checks = (try? container.decode(Checks.self, forKey: .checks)) ?? Options.StackGenFile.defaultChecks
     }
 
 }
@@ -66,6 +64,7 @@ extension StackGenFile {
         case firstPartyModules
         case thirdPartyModules
         case availableTemplateGroups
+        case lintOptions
     }
 
     public init(from decoder: Decoder) throws {
@@ -76,6 +75,7 @@ extension StackGenFile {
         firstPartyModules = (try? container.decode([FirstPartyModule.Input].self, forKey: .firstPartyModules)) ?? StackGenFile.defaultFirstPartyModules
         thirdPartyModules = (try? container.decode([ThirdPartyModule.Input].self, forKey: .thirdPartyModules)) ?? StackGenFile.defaultThirdPartyModules
         availableTemplateGroups = (try? container.decode([String: [TemplateSpec.Input]].self, forKey: .availableTemplateGroups)) ?? StackGenFile.defaultAvailableTemplateGroups
+        lintOptions = (try? container.decode(LintOptions.self, forKey: .lintOptions)) ?? StackGenFile.defaultLintOptions
     }
 
 }
