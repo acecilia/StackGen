@@ -6,10 +6,12 @@ import Path
 public class GenerateAction: Action {
     private let cliOptions: Options.CLI
     private var env: Env
+    private let writer: WriterGenerateProtocol
 
-    public init(_ cliOptions: Options.CLI, _ env: Env) {
+    public init(_ cliOptions: Options.CLI, _ env: Env, _ writer: WriterGenerateProtocol) {
         self.cliOptions = cliOptions
         self.env = env
+        self.writer = writer
     }
 
     public func execute() throws {
@@ -32,13 +34,14 @@ public class GenerateAction: Action {
 
         let modules = try ModuleResolver(stackgenFile, env).resolve()
 
-        env.reporter.info(.wrench, "generating files")
+        env.reporter.info(.wrench, "rendering files")
 
         let inputContext = Context.Input(
+            mergeBehaviour: stackgenFile.options.mergeBehaviour,
             global: stackgenFile.global,
             modules: modules
         )
-        let templateRenderer = TemplateRenderer(inputContext, env)
+        let templateRenderer = TemplateRenderer(inputContext, env, writer)
 
         for templateSpec in templateSpecs {
             if templateSpec.path.isFile {
@@ -57,5 +60,10 @@ public class GenerateAction: Action {
                 }
             }
         }
+
+        env.reporter.info(.wrench, "writing files to disk")
+
+        try writer.cleanAll()
+        try writer.writeAll()
     }
 }

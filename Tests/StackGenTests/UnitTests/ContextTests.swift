@@ -7,6 +7,7 @@ final class ContextTests: XCTestCase {
     func testContext() throws {
         let contextString = """
         env:
+          mergeBehaviour: replace
           output: outputParent/outputBasename
           root: rootParent/rootBasename
         global:

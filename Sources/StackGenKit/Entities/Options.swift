@@ -16,6 +16,7 @@ public enum Options {
     /// The options that the tool accepts through the stackgen.yml file
     public struct StackGenFile: AutoCodable {
         public static let defaultTemplateGroups: [String] = []
+        public static let defaultMergeBehaviour: MergeBehaviour = .append
 
         /// The version of StackGen to be used with this stackgen.yml file
         public let version: String
@@ -23,15 +24,20 @@ public enum Options {
         public let templateGroups: [String]
         /// A custom repository root to be used, if it is not the cwd
         public let root: String?
+        /// The behaviour to use when generating a file that already exists
+        public let mergeBehaviour: MergeBehaviour
 
         public init(
             version: String = Constant.version,
             templateGroups: [String] = defaultTemplateGroups,
-            root: String? = nil
+            root: String? = nil,
+            mergeBehaviour: MergeBehaviour = defaultMergeBehaviour
+
         ) {
             self.version = version
             self.templateGroups = templateGroups
             self.root = root
+            self.mergeBehaviour = mergeBehaviour
         }
     }
 

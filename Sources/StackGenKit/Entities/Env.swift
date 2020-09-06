@@ -10,18 +10,14 @@ public struct Env {
     public var root: Path
     /// The reporter used to format the output
     public var reporter: Reporter
-    /// The type used to write files to disk
-    public var writer: Writer
 
     public init(
         cwd: Path = Path(Path.cwd),
         root: Path = Path(Path.cwd),
-        reporter: Reporter = Reporter(),
-        writer: Writer = Writer()
+        reporter: Reporter = Reporter()
     ) {
         self.cwd = cwd
         self.root = root
         self.reporter = reporter
-        self.writer = writer
     }
 }

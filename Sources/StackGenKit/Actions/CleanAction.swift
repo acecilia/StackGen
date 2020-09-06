@@ -13,18 +13,16 @@ public class CleanAction: Action {
     public func execute() throws {
         env.reporter.info(.broom, "cleaning files")
 
+        let writer = Writer(env, dryRun: true)
         let generateEnv: Env = {
             var env = self.env
             env.reporter = Reporter(silent: true)
-            env.writer = Writer(shouldWrite: false)
             return env
         }()
-
-        let generateAction = GenerateAction(cliOptions, generateEnv)
+        let generateAction = GenerateAction(cliOptions, generateEnv, writer)
         try generateAction.execute()
 
-        for path in generateEnv.writer.writtenFiles {
-            try path.delete()
-        }
+        writer.dryRun = false
+        try writer.cleanAll()
     }
 }

@@ -6,15 +6,19 @@ import StringCodable
 public enum Context {
     /// The initial representation of the context that will be passed to the templates
     public struct Input {
+        /// The behaviour to use when generating a file that already exists
+        public let mergeBehaviour: MergeBehaviour
         /// The global values defined in the stackgen.yml file
         public let global: [String: StringCodable]
         /// A list of the modules defined in the stackgen.yml file
         public let modules: [Module.Output]
 
         public init(
+            mergeBehaviour: MergeBehaviour,
             global: [String: StringCodable],
             modules: [Module.Output]
         ) {
+            self.mergeBehaviour = mergeBehaviour
             self.global = global
             self.modules = modules
         }
@@ -50,13 +54,17 @@ public enum Context {
         public let root: Path
         /// The output path of the file resulting from rendering a template with a context
         public let output: Path
+        /// The behaviour to use when generating a file that already exists
+        public let mergeBehaviour: MergeBehaviour
 
         public init(
             root: Path,
-            output: Path
+            output: Path,
+            mergeBehaviour: MergeBehaviour
         ) {
             self.root = root
             self.output = output
+            self.mergeBehaviour = mergeBehaviour
         }
     }
 }

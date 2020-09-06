@@ -1,29 +1,102 @@
 import Foundation
 import Path
 
-/// The service used to write files to disk
-public class Writer {
-    public private(set) var writtenFiles: [Path] = []
-    public let shouldWrite: Bool
+/// A protocol to limit the exposed API
+public protocol WriterAppendProtocol {
+    func append(writeOperation: WriteOperation)
+}
 
-    public init(shouldWrite: Bool = true) {
-        self.shouldWrite = shouldWrite
+/// A protocol to limit the exposed API
+public protocol WriterGenerateProtocol: WriterAppendProtocol {
+    func cleanAll() throws
+    func writeAll() throws
+}
+
+public protocol WriterProtocol: WriterGenerateProtocol { }
+
+/// The service used to write files to disk
+public class Writer: WriterProtocol {
+    var dryRun: Bool
+    private let env: Env
+    private var writeOperations: [WriteOperation] = []
+
+    public init(_ env: Env, dryRun: Bool = false) {
+        self.env = env
+        self.dryRun = dryRun
     }
     
-    public func write(_ string: String, to path: Path, with posixPermissions: Any?) throws {
-        writtenFiles.append(path)
-        guard shouldWrite else { return }
+    public func append(writeOperation: WriteOperation) {
+        writeOperations.append(writeOperation)
+    }
 
-        if string.isEmpty {
-            try path.delete()
-        } else {
-            try string.write(to: path)
-            if let posixPermissions = posixPermissions {
-                try FileManager.default.setAttributes(
-                    [.posixPermissions: posixPermissions],
-                    ofItemAtPath: path.string
-                )
+    public func cleanAll() throws {
+        guard !dryRun else { return }
+
+        for operation in writeOperations {
+            try operation.path.delete()
+        }
+    }
+
+    public func writeAll() throws {
+        guard !dryRun else { return }
+
+        for operation in writeOperations {
+            env.reporter.info(.sparkles, "writing \(operation.path.relative(to: env.cwd))")
+
+            try operation.path.parent.mkdir(.p)
+
+            let content: String
+            switch operation.mergeBehaviour {
+            case .replace:
+                content = operation.content
+
+            case .append:
+                guard let existingContent = try String(operation.path) else {
+                    content = operation.content
+                    break
+                }
+
+                content = existingContent
+                    .appending("\n")
+                    .appending(operation.content)
+            }
+
+            if content.isEmpty {
+                try operation.path.delete()
+            } else {
+                try content.write(to: operation.path)
+                if let posixPermissions = operation.posixPermissions {
+                    try FileManager.default.setAttributes(
+                        [.posixPermissions: posixPermissions],
+                        ofItemAtPath: operation.path.string
+                    )
+                }
             }
         }
     }
 }
+
+public struct WriteOperation {
+    let content: String
+    let path: Path
+    let posixPermissions: Any?
+    let mergeBehaviour: MergeBehaviour
+}
+
+private extension String {
+    init?(_ path: Path) throws {
+        guard path.exists else {
+            return nil
+        }
+
+        let existingContent = try String(contentsOf: path)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard !existingContent.isEmpty else {
+            return nil
+        }
+
+        self = existingContent
+    }
+}
+

@@ -9,6 +9,6 @@ public class Generate: BaseCommand, Command {
         let options = Options.CLI(
             templateGroups: templateGroups
         )
-        try GenerateAction(options, env).execute()
+        try GenerateAction(options, env, Writer(env)).execute()
     }
 }

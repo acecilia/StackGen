@@ -97,7 +97,7 @@ private class Builder {
     func makeStencilError() -> Error {
         let templateEngine = TemplateEngine(env)
         let context = Context.Output(
-            env: Context.Env(root: env.cwd, output: env.cwd),
+            env: Context.Env(root: env.cwd, output: env.cwd, mergeBehaviour: .replace),
             global: [:],
             modules: [],
             module: nil

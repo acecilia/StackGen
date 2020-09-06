@@ -44,6 +44,7 @@ extension Options.StackGenFile {
         case version
         case templateGroups
         case root
+        case mergeBehaviour
     }
 
     public init(from decoder: Decoder) throws {
@@ -52,6 +53,7 @@ extension Options.StackGenFile {
         version = try container.decode(String.self, forKey: .version)
         templateGroups = (try? container.decode([String].self, forKey: .templateGroups)) ?? Options.StackGenFile.defaultTemplateGroups
         root = try container.decodeIfPresent(String.self, forKey: .root)
+        mergeBehaviour = (try? container.decode(MergeBehaviour.self, forKey: .mergeBehaviour)) ?? Options.StackGenFile.defaultMergeBehaviour
     }
 
 }
