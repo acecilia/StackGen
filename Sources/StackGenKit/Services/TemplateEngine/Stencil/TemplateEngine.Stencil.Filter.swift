@@ -14,11 +14,18 @@ extension TemplateEngine.Stencil {
 }
 
 extension TemplateEngine.Stencil.Filter {
-    /// A stencil filter to check when a path exists on disk
-    public class PathExists: StencilFilterInterface {
-        public static let filterName = "pathExists"
-
+    /// A base class to share code between filters
+    public class Base {
         public var context: Context.Output?
+
+        public required init(context: Context.Output? = nil) {
+            self.context = context
+        }
+    }
+
+    /// A stencil filter to check when a path exists on disk
+    public class PathExists: Base, StencilFilterInterface {
+        public static let filterName = "pathExists"
 
         public func run(_ value: Any?) throws -> Any {
             let context = try self.context.unwrap(Self.filterName)
@@ -28,10 +35,8 @@ extension TemplateEngine.Stencil.Filter {
     }
 
     /// A stencil filter that returns the path relative to the root of the repository
-    public class RelativeToRoot: StencilFilterInterface {
+    public class RelativeToRoot: Base, StencilFilterInterface {
         public static let filterName = "rr"
-
-        public var context: Context.Output?
 
         public func run(_ value: Any?) throws -> Any {
             let context = try self.context.unwrap(Self.filterName)
@@ -41,10 +46,8 @@ extension TemplateEngine.Stencil.Filter {
     }
 
     /// A stencil filter that returns the path relative to the module being processed
-    public class RelativeToModule: StencilFilterInterface {
+    public class RelativeToModule: Base, StencilFilterInterface {
         public static let filterName = "rm"
-
-        public var context: Context.Output?
 
         public func run(_ value: Any?) throws -> Any {
             let context = try self.context.unwrap(Self.filterName)
@@ -55,23 +58,19 @@ extension TemplateEngine.Stencil.Filter {
     }
 
     /// A stencil filter that returns the corresponding absolut path
-    public class Absolut: StencilFilterInterface {
+    public class Absolut: Base, StencilFilterInterface {
         public static let filterName = "abs"
-
-        public var context: Context.Output?
 
         public func run(_ value: Any?) throws -> Any {
             let context = try self.context.unwrap(Self.filterName)
             let path = try value.asPath(context, Self.filterName)
-            return path.relative(to: Path.root)
+            return path.string
         }
     }
 
     /// A stencil filter that returns the basename of a path
-    public class Basename: StencilFilterInterface {
+    public class Basename: Base, StencilFilterInterface {
         public static let filterName = "basename"
-
-        public var context: Context.Output?
 
         public func run(_ value: Any?) throws -> Any {
             let context = try self.context.unwrap(Self.filterName)
@@ -81,10 +80,8 @@ extension TemplateEngine.Stencil.Filter {
     }
 
     /// A stencil filter that returns the parent of a path
-    public class Parent: StencilFilterInterface {
+    public class Parent: Base, StencilFilterInterface {
         public static let filterName = "parent"
-
-        public var context: Context.Output?
 
         public func run(_ value: Any?) throws -> Any {
             let context = try self.context.unwrap(Self.filterName)
@@ -94,10 +91,8 @@ extension TemplateEngine.Stencil.Filter {
     }
 
     /// A stencil filter that expands a list of dependency names to their corresponding module dictionaries
-    public class ExpandDependencies: StencilFilterInterface {
+    public class ExpandDependencies: Base, StencilFilterInterface {
         public static let filterName = "expand"
-
-        public var context: Context.Output?
 
         public func run(_ value: Any?) throws -> Any {
             let dependencies = try value.asStringArray(Self.filterName)

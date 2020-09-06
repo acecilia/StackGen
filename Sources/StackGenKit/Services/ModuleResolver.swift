@@ -4,12 +4,14 @@ import Path
 /// The service that resolves the modules specified in the stackgen.yml file
 public class ModuleResolver {
     private let stackgenFile: StackGenFile
+    private let linter: Linter
     /// A cache used to speed up module resolution
     private var transitiveDependenciesCache: [String: Set<Module.Input>] = [:]
     private let env: Env
 
     public init(_ stackgenFile: StackGenFile, _ env: Env) throws {
         self.stackgenFile = stackgenFile
+        self.linter = Linter(env, stackgenFile.lintOptions)
         self.env = env
     }
 
@@ -20,8 +22,8 @@ public class ModuleResolver {
         // Perform checks on the modules
         try checkUniqueModuleNames(modules)
         try checkDuplicatedDependencies()
-        try checkModulesSorting()
-        try checkDependenciesSorting(modules)
+        try linter.checkModulesSorting(stackgenFile)
+        try linter.checkDependenciesSorting(stackgenFile, modules)
 
         let resolvedModules: [Module.Output] = try modules.map {
             switch $0 {
@@ -103,48 +105,6 @@ public class ModuleResolver {
         }
     }
 
-    private func checkModulesSorting() throws {
-        switch stackgenFile.options.checks.modulesSorting {
-        case .alphabetically:
-            func checkSorting(_ modules: [String]) throws {
-                let sortedModules = modules.sortedAlphabetically()
-                if modules != sortedModules {
-                    throw StackGenError(.modulesSorting(modules, sortedModules))
-                }
-            }
-            try checkSorting(stackgenFile.firstPartyModules.map { $0.name })
-            try checkSorting(stackgenFile.thirdPartyModules.map { $0.name })
-
-        case .none:
-            break
-        }
-    }
-
-    private func checkDependenciesSorting(_ modules: [Module.Input]) throws {
-        switch stackgenFile.options.checks.dependenciesSorting {
-        case .alphabeticallyAndByKind:
-            for module in stackgenFile.firstPartyModules {
-                for (dependencyGroup, dependencies) in module.dependencies {
-                    let modules = try dependencies.map { try modules.get(named: $0) }
-                    let sortedModules = modules.sortedByNameAndKind()
-                    if modules != sortedModules {
-                        throw StackGenError(
-                            .dependenciesSorting(
-                                module.name,
-                                dependencyGroup,
-                                modules.map { $0.name },
-                                sortedModules.map { $0.name }
-                            )
-                        )
-                    }
-                }
-            }
-
-        case .none:
-            break
-        }
-    }
-
     private func getTransitiveDependencies(
         _ name: String,
         _ modules: [Module.Input],
@@ -201,10 +161,7 @@ public class ModuleResolver {
 
             for dependency in dependencies {
                 let dependency = try modules.get(named: dependency)
-                if stackgenFile.options.checks.transitiveDependenciesDuplication,
-                    transitiveDependencies.contains(dependency) {
-                    throw StackGenError(.transitiveDependencyDuplication(module.name, dependency.name))
-                }
+                try linter.checkTransitiveDependenciesDuplication(module, dependency, transitiveDependencies)
                 transitiveDependencies.insert(dependency)
             }
 
