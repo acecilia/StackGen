@@ -3,17 +3,10 @@
 # `TemplateEngine.Stencil.Filter.Basename`
 
 ```swift
-public class Basename: StencilFilterInterface
+public class Basename: Base, StencilFilterInterface
 ```
 
 A stencil filter that returns the basename of a path
-
-## Properties
-### `context`
-
-```swift
-public var context: Context.Output?
-```
 
 ## Methods
 ### `run(_:)`

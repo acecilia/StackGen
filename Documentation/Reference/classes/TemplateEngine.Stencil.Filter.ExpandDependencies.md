@@ -3,17 +3,10 @@
 # `TemplateEngine.Stencil.Filter.ExpandDependencies`
 
 ```swift
-public class ExpandDependencies: StencilFilterInterface
+public class ExpandDependencies: Base, StencilFilterInterface
 ```
 
 A stencil filter that expands a list of dependency names to their corresponding module dictionaries
-
-## Properties
-### `context`
-
-```swift
-public var context: Context.Output?
-```
 
 ## Methods
 ### `run(_:)`

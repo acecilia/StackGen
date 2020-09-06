@@ -1,8 +1,8 @@
 **EXTENSION**
 
-# `Checks`
+# `LintOptions`
 ```swift
-extension Checks
+extension LintOptions
 ```
 
 ## Methods

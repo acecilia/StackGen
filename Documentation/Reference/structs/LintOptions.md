@@ -1,9 +1,9 @@
 **STRUCT**
 
-# `Checks`
+# `LintOptions`
 
 ```swift
-public struct Checks: AutoCodable
+public struct LintOptions: AutoCodable
 ```
 
 ## Properties
