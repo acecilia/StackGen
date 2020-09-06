@@ -23,6 +23,7 @@ jobs:
         xcode: 
         - 11.4.1
         - 11.5
+        - 11.7
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app
     steps:
@@ -52,7 +53,7 @@ jobs:
     strategy:
       matrix:
         xcode: 
-        - 11.5
+        - 11.7
     env:
       DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app
     steps:
