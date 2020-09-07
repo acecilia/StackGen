@@ -52,7 +52,7 @@ buildReleaseAndZip() {
 
 docs() {
   echo "✨ Intalling sourcedocs"
-  curl -Ls https://github.com/eneko/SourceDocs/releases/download/1.2.0/sourcedocs.macos.zip -o /tmp/sourcedocs.macos.zip
+  curl -Ls https://github.com/eneko/SourceDocs/releases/download/1.2.1/sourcedocs.macos.zip -o /tmp/sourcedocs.macos.zip
   unzip -j -o -d /usr/local/bin /tmp/sourcedocs.macos.zip
   rm /tmp/sourcedocs.macos.zip
   brew install graphviz # Optional dependency of sourcedocs: needed for generating the dependency graph
@@ -85,6 +85,9 @@ codecov() {
 setup() {
   echo "✨ Uninstalling carthage"
   brew uninstall carthage # Temporary: allow custom installation of carthage, needed by the bazel templates
+
+  echo "✨ Uninstalling swiftlint"
+  brew uninstall swiftlint # Allow custom installation of swiftlint in order to be able to install a specific version
 
   echo "✨ Intalling mint 0.14.2"
   brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/577bc4f3ac6301a3b6b634bd4bac9c5367a667e5/Formula/mint.rb

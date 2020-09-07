@@ -1,19 +1,12 @@
 **CLASS**
 
-# `TemplateEngine.Stencil.Filter.Absolut`
+# `TemplateEngine.Stencil.Filter.Absolute`
 
 ```swift
-public class Absolut: StencilFilterInterface
+public class Absolute: Base, StencilFilterInterface
 ```
 
 A stencil filter that returns the corresponding absolut path
-
-## Properties
-### `context`
-
-```swift
-public var context: Context.Output?
-```
 
 ## Methods
 ### `run(_:)`

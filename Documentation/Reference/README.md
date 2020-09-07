@@ -9,13 +9,13 @@
 
 ## Structs
 
--   [Checks](structs/Checks.md)
 -   [Context.Env](structs/Context.Env.md)
 -   [Context.Input](structs/Context.Input.md)
 -   [Context.Output](structs/Context.Output.md)
 -   [Env](structs/Env.md)
 -   [FirstPartyModule.Input](structs/FirstPartyModule.Input.md)
 -   [FirstPartyModule.Output](structs/FirstPartyModule.Output.md)
+-   [LintOptions](structs/LintOptions.md)
 -   [Options.CLI](structs/Options.CLI.md)
 -   [Options.Resolved](structs/Options.Resolved.md)
 -   [Options.StackGenFile](structs/Options.StackGenFile.md)
@@ -31,12 +31,14 @@
 
 -   [CleanAction](classes/CleanAction.md)
 -   [GenerateAction](classes/GenerateAction.md)
+-   [Linter](classes/Linter.md)
 -   [ModuleResolver](classes/ModuleResolver.md)
 -   [Reporter](classes/Reporter.md)
 -   [TemplateEngine](classes/TemplateEngine.md)
 -   [TemplateEngine.Stencil](classes/TemplateEngine.Stencil.md)
 -   [TemplateEngine.Stencil.Extensions](classes/TemplateEngine.Stencil.Extensions.md)
--   [TemplateEngine.Stencil.Filter.Absolut](classes/TemplateEngine.Stencil.Filter.Absolut.md)
+-   [TemplateEngine.Stencil.Filter.Absolute](classes/TemplateEngine.Stencil.Filter.Absolute.md)
+-   [TemplateEngine.Stencil.Filter.Base](classes/TemplateEngine.Stencil.Filter.Base.md)
 -   [TemplateEngine.Stencil.Filter.Basename](classes/TemplateEngine.Stencil.Filter.Basename.md)
 -   [TemplateEngine.Stencil.Filter.ExpandDependencies](classes/TemplateEngine.Stencil.Filter.ExpandDependencies.md)
 -   [TemplateEngine.Stencil.Filter.Parent](classes/TemplateEngine.Stencil.Filter.Parent.md)
@@ -69,10 +71,10 @@
 
 ## Extensions
 
--   [Checks](extensions/Checks.md)
 -   [Encodable](extensions/Encodable.md)
 -   [Error](extensions/Error.md)
 -   [FirstPartyModule.Input](extensions/FirstPartyModule.Input.md)
+-   [LintOptions](extensions/LintOptions.md)
 -   [Module.Wrapper](extensions/Module.Wrapper.md)
 -   [NSRegularExpression](extensions/NSRegularExpression.md)
 -   [Optional](extensions/Optional.md)

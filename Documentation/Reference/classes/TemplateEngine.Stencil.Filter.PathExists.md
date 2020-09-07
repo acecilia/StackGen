@@ -3,17 +3,10 @@
 # `TemplateEngine.Stencil.Filter.PathExists`
 
 ```swift
-public class PathExists: StencilFilterInterface
+public class PathExists: Base, StencilFilterInterface
 ```
 
 A stencil filter to check when a path exists on disk
-
-## Properties
-### `context`
-
-```swift
-public var context: Context.Output?
-```
 
 ## Methods
 ### `run(_:)`

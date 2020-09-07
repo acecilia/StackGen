@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Checks: AutoCodable {
+public struct LintOptions: AutoCodable {
     public static let defaultModulesSorting: ModuleSorting = .alphabetically
     public static let defaultDependenciesSorting: DependencySorting = .alphabeticallyAndByKind
     public static let defaultTransitiveDependenciesDuplication: Bool = true

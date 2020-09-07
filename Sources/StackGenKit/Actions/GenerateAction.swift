@@ -15,18 +15,7 @@ public class GenerateAction: Action {
     public func execute() throws {
         env.reporter.info(.wrench, "resolving \(Constant.stackGenFileName)")
 
-        let stackgenFile: StackGenFile = try {
-            let stackgenFile = try StackGenFile.resolve(env)
-
-            if let root = stackgenFile.options.root {
-                env.root = Path(root) ?? env.cwd/root
-                // If the root is not the cwd, parse again the stackgenFile in
-                // order to get the right relative paths
-                return try StackGenFile.resolve(env)
-            } else {
-                return stackgenFile
-            }
-        }()
+        let stackgenFile = try StackGenFile.resolve(&env) ?? StackGenFile()
         guard stackgenFile.options.version == Constant.version else {
             throw StackGenError(.stackgenFileVersionNotMatching(stackgenFile.options.version))
         }

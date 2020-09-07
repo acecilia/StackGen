@@ -3,7 +3,7 @@
 # `StackGenFile`
 
 ```swift
-public struct StackGenFile: AutoDecodable
+public struct StackGenFile: AutoCodable
 ```
 
 The representation of the stackgen.yml file
@@ -49,8 +49,16 @@ public let availableTemplateGroups: [String: [TemplateSpec.Input]]
 
 The template groups to use
 
+### `lintOptions`
+
+```swift
+public let lintOptions: LintOptions
+```
+
+The lint options to use
+
 ## Methods
-### `init(options:global:firstPartyModules:thirdPartyModules:availableTemplateGroups:)`
+### `init(options:global:firstPartyModules:thirdPartyModules:availableTemplateGroups:lintOptions:)`
 
 ```swift
 public init(
@@ -58,6 +66,13 @@ public init(
     global: [String: StringCodable] = defaultGlobal,
     firstPartyModules: [FirstPartyModule.Input] = defaultFirstPartyModules,
     thirdPartyModules: [ThirdPartyModule.Input] = defaultThirdPartyModules,
-    availableTemplateGroups: [String: [TemplateSpec.Input]] = defaultAvailableTemplateGroups
+    availableTemplateGroups: [String: [TemplateSpec.Input]] = defaultAvailableTemplateGroups,
+    lintOptions: LintOptions = defaultLintOptions
 )
+```
+
+### `resolve(_:)`
+
+```swift
+public static func resolve(_ env: inout Env) throws -> StackGenFile?
 ```

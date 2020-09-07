@@ -9,7 +9,7 @@ extension TemplateEngine.Stencil {
             Filter.PathExists(),
             Filter.RelativeToRoot(),
             Filter.RelativeToModule(),
-            Filter.Absolut(),
+            Filter.Absolute(),
             Filter.Basename(),
             Filter.Parent(),
             Filter.ExpandDependencies()

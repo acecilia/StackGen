@@ -3,17 +3,10 @@
 # `TemplateEngine.Stencil.Filter.RelativeToRoot`
 
 ```swift
-public class RelativeToRoot: StencilFilterInterface
+public class RelativeToRoot: Base, StencilFilterInterface
 ```
 
 A stencil filter that returns the path relative to the root of the repository
-
-## Properties
-### `context`
-
-```swift
-public var context: Context.Output?
-```
 
 ## Methods
 ### `run(_:)`
